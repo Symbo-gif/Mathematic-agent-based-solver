@@ -391,6 +391,12 @@ class SolverEngine:
                 task_metadata['lower_bound'] = structured.metadata.get('lower_bound')
                 task_metadata['upper_bound'] = structured.metadata.get('upper_bound')
 
+            # Add summation/product bounds if present
+            if 'start' in structured.metadata:
+                task_metadata['start'] = structured.metadata.get('start')
+            if 'end' in structured.metadata:
+                task_metadata['end'] = structured.metadata.get('end')
+
             task_entry = _MinimalTaskEntry(
                 metadata=task_metadata,
                 conversation_id=f"solve_{self._problems_solved}"
@@ -577,6 +583,27 @@ class SolverEngine:
 
         elif operation == 'solve':
             solutions = sp.solve(expr, var)
+            return solutions if solutions else "No solutions found"
+
+        elif operation == 'solve_system':
+            # Handle system of equations
+            # If expr is a list of strings, sympify each one
+            if isinstance(expr, list):
+                equations = []
+                variables = set()
+                for eq_str in expr:
+                    if isinstance(eq_str, str):
+                        eq_expr = sp.sympify(eq_str)
+                    else:
+                        eq_expr = eq_str
+                    equations.append(eq_expr)
+                    if hasattr(eq_expr, 'free_symbols'):
+                        variables.update(eq_expr.free_symbols)
+                variables = sorted(variables, key=lambda s: s.name)
+                solutions = sp.solve(equations, variables, dict=True)
+            else:
+                # Single expression - solve for the variable
+                solutions = sp.solve(expr, var, dict=True)
             return solutions if solutions else "No solutions found"
 
         elif operation == 'factor':
@@ -1129,7 +1156,7 @@ class SolverEngine:
                     metadata={'method': method, 'used_assumptions': True}
                 )
 
-            # Native engine couldn't solve - return error (no SymPy fallback)
+            # Native engine couldn't solve - no SymPy fallback (pure native reasoning)
             return SolveResult(
                 status=SolveStatus.FAILED,
                 error=f"Native limit engine could not evaluate: lim({expr_str}) as {variable} → {point}"

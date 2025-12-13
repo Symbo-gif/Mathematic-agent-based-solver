@@ -11997,6 +11997,20 @@ def _try_taylor_expansion_limit(expr_str: str, var: str) -> Optional[str]:
     if match:
         return '1'
 
+    # Pattern: (log(1+x) - log(1))/x → 1 (derivative definition of log at x=1)
+    # Since log(1) = 0, this is equivalent to log(1+x)/x
+    match = re.match(rf'^\(\s*(?:log|ln)\(\s*1\s*\+\s*{var}\s*\)\s*-\s*(?:log|ln)\(\s*1\s*\)\s*\)/{var}$', expr, re.IGNORECASE)
+    if match:
+        return '1'
+
+    # Pattern: (log(a+x) - log(a))/x → 1/a (derivative definition of log at x=a)
+    # log(a+x) - log(a) = log((a+x)/a) = log(1 + x/a) ≈ x/a for small x
+    match = re.match(rf'^\(\s*(?:log|ln)\(\s*(\d+)\s*\+\s*{var}\s*\)\s*-\s*(?:log|ln)\(\s*\1\s*\)\s*\)/{var}$', expr, re.IGNORECASE)
+    if match:
+        a = int(match.group(1))
+        if a > 0:
+            return f'1/{a}' if a > 1 else '1'
+
     # Pattern: (log(1+x) - x)/x^p
     match = re.match(rf'^\(\s*(?:log|ln)\(\s*1\s*\+\s*{var}\s*\)\s*-\s*{var}\s*\)/{var}\*\*(\d+)$', expr, re.IGNORECASE)
     if match:
