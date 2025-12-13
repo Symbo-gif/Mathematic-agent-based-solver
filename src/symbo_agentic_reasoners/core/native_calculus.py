@@ -60,6 +60,39 @@ logger = logging.getLogger('symbo_agentic_reasoners.native_calculus')
 
 
 # =============================================================================
+# SAFETY LIMITS
+# =============================================================================
+MAX_EXPRESSION_DEPTH = 50  # Maximum nesting level for parentheses/functions
+MAX_EXPRESSION_LENGTH = 10000  # Maximum expression length in characters
+
+
+def _check_expression_safety(expr: str) -> Tuple[bool, str]:
+    """
+    Check if expression is safe to process (not too deeply nested or too long).
+
+    Returns:
+        (is_safe, error_message)
+    """
+    if len(expr) > MAX_EXPRESSION_LENGTH:
+        return False, f"Expression too long ({len(expr)} chars, max {MAX_EXPRESSION_LENGTH})"
+
+    # Count maximum nesting depth
+    depth = 0
+    max_depth = 0
+    for char in expr:
+        if char == '(':
+            depth += 1
+            max_depth = max(max_depth, depth)
+        elif char == ')':
+            depth -= 1
+
+    if max_depth > MAX_EXPRESSION_DEPTH:
+        return False, f"Expression too deeply nested ({max_depth} levels, max {MAX_EXPRESSION_DEPTH})"
+
+    return True, ""
+
+
+# =============================================================================
 # INTERNAL AST REPRESENTATION
 # =============================================================================
 
@@ -3432,6 +3465,11 @@ def differentiate(expr_str: str, var: str = 'x') -> Tuple[bool, Optional[str], s
         - result_string: String representation of derivative
         - method: "native_calculus" or error description
     """
+    # Safety check to prevent DoS via deeply nested expressions
+    is_safe, safety_error = _check_expression_safety(expr_str)
+    if not is_safe:
+        return False, None, f"expression_rejected: {safety_error}"
+
     try:
         expr = _parser.parse(expr_str)
         if expr is None:
@@ -3449,6 +3487,10 @@ def differentiate(expr_str: str, var: str = 'x') -> Tuple[bool, Optional[str], s
         return False, None, f"error: {e}"
 
 
+# Alias for consistency with naming convention
+native_derivative = differentiate
+
+
 def integrate(expr_str: str, var: str = 'x') -> Tuple[bool, Optional[str], str]:
     """
     Integrate expression string.
@@ -3463,6 +3505,11 @@ def integrate(expr_str: str, var: str = 'x') -> Tuple[bool, Optional[str], str]:
         - result_string: String representation of antiderivative
         - method: "native_calculus" or error description
     """
+    # Safety check to prevent DoS via deeply nested expressions
+    is_safe, safety_error = _check_expression_safety(expr_str)
+    if not is_safe:
+        return False, None, f"expression_rejected: {safety_error}"
+
     try:
         expr = _parser.parse(expr_str)
         if expr is None:
@@ -3506,6 +3553,11 @@ def definite_integrate(expr_str: str, var: str = 'x', a: Union[float, str] = Non
         - ∫_{-∞}^{∞} (1/√(2π)) exp(-x²/2) dx = 1 (normalized)
     """
     import math
+
+    # Safety check to prevent DoS via deeply nested expressions
+    is_safe, safety_error = _check_expression_safety(expr_str)
+    if not is_safe:
+        return False, None, f"expression_rejected: {safety_error}"
 
     try:
         # Fix exponent precedence: -x**n → (-1)*x**n
@@ -11552,6 +11604,84 @@ def _try_nested_limit(expr_str: str, var: str, point: str) -> Optional[Tuple[str
     return None
 
 
+def _try_one_sided_divergent_limit(expr_str: str, var: str, point: float, direction: str) -> Optional[str]:
+    """
+    Handle one-sided limits that diverge at finite points.
+
+    Examples:
+        - 1/x as x→0⁺ → +∞
+        - 1/x as x→0⁻ → -∞
+        - 1/x² as x→0 (either side) → +∞
+        - 1/(x-a) as x→a⁺ → +∞, x→a⁻ → -∞
+
+    Args:
+        expr_str: Expression string
+        var: Variable name
+        point: Limit point (finite)
+        direction: 'left' or 'right'
+
+    Returns:
+        'oo', '-oo', or None if not recognized
+    """
+    import re
+
+    expr_norm = expr_str.replace(' ', '')
+
+    # Pattern 1: 1/x or 1/(x) at x→0
+    if abs(point) < 1e-10:  # Limit to 0
+        # Check for 1/x pattern
+        simple_inv = re.match(rf'^1/{var}$', expr_norm)
+        if simple_inv:
+            if direction == 'right':
+                return 'oo'  # 1/x → +∞ as x→0⁺
+            else:
+                return '-oo'  # 1/x → -∞ as x→0⁻
+
+        # Check for 1/(x) pattern
+        paren_inv = re.match(rf'^1/\({var}\)$', expr_norm)
+        if paren_inv:
+            if direction == 'right':
+                return 'oo'
+            else:
+                return '-oo'
+
+        # Check for x**(-1) pattern
+        pow_inv = re.match(rf'^{var}\*\*\(-1\)$', expr_norm)
+        if pow_inv:
+            if direction == 'right':
+                return 'oo'
+            else:
+                return '-oo'
+
+        # Check for 1/x² or 1/x**n (n > 0 even) - always +∞
+        even_power_patterns = [
+            rf'^1/{var}\*\*2$',
+            rf'^1/{var}\*\*4$',
+            rf'^1/{var}\*\*6$',
+            rf'^1/\({var}\*\*2\)$',
+            rf'^{var}\*\*\(-2\)$',
+        ]
+        for pattern in even_power_patterns:
+            if re.match(pattern, expr_norm):
+                return 'oo'  # 1/x² → +∞ from both sides
+
+        # Check for 1/x³ or 1/x**n (n > 0 odd) - sign depends on direction
+        odd_power_patterns = [
+            rf'^1/{var}\*\*3$',
+            rf'^1/{var}\*\*5$',
+            rf'^1/\({var}\*\*3\)$',
+            rf'^{var}\*\*\(-3\)$',
+        ]
+        for pattern in odd_power_patterns:
+            if re.match(pattern, expr_norm):
+                if direction == 'right':
+                    return 'oo'
+                else:
+                    return '-oo'
+
+    return None
+
+
 def native_limit(expr_str: str, var: str, point: str, direction: str = 'both') -> Tuple[bool, Optional[str], str]:
     """
     Evaluate limits using rule-based pattern matching.
@@ -11574,6 +11704,11 @@ def native_limit(expr_str: str, var: str, point: str, direction: str = 'both') -
     """
     import math
     import re
+
+    # Safety check to prevent DoS via deeply nested expressions
+    is_safe, safety_error = _check_expression_safety(expr_str)
+    if not is_safe:
+        return False, None, f"expression_rejected: {safety_error}"
 
     # Normalize the point
     point_lower = str(point).lower().strip()
@@ -11689,6 +11824,13 @@ def native_limit(expr_str: str, var: str, point: str, direction: str = 'both') -
     # FINITE LIMITS
     # =========================================================================
     else:
+        # Check for one-sided limits that diverge at finite points
+        # e.g., 1/x as x→0⁺ → +∞, 1/x as x→0⁻ → -∞
+        if direction in ('left', 'right'):
+            divergent_result = _try_one_sided_divergent_limit(expr_str, var, point_val, direction)
+            if divergent_result is not None:
+                return True, divergent_result, "native_limit_divergent"
+
         # Pattern: sin(x)/x → 1 as x→0
         if abs(point_val) < 1e-10:  # Limit to 0
             sinc_result = _try_sinc_limit(expr_str, var)
@@ -12105,11 +12247,12 @@ def _try_oscillatory_decay_limit(expr_str: str, var: str, point: float) -> Optio
 
 def _try_power_decay_limit(expr_str: str, var: str, point: float) -> Optional[str]:
     """
-    Check for 1/x^n → 0 patterns.
+    Check for 1/x^n → 0 patterns as x → ±∞.
     """
     import re
+    import math
 
-    if point > 0:  # x → +∞
+    if math.isinf(point):  # x → ±∞
         # Pattern: 1/x^n for n > 0
         patterns = [
             rf'^1/{var}\*\*(\d+)$',
@@ -12348,6 +12491,9 @@ def _try_direct_substitution(expr_str: str, var: str, point: float) -> Optional[
     try:
         result = _evaluate_at(expr, var, point)
         if result is not None and math.isfinite(result):
+            # Return clean integer if value is integer
+            if result == int(result):
+                return str(int(result))
             return str(result)
     except:
         pass

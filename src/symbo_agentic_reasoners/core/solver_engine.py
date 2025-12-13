@@ -48,6 +48,36 @@ from symbo_agentic_reasoners.core.number_theory_native import (
 
 logger = logging.getLogger(__name__)
 
+# Safety limits to prevent infinite recursion
+MAX_EXPRESSION_DEPTH = 50  # Maximum nesting level for parentheses/functions
+MAX_EXPRESSION_LENGTH = 10000  # Maximum expression length in characters
+
+
+def _check_expression_safety(expr: str) -> Tuple[bool, str]:
+    """
+    Check if expression is safe to process (not too deeply nested or too long).
+
+    Returns:
+        (is_safe, error_message)
+    """
+    if len(expr) > MAX_EXPRESSION_LENGTH:
+        return False, f"Expression too long ({len(expr)} chars, max {MAX_EXPRESSION_LENGTH})"
+
+    # Count maximum nesting depth
+    depth = 0
+    max_depth = 0
+    for char in expr:
+        if char == '(':
+            depth += 1
+            max_depth = max(max_depth, depth)
+        elif char == ')':
+            depth -= 1
+
+    if max_depth > MAX_EXPRESSION_DEPTH:
+        return False, f"Expression too deeply nested ({max_depth} levels, max {MAX_EXPRESSION_DEPTH})"
+
+    return True, ""
+
 
 class SolveStatus(Enum):
     """Status of a solve operation."""
@@ -165,6 +195,14 @@ class SolverEngine:
         start_time = time.time()
 
         try:
+            # Step 0a: Check expression safety (prevent DoS via deeply nested expressions)
+            is_safe, safety_error = _check_expression_safety(problem)
+            if not is_safe:
+                return SolveResult(
+                    status=SolveStatus.FAILED,
+                    error=f"Expression rejected: {safety_error}"
+                )
+
             # Check hardware if coordinator available
             if self._coordinator and not self._coordinator.can_proceed_with_task():
                 return SolveResult(

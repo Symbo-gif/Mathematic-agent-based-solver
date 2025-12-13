@@ -29,13 +29,9 @@ from fractions import Fraction
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from symbo_agentic_reasoners.core.native_calculus import (
-    native_limit, definite_integrate
+    native_limit, definite_integrate, native_derivative, differentiate
 )
 # Some functions may not exist - import conditionally
-try:
-    from symbo_agentic_reasoners.core.native_calculus import native_derivative
-except ImportError:
-    native_derivative = None
 try:
     from symbo_agentic_reasoners.core.native_calculus import native_polynomial_roots
 except ImportError:
@@ -942,11 +938,12 @@ class TestComprehensiveSolver:
 
     def test_calculus_derivative(self):
         """Derivative computation."""
-        if native_derivative is None:
-            pytest.skip("native_derivative not available")
-        result = native_derivative("x**3 + 2*x**2 - 5*x + 7", "x")
+        success, result, method = native_derivative("x**3 + 2*x**2 - 5*x + 7", "x")
         # Should be 3x² + 4x - 5
+        assert success, f"Derivative failed: {method}"
         assert result is not None
+        # Verify the result contains expected terms
+        assert '3' in result or 'x**2' in result, f"Unexpected derivative: {result}"
 
     def test_calculus_integration_polynomial(self):
         """Polynomial integration."""
