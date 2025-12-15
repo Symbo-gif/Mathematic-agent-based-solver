@@ -75,12 +75,9 @@ EXTRACTED (complete):
 - vector_calculus.py: gradient, divergence, curl
 - series_specialist.py: series_sum with classic series patterns
 - calculus_utils.py: native_trig_simplify, _evaluate_at_numeric, helpers
+- definite_integration_specialist.py: definite_integrate + 61 helpers (4933 lines)
 
-PENDING (still in native_calculus.py):
-- definite_integrate: ~50 helper functions need extraction
-- _check_log_singularity: Internal helper
-
-The original native_calculus.py remains as a fallback for definite_integrate.
+ALL EXTRACTIONS COMPLETE - native_calculus.py is no longer needed!
 See CALCULUS_DECOMPOSITION_PLAN.md for full details.
 """
 
@@ -148,17 +145,12 @@ from .series_specialist import series_sum
 # Functions from calculus_utils.py
 from .calculus_utils import native_trig_simplify
 
-# Functions NOT YET extracted - temporary fallback to native_calculus.py
-# definite_integrate has many helper dependencies that need to be extracted
-try:
-    from ..native_calculus import (
-        definite_integrate,
-        _check_log_singularity,
-    )
-except ImportError:
-    # If native_calculus is not available, these will fail at runtime
-    definite_integrate = None
-    _check_log_singularity = None
+# Functions from definite_integration_specialist.py (EXTRACTED from native_calculus.py)
+# These handle definite integration with special patterns and singularity detection
+from .definite_integration_specialist import (
+    definite_integrate,
+    _check_log_singularity,
+)
 
 
 __all__ = [
