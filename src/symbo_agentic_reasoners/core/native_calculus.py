@@ -8753,9 +8753,9 @@ def series_sum(expr_str: str, var: str = 'n', start: int = 1, end: Union[int, st
     normalized = re.sub(r'\s+', '', expr_str)
 
     # ==========================================================================
-    # STEP 1: n-th term divergence test (if lim a_n ≠ 0, series diverges)
+    # STEP 1: n-th term divergence test (if lim a_n != 0, series diverges)
     # ==========================================================================
-    div_reason = _check_nth_term_divergence_sympy(expr_str, var)
+    div_reason = _check_nth_term_divergence_native(expr_str, var)
     if div_reason is not None:
         return (True, f"divergent ({div_reason})", "nth_term_test")
 
@@ -8989,94 +8989,55 @@ def _check_nth_term_divergence(expr_str: str, var: str) -> Optional[str]:
     return None
 
 
-def _check_nth_term_divergence_sympy(expr_str: str, var: str) -> Optional[str]:
+def _check_nth_term_divergence_native(expr_str: str, var: str) -> Optional[str]:
     """
-    Improved n-th term divergence test using SymPy's limit.
+    Improved n-th term divergence test using native limit evaluation.
 
-    If lim_{n→∞} a_n != 0, the series diverges.
+    NO SYMPY - Uses native_limit for pure mathematical reasoning.
+
+    If lim_{n to infinity} a_n != 0, the series diverges.
 
     Returns:
-        Divergence reason if limit ≠ 0, None if limit = 0 (or inconclusive)
+        Divergence reason if limit != 0, None if limit = 0 (or inconclusive)
     """
     try:
-        import sympy as sp
-        # Create symbol with proper assumptions for limit computation
-        n = sp.Symbol(var, positive=True, integer=True)
-        expr = sp.sympify(expr_str)
+        # Use native limit evaluation
+        success, limit_val, method = native_limit(expr_str, var, 'inf')
 
-        # Replace the symbol in expression with our properly-assumed symbol
-        # This is needed because sympify creates a symbol without assumptions
-        expr_symbols = expr.free_symbols
-        for s in expr_symbols:
-            if s.name == var:
-                expr = expr.subs(s, n)
-                break
+        if success and limit_val is not None:
+            limit_str = str(limit_val).lower().strip()
 
-        # Compute the limit as n → ∞
-        L = sp.limit(expr, n, sp.oo)
+            # Check for non-zero limit
+            if limit_str not in ('0', '0.0', 'none'):
+                # Check for infinity
+                if 'inf' in limit_str or 'oo' in limit_str:
+                    return f"lim a_n = {limit_val} (terms grow without bound)"
 
-        # If limit is a finite non-zero number, series diverges
-        if L.is_number and L != 0:
-            return f"lim a_n = {L} != 0 (n-th term test)"
+                # Check for finite non-zero
+                try:
+                    limit_num = float(limit_val)
+                    if abs(limit_num) > 1e-10:
+                        return f"lim a_n = {limit_val} != 0 (n-th term test)"
+                except ValueError:
+                    # Symbolic non-zero result
+                    if limit_str not in ('0', '0.0', 'none', 'dne'):
+                        return f"lim a_n = {limit_val} != 0 (n-th term test)"
 
-        # If limit is +/-oo, series diverges
-        if L == sp.oo or L == -sp.oo:
-            return f"lim a_n = {L} (terms grow without bound)"
-
-        # If limit doesn't exist (oscillates), check for special cases
-        # AccumBounds indicates oscillation (like (-1)^n)
-        if isinstance(L, sp.AccumBounds):
-            # Series may still converge conditionally (like alternating series)
-            # So we don't mark as divergent here
-            return None
-
-        # SymPy sometimes returns the expression unchanged if it can't simplify
-        # In that case, try alternative approaches for TRUE rational functions
-        # (polynomials in n divided by polynomials in n)
-        if L == expr or not L.is_number:
-            # Only try polynomial analysis for true polynomial/rational expressions
-            # Skip if expression contains exponentials, factorials, etc.
-            has_non_polynomial = (expr.has(sp.exp) or expr.has(sp.factorial) or
-                                  expr.has(sp.gamma) or
-                                  any(arg.has(n) for arg in expr.atoms(sp.Pow)
-                                      if arg.base.is_number and arg.base != sp.E))
-
-            if not has_non_polynomial:
-                num, den = expr.as_numer_denom()
-                if den != 1:
-                    # Check degrees - only for true polynomials
-                    try:
-                        if num.is_polynomial(n) and den.is_polynomial(n):
-                            num_poly = sp.Poly(num, n)
-                            den_poly = sp.Poly(den, n)
-                            deg_num = num_poly.degree()
-                            deg_den = den_poly.degree()
-
-                            if deg_num > deg_den:
-                                return f"lim a_n = +/-inf (numerator degree {deg_num} > denominator degree {deg_den})"
-                            elif deg_num == deg_den:
-                                # Limit is ratio of leading coefficients
-                                lc_num = num_poly.LC()
-                                lc_den = den_poly.LC()
-                                ratio = sp.simplify(lc_num / lc_den)
-                                if ratio != 0:
-                                    return f"lim a_n = {ratio} != 0 (n-th term test)"
-                    except Exception:
-                        pass
-
-            # Try numerical evaluation at large n (for non-polynomial cases)
-            try:
-                val_1000 = float(expr.subs(n, 1000))
-                val_10000 = float(expr.subs(n, 10000))
-                val_100000 = float(expr.subs(n, 100000))
+        # Try numerical evaluation at large n for cases native_limit doesn't handle
+        try:
+            ast = _parse_to_ast(expr_str)
+            if ast is not None:
+                val_1000 = _evaluate_at_numeric(ast, var, 1000)
+                val_10000 = _evaluate_at_numeric(ast, var, 10000)
+                val_100000 = _evaluate_at_numeric(ast, var, 100000)
 
                 # If values are approaching a non-zero constant
                 if abs(val_1000) > 0.01 and abs(val_10000) > 0.01 and abs(val_100000) > 0.01:
                     if abs(val_10000 - val_1000) < 0.1 and abs(val_100000 - val_10000) < 0.01:
                         approx_limit = val_100000
                         return f"lim a_n ~ {approx_limit:.4f} != 0 (n-th term test, numerical)"
-            except:
-                pass
+        except Exception:
+            pass
 
     except Exception:
         pass
@@ -9128,30 +9089,30 @@ def _try_geometric_series(expr_str: str, var: str, start: int) -> Optional[Tuple
                 result = r / (1 - r)
                 return (str(result), "geometric_series")
 
-    # Pattern 3: Use SymPy for more complex detection
+    # Pattern 3: Use native AST evaluation for more complex detection
+    # NO SYMPY - Uses native evaluation for pure mathematical reasoning
     try:
-        import sympy as sp
-        n = sp.Symbol(var)
-        expr = sp.sympify(expr_str)
-
-        # Check if expression is of form a * r^n
-        # Try to extract base by dividing consecutive terms
-        a1 = expr.subs(n, 0)
-        a2 = expr.subs(n, 1)
-        if a1 != 0:
-            r = sp.simplify(a2 / a1)
-            # Verify it's geometric: a_n = a1 * r^n
-            if r.is_number and abs(float(r)) < 1:
-                r_val = float(r)
-                a1_val = float(a1)
-                if start == 0:
-                    result = a1_val / (1 - r_val)
-                    return (str(result), "geometric_series_sympy")
-                elif start == 1:
-                    # sum from 1 to inf = (total from 0) - a_0
-                    total = a1_val / (1 - r_val)
-                    result = total - a1_val
-                    return (str(result), "geometric_series_sympy")
+        ast = _parse_to_ast(expr_str)
+        if ast is not None:
+            # Check if expression is of form a * r^n
+            # Try to extract base by dividing consecutive terms
+            a1 = _evaluate_at_numeric(ast, var, 0)
+            a2 = _evaluate_at_numeric(ast, var, 1)
+            if a1 != 0 and abs(a1) < 1e10 and abs(a2) < 1e10:
+                r_val = a2 / a1
+                # Verify it's geometric by checking a_3 / a_2
+                a3 = _evaluate_at_numeric(ast, var, 2)
+                if abs(a2) > 1e-10 and abs(a3 / a2 - r_val) < 1e-8:
+                    # Confirmed geometric
+                    if abs(r_val) < 1:
+                        if start == 0:
+                            result = a1 / (1 - r_val)
+                            return (str(result), "geometric_series_native")
+                        elif start == 1:
+                            # sum from 1 to inf = (total from 0) - a_0
+                            total = a1 / (1 - r_val)
+                            result = total - a1
+                            return (str(result), "geometric_series_native")
 
     except Exception:
         pass
@@ -9193,34 +9154,37 @@ def _try_exp_series(expr_str: str, var: str, start: int) -> Optional[Tuple[str, 
         lam = float(match.group(1))
         return (f"exp({lam})", "exp_series")
 
-    # Pattern 3: Use SymPy for more robust detection
+    # Pattern 3: Use native evaluation for more robust detection
+    # NO SYMPY - Uses native numerical evaluation for ratio test
     try:
-        import sympy as sp
-        n = sp.Symbol(var, nonnegative=True, integer=True)
-        expr = sp.sympify(expr_str)
+        import math
+        ast = _parse_to_ast(expr_str)
+        if ast is not None:
+            # For exp series λ^n/n!, the ratio a_{n+1}/a_n = λ/(n+1)
+            # So a_{n+1}/a_n * (n+1) should be constant = λ
+            ratios_times_n1 = []
+            for n_val in [1, 2, 3, 4, 5]:
+                try:
+                    a_n = _evaluate_at_numeric(ast, var, n_val)
+                    a_n1 = _evaluate_at_numeric(ast, var, n_val + 1)
+                    if abs(a_n) > 1e-15:
+                        ratio = a_n1 / a_n
+                        lambda_candidate = ratio * (n_val + 1)
+                        ratios_times_n1.append(lambda_candidate)
+                except Exception:
+                    pass
 
-        # Check if expression is λ^n / n!
-        # This should simplify or match known form
-        # Try: multiply by n! and see if we get λ^n
-        factorial_n = sp.factorial(n)
-        candidate = sp.simplify(expr * factorial_n)
-
-        # If candidate is a^n for some constant a
-        if candidate.is_Pow and candidate.exp == n:
-            base = candidate.base
-            if base.is_number:
-                return (f"exp({base})", "exp_series_sympy")
-
-        # Alternative: check the ratio a_{n+1}/a_n → λ/(n+1)
-        # For exp series, ratio = λ/(n+1)
-        a_n = expr
-        a_n1 = expr.subs(n, n + 1)
-        ratio = sp.simplify(a_n1 / a_n)
-        # Should be λ/(n+1)
-        ratio_times_n1 = sp.simplify(ratio * (n + 1))
-        if ratio_times_n1.is_number:
-            lam = float(ratio_times_n1)
-            return (f"exp({lam})", "exp_series_ratio")
+            # If all ratios_times_n1 are approximately equal, we found λ
+            if len(ratios_times_n1) >= 3:
+                avg_lambda = sum(ratios_times_n1) / len(ratios_times_n1)
+                variance = sum((x - avg_lambda)**2 for x in ratios_times_n1) / len(ratios_times_n1)
+                if variance < 0.01:  # Ratios are consistent
+                    # This is exp(λ)
+                    if abs(avg_lambda - round(avg_lambda)) < 1e-6:
+                        lam = int(round(avg_lambda))
+                    else:
+                        lam = avg_lambda
+                    return (f"exp({lam})", "exp_series_ratio_native")
 
     except Exception:
         pass
@@ -9232,10 +9196,10 @@ def _check_symmetry_integral(expr_str: str, var: str, a_norm, b_norm) -> Optiona
     """
     Check if integral is of an odd function over symmetric bounds.
 
-    If f(-x) = -f(x) and bounds are [-a, a], then integral = 0.
-    If f(-x) = f(x) (even), could rewrite as 2*∫_0^a but we don't do that here.
+    NO SYMPY - Uses native numerical evaluation for parity detection.
 
-    Uses SymPy symbolic evaluation for robust parity detection.
+    If f(-x) = -f(x) and bounds are [-a, a], then integral = 0.
+    If f(-x) = f(x) (even), could rewrite as 2*int_0^a but we don't do that here.
 
     Returns:
         "0" if odd function over symmetric bounds, None otherwise
@@ -9275,22 +9239,30 @@ def _check_symmetry_integral(expr_str: str, var: str, a_norm, b_norm) -> Optiona
         if re.match(pattern, normalized, re.IGNORECASE):
             return "0 (odd function over symmetric bounds)"
 
-    # Use SymPy for more complex cases (robust parity detection)
+    # Use native numerical evaluation for parity detection
+    # Check if f(-x) = -f(x) at multiple test points
     try:
-        import sympy as sp
-        x = sp.Symbol(var)
-        expr = sp.sympify(expr_str)
-        f_neg = expr.subs(x, -x)
+        ast = _parse_to_ast(expr_str)
+        if ast is not None:
+            # Test points for parity check
+            test_points = [0.5, 1.0, 1.5, 2.0, math.pi/4]
+            is_odd = True
 
-        # Check if f(-x) = -f(x) (odd function)
-        diff = sp.simplify(expr + f_neg)
-        if diff == 0:
-            return "0 (odd function over symmetric bounds)"
+            for x_val in test_points:
+                try:
+                    f_x = _evaluate_at_numeric(ast, var, x_val)
+                    f_neg_x = _evaluate_at_numeric(ast, var, -x_val)
 
-        # Alternative: check if simplifying (f - (-f_neg)) = 0
-        # i.e., f + f_neg = 0 means f is odd
-        if sp.simplify(expr + f_neg).equals(sp.Integer(0)):
-            return "0 (odd function over symmetric bounds)"
+                    # For odd function: f(-x) + f(x) = 0
+                    if abs(f_x + f_neg_x) > 1e-10 * (abs(f_x) + abs(f_neg_x) + 1):
+                        is_odd = False
+                        break
+                except Exception:
+                    # If evaluation fails, skip this point
+                    continue
+
+            if is_odd:
+                return "0 (odd function over symmetric bounds)"
 
     except Exception:
         pass
@@ -12798,6 +12770,494 @@ def _evaluate_expr_numerically(expr_str: str) -> Optional[float]:
         return eval(expr_safe)
     except:
         return None
+
+
+# =============================================================================
+# ADDITIONAL SOLVER FUNCTIONS (SymPy-free)
+# =============================================================================
+
+def solve_polynomial(expr_str: str, var: str = 'x') -> list:
+    """
+    Solve a polynomial equation for the given variable.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Args:
+        expr_str: Polynomial expression string (assumed equal to 0)
+        var: Variable to solve for
+
+    Returns:
+        List of solutions
+    """
+    import re
+    import math
+
+    # Clean expression
+    expr = expr_str.replace(' ', '').replace('^', '**')
+
+    # Try to extract polynomial coefficients
+    # Linear: ax + b = 0 -> x = -b/a
+    linear_match = re.match(rf'^(-?\d*\.?\d*)\*?{var}\s*([+-]\s*\d*\.?\d+)?$', expr)
+    if linear_match:
+        a = float(linear_match.group(1) or '1')
+        b_str = linear_match.group(2)
+        b = float(b_str.replace(' ', '')) if b_str else 0
+        if a != 0:
+            return [str(-b / a)]
+
+    # Quadratic: ax^2 + bx + c = 0
+    # Extract coefficients by pattern matching
+    quad_pattern = rf'(-?\d*\.?\d*)\*?{var}\*\*2\s*([+-]\s*\d*\.?\d*)\*?{var}\s*([+-]\s*\d*\.?\d+)?'
+    quad_match = re.match(quad_pattern, expr)
+    if quad_match:
+        try:
+            a_str = quad_match.group(1) or '1'
+            a = float(a_str) if a_str not in ('', '+') else 1.0
+            if a_str == '-':
+                a = -1.0
+
+            b_str = quad_match.group(2)
+            b = float(b_str.replace(' ', '')) if b_str else 0
+
+            c_str = quad_match.group(3)
+            c = float(c_str.replace(' ', '')) if c_str else 0
+
+            # Quadratic formula
+            discriminant = b*b - 4*a*c
+            if discriminant >= 0:
+                sqrt_d = math.sqrt(discriminant)
+                x1 = (-b + sqrt_d) / (2*a)
+                x2 = (-b - sqrt_d) / (2*a)
+                if discriminant == 0:
+                    return [str(x1)]
+                return [str(x1), str(x2)]
+            else:
+                # Complex roots
+                real = -b / (2*a)
+                imag = math.sqrt(-discriminant) / (2*a)
+                return [f"{real} + {imag}*I", f"{real} - {imag}*I"]
+        except:
+            pass
+
+    # Simple form: x = value
+    simple_match = re.match(rf'^{var}\s*=\s*(-?\d*\.?\d+)$', expr)
+    if simple_match:
+        return [simple_match.group(1)]
+
+    return []
+
+
+def solve_system_native(equations: list) -> list:
+    """
+    Solve a system of equations.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Args:
+        equations: List of equation strings
+
+    Returns:
+        List of solution dictionaries
+    """
+    import re
+
+    if len(equations) == 2:
+        # Two equations, two unknowns
+        # Try simple substitution or elimination
+
+        # Extract coefficients for linear system
+        # Form: a1*x + b1*y = c1, a2*x + b2*y = c2
+        def parse_linear(eq: str, vars: list):
+            """Parse linear equation to coefficients."""
+            eq = eq.replace(' ', '').replace('=', '-')
+            coeffs = {v: 0.0 for v in vars}
+            const = 0.0
+
+            # Split by + and -
+            terms = re.split(r'(?=[+-])', eq)
+            for term in terms:
+                if not term:
+                    continue
+                term = term.strip()
+
+                # Check for each variable
+                found_var = False
+                for v in vars:
+                    if v in term:
+                        # Extract coefficient
+                        coef_str = term.replace(v, '').replace('*', '')
+                        if coef_str in ('', '+'):
+                            coef = 1.0
+                        elif coef_str == '-':
+                            coef = -1.0
+                        else:
+                            try:
+                                coef = float(coef_str)
+                            except:
+                                coef = 1.0
+                        coeffs[v] += coef
+                        found_var = True
+                        break
+
+                if not found_var:
+                    # Constant term
+                    try:
+                        const += float(term)
+                    except:
+                        pass
+
+            return coeffs, -const
+
+        # Find variables
+        vars_found = set()
+        for eq in equations:
+            vars_found.update(re.findall(r'\b([a-z])\b', eq))
+        vars_list = sorted(list(vars_found))[:2]  # Only first 2 vars
+
+        if len(vars_list) == 2:
+            try:
+                c1, d1 = parse_linear(equations[0], vars_list)
+                c2, d2 = parse_linear(equations[1], vars_list)
+
+                v1, v2 = vars_list
+                a1, b1 = c1[v1], c1[v2]
+                a2, b2 = c2[v1], c2[v2]
+
+                # Cramer's rule
+                det = a1*b2 - a2*b1
+                if abs(det) > 1e-10:
+                    x = (d1*b2 - d2*b1) / det
+                    y = (a1*d2 - a2*d1) / det
+                    return [{v1: x, v2: y}]
+            except:
+                pass
+
+    return []
+
+
+def factor_polynomial(expr_str: str) -> tuple:
+    """
+    Factor a polynomial expression.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Args:
+        expr_str: Polynomial expression
+
+    Returns:
+        (success, factored_form)
+    """
+    import re
+    import math
+
+    expr = expr_str.replace(' ', '').replace('^', '**')
+
+    # Difference of squares: a^2 - b^2 = (a+b)(a-b)
+    dos_match = re.match(r'^(\w+)\*\*2-(\w+)\*\*2$', expr)
+    if dos_match:
+        a, b = dos_match.group(1), dos_match.group(2)
+        return (True, f"({a}+{b})*({a}-{b})")
+
+    # Difference of squares with constant: x^2 - n = (x+sqrt(n))(x-sqrt(n))
+    # Special case for perfect squares: x^2 - 1 = (x+1)(x-1)
+    dos_const_match = re.match(r'^(\w+)\*\*2-(\d+)$', expr)
+    if dos_const_match:
+        a, n = dos_const_match.group(1), int(dos_const_match.group(2))
+        sqrt_n = int(math.sqrt(n))
+        if sqrt_n * sqrt_n == n:  # Perfect square
+            return (True, f"({a}+{sqrt_n})*({a}-{sqrt_n})")
+
+    # Perfect square: a^2 + 2ab + b^2 = (a+b)^2
+    # This is complex to detect, skip for now
+
+    # Difference of cubes: a^3 - b^3 = (a-b)(a^2+ab+b^2)
+    doc_match = re.match(r'^(\w+)\*\*3-(\w+)\*\*3$', expr)
+    if doc_match:
+        a, b = doc_match.group(1), doc_match.group(2)
+        return (True, f"({a}-{b})*({a}**2+{a}*{b}+{b}**2)")
+
+    # Sum of cubes: a^3 + b^3 = (a+b)(a^2-ab+b^2)
+    soc_match = re.match(r'^(\w+)\*\*3\+(\w+)\*\*3$', expr)
+    if soc_match:
+        a, b = soc_match.group(1), soc_match.group(2)
+        return (True, f"({a}+{b})*({a}**2-{a}*{b}+{b}**2)")
+
+    # Simple common factor: ax + ay = a(x+y)
+    common_match = re.match(r'^(\d+)\*?(\w+)\s*\+\s*(\d+)\*?(\w+)$', expr)
+    if common_match:
+        a1, v1, a2, v2 = common_match.groups()
+        a1, a2 = int(a1), int(a2)
+        gcd = math.gcd(a1, a2)
+        if gcd > 1:
+            return (True, f"{gcd}*({a1//gcd}*{v1}+{a2//gcd}*{v2})")
+
+    # Quadratic factoring: ax^2 + bx + c
+    # Try to find roots and factor
+    solutions = solve_polynomial(expr_str, 'x')
+    if len(solutions) == 2:
+        try:
+            r1, r2 = float(solutions[0]), float(solutions[1])
+            if r1 == int(r1) and r2 == int(r2):
+                r1, r2 = int(r1), int(r2)
+                if r1 >= 0 and r2 >= 0:
+                    return (True, f"(x-{r1})*(x-{r2})")
+                elif r1 >= 0:
+                    return (True, f"(x-{r1})*(x+{-r2})")
+                elif r2 >= 0:
+                    return (True, f"(x+{-r1})*(x-{r2})")
+                else:
+                    return (True, f"(x+{-r1})*(x+{-r2})")
+        except:
+            pass
+
+    return (False, expr_str)
+
+
+def expand_expression(expr_str: str) -> tuple:
+    """
+    Expand a polynomial expression.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Args:
+        expr_str: Expression with factors to expand
+
+    Returns:
+        (success, expanded_form)
+    """
+    import re
+
+    expr = expr_str.replace(' ', '').replace('^', '**')
+
+    # Expand (a+b)^2 = a^2 + 2ab + b^2
+    sq_match = re.match(r'^\((\w+)\+(\w+)\)\*\*2$', expr)
+    if sq_match:
+        a, b = sq_match.group(1), sq_match.group(2)
+        return (True, f"{a}**2+2*{a}*{b}+{b}**2")
+
+    # Expand (a-b)^2 = a^2 - 2ab + b^2
+    sq_neg_match = re.match(r'^\((\w+)-(\w+)\)\*\*2$', expr)
+    if sq_neg_match:
+        a, b = sq_neg_match.group(1), sq_neg_match.group(2)
+        return (True, f"{a}**2-2*{a}*{b}+{b}**2")
+
+    # Expand (a+b)(a-b) = a^2 - b^2
+    dos_match = re.match(r'^\((\w+)\+(\w+)\)\*\((\w+)-(\w+)\)$', expr)
+    if dos_match:
+        a1, b1, a2, b2 = dos_match.groups()
+        if a1 == a2 and b1 == b2:
+            return (True, f"{a1}**2-{b1}**2")
+
+    # Expand (a+b)(c+d) = ac + ad + bc + bd
+    foil_match = re.match(r'^\((\w+)\+(\w+)\)\*\((\w+)\+(\w+)\)$', expr)
+    if foil_match:
+        a, b, c, d = foil_match.groups()
+        return (True, f"{a}*{c}+{a}*{d}+{b}*{c}+{b}*{d}")
+
+    # Expand (a+b)^3 = a^3 + 3a^2b + 3ab^2 + b^3
+    cube_match = re.match(r'^\((\w+)\+(\w+)\)\*\*3$', expr)
+    if cube_match:
+        a, b = cube_match.group(1), cube_match.group(2)
+        return (True, f"{a}**3+3*{a}**2*{b}+3*{a}*{b}**2+{b}**3")
+
+    return (False, expr_str)
+
+
+def taylor_series(expr_str: str, var: str = 'x', point: float = 0, n_terms: int = 6) -> tuple:
+    """
+    Compute Taylor series expansion.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Args:
+        expr_str: Expression to expand
+        var: Variable
+        point: Expansion point
+        n_terms: Number of terms
+
+    Returns:
+        (success, series_string)
+    """
+    import math
+
+    # Known Taylor series at 0
+    TAYLOR_EXPANSIONS = {
+        f'exp({var})': [1, 1, 1/2, 1/6, 1/24, 1/120],  # e^x = sum x^n/n!
+        f'sin({var})': [0, 1, 0, -1/6, 0, 1/120],  # sin(x) = x - x^3/3! + x^5/5!
+        f'cos({var})': [1, 0, -1/2, 0, 1/24, 0],  # cos(x) = 1 - x^2/2! + x^4/4!
+        f'log(1+{var})': [0, 1, -1/2, 1/3, -1/4, 1/5],  # ln(1+x) = x - x^2/2 + x^3/3
+        f'ln(1+{var})': [0, 1, -1/2, 1/3, -1/4, 1/5],
+        f'1/(1-{var})': [1, 1, 1, 1, 1, 1],  # 1/(1-x) = 1 + x + x^2 + ...
+        f'1/(1+{var})': [1, -1, 1, -1, 1, -1],  # 1/(1+x) = 1 - x + x^2 - ...
+        f'sqrt(1+{var})': [1, 1/2, -1/8, 1/16, -5/128, 7/256],  # (1+x)^(1/2)
+    }
+
+    expr_clean = expr_str.replace(' ', '')
+
+    # Check known expansions
+    if expr_clean in TAYLOR_EXPANSIONS:
+        coeffs = TAYLOR_EXPANSIONS[expr_clean][:n_terms]
+        terms = []
+        for n, c in enumerate(coeffs):
+            if abs(c) < 1e-15:
+                continue
+            if n == 0:
+                terms.append(f"{c}")
+            elif n == 1:
+                if c == 1:
+                    terms.append(f"{var}")
+                elif c == -1:
+                    terms.append(f"-{var}")
+                else:
+                    terms.append(f"{c}*{var}")
+            else:
+                if c == 1:
+                    terms.append(f"{var}**{n}")
+                elif c == -1:
+                    terms.append(f"-{var}**{n}")
+                else:
+                    terms.append(f"{c}*{var}**{n}")
+
+        result = ' + '.join(terms).replace('+ -', '- ')
+        return (True, result)
+
+    # Try computing derivatives numerically
+    try:
+        # Compute by successive differentiation
+        terms = []
+        for n in range(n_terms):
+            # Get n-th derivative
+            if n == 0:
+                deriv_str = expr_str
+            else:
+                success, deriv_str, _ = differentiate(expr_str if n == 1 else deriv_str, var)
+                if not success:
+                    break
+
+            # Evaluate at point (usually 0)
+            # This is simplified - just try to get numeric value
+            try:
+                value = _eval_at_point(deriv_str, var, point)
+                if value is None:
+                    continue
+                coef = value / math.factorial(n)
+                if abs(coef) < 1e-15:
+                    continue
+
+                if n == 0:
+                    terms.append(f"{coef}")
+                elif n == 1:
+                    if point == 0:
+                        terms.append(f"{coef}*{var}")
+                    else:
+                        terms.append(f"{coef}*({var}-{point})")
+                else:
+                    if point == 0:
+                        terms.append(f"{coef}*{var}**{n}")
+                    else:
+                        terms.append(f"{coef}*({var}-{point})**{n}")
+            except:
+                continue
+
+        if terms:
+            result = ' + '.join(terms).replace('+ -', '- ')
+            return (True, result)
+    except:
+        pass
+
+    return (False, None)
+
+
+def _eval_at_point(expr_str: str, var: str, point: float) -> float:
+    """Evaluate expression at a point."""
+    import re
+    import math
+
+    expr = expr_str.replace(var, f'({point})')
+    expr = expr.replace('^', '**')
+
+    # Replace math functions
+    expr = re.sub(r'\bsin\b', 'math.sin', expr)
+    expr = re.sub(r'\bcos\b', 'math.cos', expr)
+    expr = re.sub(r'\bexp\b', 'math.exp', expr)
+    expr = re.sub(r'\b(log|ln)\b', 'math.log', expr)
+    expr = re.sub(r'\bsqrt\b', 'math.sqrt', expr)
+
+    try:
+        return eval(expr)
+    except:
+        return None
+
+
+def solve_ode_native(expr_str: str) -> tuple:
+    """
+    Solve ordinary differential equations.
+
+    NO SYMPY - Pure native mathematical reasoning.
+
+    Handles:
+    - y' = f(x) -> y = integral(f(x))
+    - y' = a*y -> y = C*exp(a*x)
+    - y' + p(x)*y = q(x) (linear first order)
+
+    Args:
+        expr_str: ODE expression
+
+    Returns:
+        (success, solution_string)
+    """
+    import re
+
+    expr = expr_str.replace(' ', '')
+
+    # Pattern: y' = f(x) where f doesn't contain y
+    # Result: y = integral(f(x))
+    deriv_match = re.match(r"^y'=(.+)$", expr)
+    if deriv_match:
+        rhs = deriv_match.group(1)
+        if 'y' not in rhs:
+            success, integral, method = integrate(rhs, 'x')
+            if success:
+                return (True, f"y = {integral} + C")
+
+    # Pattern: y' = a*y -> y = C*exp(a*x)
+    exp_decay = re.match(r"^y'=(-?\d*\.?\d*)\*?y$", expr)
+    if exp_decay:
+        a_str = exp_decay.group(1) or '1'
+        a = float(a_str) if a_str not in ('', '-') else (1.0 if a_str == '' else -1.0)
+        return (True, f"y = C*exp({a}*x)")
+
+    # Pattern: y' + a*y = 0 -> y = C*exp(-a*x)
+    homog = re.match(r"^y'\+(-?\d*\.?\d*)\*?y=0$", expr)
+    if homog:
+        a_str = homog.group(1) or '1'
+        a = float(a_str) if a_str not in ('', '-') else (1.0 if a_str == '' else -1.0)
+        return (True, f"y = C*exp({-a}*x)")
+
+    # Pattern: y'' + a*y = 0 (harmonic oscillator)
+    harmonic = re.match(r"^y''\+(-?\d*\.?\d*)\*?y=0$", expr)
+    if harmonic:
+        a_str = harmonic.group(1) or '1'
+        a = float(a_str) if a_str not in ('', '-') else (1.0 if a_str == '' else -1.0)
+        if a > 0:
+            import math
+            omega = math.sqrt(a)
+            return (True, f"y = C1*cos({omega}*x) + C2*sin({omega}*x)")
+        elif a < 0:
+            import math
+            k = math.sqrt(-a)
+            return (True, f"y = C1*exp({k}*x) + C2*exp({-k}*x)")
+
+    # Pattern: y'' - a^2*y = 0 -> y = C1*exp(a*x) + C2*exp(-a*x)
+    exp_growth = re.match(r"^y''-(\d*\.?\d*)\*?y=0$", expr)
+    if exp_growth:
+        a_str = exp_growth.group(1) or '1'
+        a = float(a_str) if a_str else 1.0
+        import math
+        k = math.sqrt(a)
+        return (True, f"y = C1*exp({k}*x) + C2*exp({-k}*x)")
+
+    return (False, None)
 
 
 # =============================================================================

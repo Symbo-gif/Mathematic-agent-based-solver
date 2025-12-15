@@ -23,10 +23,18 @@ import os
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from symbo_agentic_reasoners.core.native_calculus import (
-    native_limit, definite_integrate, series_sum,
-    _try_special_function_asymptotic, _try_gamma_power_integral
+from symbo_agentic_reasoners.core.calculus import (
+    native_limit, definite_integrate, series_sum
 )
+# Internal functions - import from limit_specialist and native_calculus
+from symbo_agentic_reasoners.core.calculus.limit_specialist import (
+    _try_special_function_asymptotic
+)
+# _try_gamma_power_integral is still only in native_calculus
+try:
+    from symbo_agentic_reasoners.core.native_calculus import _try_gamma_power_integral
+except ImportError:
+    _try_gamma_power_integral = None
 from symbo_agentic_reasoners.core.number_theory_native import (
     mobius, mangoldt, totient, prime_product, evaluate_nt_series,
     alternating_log_series, STIELTJES_CONSTANTS, EULER_GAMMA

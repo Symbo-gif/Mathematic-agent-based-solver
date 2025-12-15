@@ -28,16 +28,16 @@ from fractions import Fraction
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from symbo_agentic_reasoners.core.native_calculus import (
+from symbo_agentic_reasoners.core.calculus import (
     native_limit, definite_integrate, native_derivative, differentiate
 )
 # Some functions may not exist - import conditionally
 try:
-    from symbo_agentic_reasoners.core.native_calculus import native_polynomial_roots
+    from symbo_agentic_reasoners.core.calculus.limit_specialist import native_polynomial_roots
 except ImportError:
     native_polynomial_roots = None
 try:
-    from symbo_agentic_reasoners.core.native_calculus import KNOWN_LIMIT_PATTERNS
+    from symbo_agentic_reasoners.core.calculus.limit_specialist import KNOWN_LIMIT_PATTERNS
 except ImportError:
     KNOWN_LIMIT_PATTERNS = {}
 from symbo_agentic_reasoners.core.solver_engine import SolverEngine

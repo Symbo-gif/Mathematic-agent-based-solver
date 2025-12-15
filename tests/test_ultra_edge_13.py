@@ -14,7 +14,7 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from symbo_agentic_reasoners.core.native_calculus import (
+from symbo_agentic_reasoners.core.calculus import (
     native_limit, definite_integrate
 )
 from symbo_agentic_reasoners.core.solver_engine import SolverEngine

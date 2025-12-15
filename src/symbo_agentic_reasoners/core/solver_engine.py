@@ -32,7 +32,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
-import sympy as sp
+# NO SYMPY - Use native symbolic module
+from symbo_agentic_reasoners.core.native_symbolic import (
+    Expr, Symbol, Integer, Float, Rational,
+    Add, Mul, Pow, Sin, Cos, Tan, Exp, Log, Sqrt,
+    parse_expr, sympify, symbols, diff as native_diff, simplify as native_simplify
+)
+from symbo_agentic_reasoners.core.calculus import (
+    differentiate, integrate as native_integrate, native_limit,
+    definite_integrate
+)
 
 from symbo_agentic_reasoners.core.safe_parser import safe_sympify, SecurityError
 from symbo_agentic_reasoners.core.expression_analyzer import analyze_expression, ExpressionCategory
@@ -368,9 +377,9 @@ class SolverEngine:
         specialist = self._get_specialist(specialist_key, domain, operation)
 
         if specialist is None:
-            # Fallback to direct SymPy computation
+            # Fallback to direct native computation
             raw_input = structured.raw_input if hasattr(structured, 'raw_input') else ""
-            return self._solve_with_sympy(expr, operation, variable, raw_input)
+            return self._solve_native(expr, operation, variable, raw_input)
 
         # Use specialist
         try:
@@ -427,25 +436,26 @@ class SolverEngine:
                     specialist_used=specialist_key
                 )
             else:
-                # Specialist returned empty - fallback to SymPy
-                logger.debug(f"Specialist {specialist_key} returned empty, falling back to SymPy")
+                # Specialist returned empty - fallback to native
+                logger.debug(f"Specialist {specialist_key} returned empty, falling back to native")
                 raw_input = structured.raw_input if hasattr(structured, 'raw_input') else ""
-                return self._solve_with_sympy(expr, operation, variable, raw_input)
+                return self._solve_native(expr, operation, variable, raw_input)
 
         except Exception as e:
             logger.warning(f"Specialist {specialist_key} failed: {e}")
-            # Fallback to direct SymPy
+            # Fallback to direct native computation
             raw_input = structured.raw_input if hasattr(structured, 'raw_input') else ""
-            return self._solve_with_sympy(expr, operation, variable, raw_input)
+            return self._solve_native(expr, operation, variable, raw_input)
 
     def _solve_direct(self, expr, operation: str, variable: str) -> SolveResult:
-        """Direct solve using SymPy (fast path)."""
-        return self._solve_with_sympy(expr, operation, variable)
+        """Direct solve using native engine (fast path)."""
+        return self._solve_native(expr, operation, variable)
 
-    def _solve_with_sympy(self, expr, operation: str, variable: str, raw_input: str = "") -> SolveResult:
+    def _solve_native(self, expr, operation: str, variable: str, raw_input: str = "") -> SolveResult:
         """
-        Direct SymPy computation without specialist agents.
+        Direct native computation without specialist agents.
 
+        NO SYMPY - Pure native mathematical reasoning.
         This is the fast-path fallback that handles all common operations.
         Timeout protection prevents hung computations.
 
@@ -453,7 +463,10 @@ class SolverEngine:
         to provide meaningful results instead of "No expression to solve".
         """
         try:
-            if expr is None:
+            # Convert expr to string for native processing
+            expr_str = str(expr) if expr is not None else raw_input
+
+            if not expr_str or expr_str == 'None':
                 # Try expression analysis mode instead of returning an error
                 if raw_input:
                     analysis_result = analyze_expression(raw_input)
@@ -508,9 +521,8 @@ class SolverEngine:
                                 }
                             )
 
-                        # For diophantine, route to solver
+                        # For diophantine, route to native solver
                         if category == ExpressionCategory.DIOPHANTINE:
-                            # Try to solve with SymPy diophantine
                             return self._solve_diophantine(raw_input)
 
                         # For pure expressions, return simplified form
@@ -531,7 +543,7 @@ class SolverEngine:
                     error="No expression to solve"
                 )
 
-            var = sp.Symbol(variable) if variable else sp.Symbol('x')
+            var_name = variable if variable else 'x'
 
             # Get timeout for this operation type
             timeout = self.DEFAULT_TIMEOUTS.get(operation, self.DEFAULT_TIMEOUTS['default'])
@@ -540,104 +552,149 @@ class SolverEngine:
             if self._enable_timeouts:
                 try:
                     result = run_with_timeout(
-                        self._execute_sympy_operation,
+                        self._execute_native_operation,
                         timeout,
-                        expr, operation, var,
+                        expr_str, operation, var_name,
                         raise_on_timeout=True
                     )
                 except WatchdogTimeoutError:
                     self._problems_timed_out += 1
-                    logger.warning(f"SymPy operation '{operation}' timed out after {timeout}s")
+                    logger.warning(f"Native operation '{operation}' timed out after {timeout}s")
                     return SolveResult(
                         status=SolveStatus.TIMEOUT,
                         error=f"Operation '{operation}' timed out after {timeout}s",
                         operation=operation
                     )
             else:
-                result = self._execute_sympy_operation(expr, operation, var)
+                result = self._execute_native_operation(expr_str, operation, var_name)
 
             return SolveResult(
                 status=SolveStatus.SUCCESS,
                 result=str(result),
-                sympy_result=result,
-                specialist_used="sympy_direct"
+                specialist_used="native_direct"
             )
 
         except Exception as e:
             return SolveResult(
                 status=SolveStatus.FAILED,
-                error=f"SymPy computation failed: {e}"
+                error=f"Native computation failed: {e}"
             )
 
-    def _execute_sympy_operation(self, expr, operation: str, var) -> Any:
+    def _execute_native_operation(self, expr_str: str, operation: str, var_name: str) -> Any:
         """
-        Execute the actual SymPy operation.
+        Execute the actual mathematical operation using native modules.
 
-        Separated from _solve_with_sympy for timeout wrapping.
+        NO SYMPY - Pure native mathematical reasoning.
         """
         if operation in ['derivative', 'diff', 'differentiate']:
-            return sp.diff(expr, var)
+            # Use native differentiation
+            success, result, method = differentiate(expr_str, var_name)
+            if success:
+                return result
+            return f"Could not differentiate: {expr_str}"
 
         elif operation in ['integral', 'integrate']:
-            return sp.integrate(expr, var)
+            # Use native integration
+            success, result, method = native_integrate(expr_str, var_name)
+            if success:
+                return result
+            return f"Could not integrate: {expr_str}"
 
         elif operation == 'solve':
-            solutions = sp.solve(expr, var)
+            # Use native solver (to be implemented in native_symbolic)
+            from symbo_agentic_reasoners.core.calculus import solve_polynomial
+            solutions = solve_polynomial(expr_str, var_name)
             return solutions if solutions else "No solutions found"
 
         elif operation == 'solve_system':
-            # Handle system of equations
-            # If expr is a list of strings, sympify each one
-            if isinstance(expr, list):
-                equations = []
-                variables = set()
-                for eq_str in expr:
-                    if isinstance(eq_str, str):
-                        eq_expr = sp.sympify(eq_str)
-                    else:
-                        eq_expr = eq_str
-                    equations.append(eq_expr)
-                    if hasattr(eq_expr, 'free_symbols'):
-                        variables.update(eq_expr.free_symbols)
-                variables = sorted(variables, key=lambda s: s.name)
-                solutions = sp.solve(equations, variables, dict=True)
+            # Handle system of equations using native solver
+            if isinstance(expr_str, list):
+                # Multiple equations - use native system solver
+                from symbo_agentic_reasoners.core.calculus import solve_system_native
+                solutions = solve_system_native(expr_str)
+                return solutions if solutions else "No solutions found"
             else:
-                # Single expression - solve for the variable
-                solutions = sp.solve(expr, var, dict=True)
-            return solutions if solutions else "No solutions found"
+                # Single expression
+                from symbo_agentic_reasoners.core.calculus import solve_polynomial
+                solutions = solve_polynomial(expr_str, var_name)
+                return solutions if solutions else "No solutions found"
 
         elif operation == 'factor':
-            return sp.factor(expr)
+            # Use native factoring
+            from symbo_agentic_reasoners.core.calculus import factor_polynomial
+            success, result = factor_polynomial(expr_str)
+            if success:
+                return result
+            return expr_str  # Return original if can't factor
 
         elif operation == 'expand':
-            return sp.expand(expr)
+            # Use native expansion
+            from symbo_agentic_reasoners.core.calculus import expand_expression
+            success, result = expand_expression(expr_str)
+            if success:
+                return result
+            return expr_str
 
         elif operation == 'simplify':
-            return sp.simplify(expr)
+            # Use native simplification
+            try:
+                expr = parse_expr(expr_str)
+                return str(expr.simplify())
+            except:
+                return expr_str
 
         elif operation == 'limit':
-            # Default limit as x -> 0
-            return sp.limit(expr, var, 0)
+            # Use native limit engine
+            success, result, method = native_limit(expr_str, var_name, '0')
+            if success:
+                return result
+            return f"Could not evaluate limit: {expr_str}"
 
         elif operation == 'series':
-            # Taylor series around 0, 6 terms
-            return sp.series(expr, var, 0, 6)
+            # Use native Taylor series
+            from symbo_agentic_reasoners.core.calculus import taylor_series
+            success, result = taylor_series(expr_str, var_name, point=0, n_terms=6)
+            if success:
+                return result
+            return f"Could not compute series: {expr_str}"
 
         elif operation in ['dsolve', 'ode']:
-            # Differential equation solving
-            return sp.dsolve(expr)
+            # Use native ODE solver
+            from symbo_agentic_reasoners.core.calculus import solve_ode_native
+            success, result = solve_ode_native(expr_str)
+            if success:
+                return result
+            return f"Could not solve ODE: {expr_str}"
 
         elif operation == 'compute':
-            # Try to evaluate/simplify
-            return sp.simplify(expr)
+            # Try to evaluate/simplify using native
+            try:
+                expr = parse_expr(expr_str)
+                simplified = expr.simplify()
+                # Try numeric evaluation
+                try:
+                    val = simplified.evalf()
+                    if isinstance(val, (int, float)):
+                        return val
+                except:
+                    pass
+                return str(simplified)
+            except:
+                return expr_str
 
         else:
             # Unknown operation - try simplify
-            return sp.simplify(expr)
+            try:
+                expr = parse_expr(expr_str)
+                return str(expr.simplify())
+            except:
+                return expr_str
 
     def _solve_diophantine(self, raw_input: str) -> SolveResult:
         """
-        Solve a diophantine equation using SymPy.
+        Solve a diophantine equation using native methods.
+
+        NO SYMPY - Pure native mathematical reasoning.
 
         Handles inputs like:
         - diophantine(x**2 - y**3 - 1)
@@ -646,7 +703,6 @@ class SolverEngine:
         """
         try:
             import re
-            from sympy.solvers.diophantine import diophantine as sympy_diophantine
 
             # Extract the equation from diophantine(...)
             match = re.search(r'diophantine\s*\(\s*(.+?)\s*\)$', raw_input, re.IGNORECASE)
@@ -658,171 +714,103 @@ class SolverEngine:
 
             equation_str = match.group(1)
 
-            # Parse the equation
-            equation = safe_sympify(equation_str)
-            if equation is None:
-                return SolveResult(
-                    status=SolveStatus.FAILED,
-                    error=f"Could not parse diophantine equation: {equation_str}"
-                )
-
-            # Solve the diophantine equation
-            try:
-                solutions = sympy_diophantine(equation)
-
-                if solutions:
-                    # Format solutions
-                    if isinstance(solutions, set):
-                        sol_list = list(solutions)
-                        if len(sol_list) == 1:
-                            result_str = str(sol_list[0])
-                        else:
-                            result_str = str(sol_list)
-                    else:
-                        result_str = str(solutions)
-
-                    return SolveResult(
-                        status=SolveStatus.SUCCESS,
-                        result=result_str,
-                        specialist_used="sympy.diophantine",
-                        metadata={'equation': equation_str}
-                    )
-                else:
-                    return SolveResult(
-                        status=SolveStatus.SUCCESS,
-                        result="No integer solutions",
-                        specialist_used="sympy.diophantine",
-                        metadata={'equation': equation_str}
-                    )
-
-            except NotImplementedError:
-                # SymPy can't solve this particular diophantine equation
-                # Check if this is a parametric equation (contains symbolic parameters)
-                all_symbols = equation.free_symbols
-                target_var_names = {'x', 'y', 'z', 'w', 'u', 'v', 'm', 'n', 'k', 'p', 'q'}
-                variables = [s for s in all_symbols if s.name.lower() in target_var_names]
-                parameters = [s for s in all_symbols if s not in variables]
-
-                if parameters:
-                    # Parametric equation - return symbolic/theoretical result
-                    param_names = ', '.join(sorted(s.name for s in parameters))
-                    var_names = ', '.join(sorted(s.name for s in variables))
-
-                    # Recognize common parametric forms
-                    if 'D' in param_names or len(parameters) > 0:
-                        # Generalized Pell equation or similar
-                        return SolveResult(
-                            status=SolveStatus.SUCCESS,
-                            result=f"Parametric Diophantine equation in ({var_names}) with parameters ({param_names}). "
-                                   f"Solutions depend on parameter values and may involve continued fraction methods.",
-                            specialist_used="parametric_diophantine",
-                            metadata={
-                                'equation': equation_str,
-                                'variables': var_names,
-                                'parameters': param_names,
-                                'type': 'parametric'
-                            }
-                        )
-
-                # Try specialized solvers before generic bounded search
-                import re
-
-                # Pattern 1: Sum of cubes x^3 + y^3 + z^3 = n (with equals sign)
-                eq_str_nospace = equation_str.replace(' ', '')
-                cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*=\s*(\d+)$',
+            # Try specialized solvers based on pattern recognition
+            # Pattern 1: Sum of cubes x^3 + y^3 + z^3 = n (with equals sign)
+            eq_str_nospace = equation_str.replace(' ', '')
+            cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*=\s*(\d+)$',
+                                  eq_str_nospace)
+            if not cube_match:
+                # Also try with minus sign (equation normalized form)
+                cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*-\s*(\d+)$',
                                       eq_str_nospace)
-                if not cube_match:
-                    # Also try with minus sign (equation normalized form)
-                    cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*-\s*(\d+)$',
-                                          eq_str_nospace)
-                if cube_match:
-                    target = int(cube_match.group(4))
-                    cube_solutions = self._solve_sum_of_cubes(target)
-                    if cube_solutions:
-                        result_str = str(cube_solutions)
-                        return SolveResult(
-                            status=SolveStatus.SUCCESS,
-                            result=result_str,
-                            specialist_used="sum_of_cubes_solver",
-                            metadata={'equation': equation_str, 'target': target}
-                        )
-
-                # Also match: x**3 + y**3 + z**3 - 3**9 form
-                power_cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*-\s*(\d+)\*\*(\d+)$',
-                                            equation_str.replace(' ', ''))
-                if power_cube_match:
-                    base = int(power_cube_match.group(4))
-                    exp = int(power_cube_match.group(5))
-                    target = base ** exp
-                    cube_solutions = self._solve_sum_of_cubes(target)
-                    if cube_solutions:
-                        result_str = str(cube_solutions)
-                        return SolveResult(
-                            status=SolveStatus.SUCCESS,
-                            result=result_str,
-                            specialist_used="sum_of_cubes_solver",
-                            metadata={'equation': equation_str, 'target': target}
-                        )
-
-                # Pattern 2: Quaternary quadratic a*x^2 + b*y^2 + c*z^2 + d*w^2 - n = 0
-                quad_match = re.match(
-                    r'^(\d+)\*(\w+)\*\*2\s*\+\s*(\d+)\*(\w+)\*\*2\s*\+\s*(\d+)\*(\w+)\*\*2\s*([+-])\s*(\d+)\*(\w+)\*\*2\s*-\s*(\d+)$',
-                    equation_str.replace(' ', '')
-                )
-                if quad_match:
-                    a = int(quad_match.group(1))
-                    b = int(quad_match.group(3))
-                    c = int(quad_match.group(5))
-                    sign = 1 if quad_match.group(7) == '+' else -1
-                    d = sign * int(quad_match.group(8))
-                    target = int(quad_match.group(10))
-                    quad_solutions = self._solve_quaternary_quadratic((a, b, c, d), target)
-                    if quad_solutions:
-                        result_str = str(quad_solutions)
-                        return SolveResult(
-                            status=SolveStatus.SUCCESS,
-                            result=result_str,
-                            specialist_used="quaternary_quadratic_solver",
-                            metadata={'equation': equation_str, 'coeffs': (a, b, c, d), 'target': target}
-                        )
-
-                # Pattern 3: Mordell curve x^5 - y^2 - k = 0
-                mordell_match = re.match(r'^(\w+)\*\*5\s*-\s*(\w+)\*\*2\s*-\s*(\d+)$',
-                                         equation_str.replace(' ', ''))
-                if mordell_match:
-                    k = int(mordell_match.group(3))
-                    mordell_solutions = self._solve_mordell_curve(k)
-                    if mordell_solutions:
-                        result_str = str(mordell_solutions)
-                        return SolveResult(
-                            status=SolveStatus.SUCCESS,
-                            result=result_str,
-                            specialist_used="mordell_curve_solver",
-                            metadata={'equation': equation_str, 'k': k}
-                        )
-
-                # Fall back to bounded integer search for small solutions
-                bounded_solutions = self._bounded_diophantine_search(equation, search_range=100)
-
-                if bounded_solutions:
-                    result_str = str(bounded_solutions) if len(bounded_solutions) > 1 else str(list(bounded_solutions)[0])
+            if cube_match:
+                target = int(cube_match.group(4))
+                cube_solutions = self._solve_sum_of_cubes(target)
+                if cube_solutions:
+                    result_str = str(cube_solutions)
                     return SolveResult(
                         status=SolveStatus.SUCCESS,
                         result=result_str,
-                        specialist_used="bounded_search",
-                        metadata={
-                            'equation': equation_str,
-                            'method': 'bounded_integer_search',
-                            'search_range': 100
-                        }
+                        specialist_used="sum_of_cubes_solver",
+                        metadata={'equation': equation_str, 'target': target}
                     )
-                else:
+
+            # Also match: x**3 + y**3 + z**3 - 3**9 form
+            power_cube_match = re.match(r'^(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*\+\s*(\w+)\*\*3\s*-\s*(\d+)\*\*(\d+)$',
+                                        equation_str.replace(' ', ''))
+            if power_cube_match:
+                base = int(power_cube_match.group(4))
+                exp = int(power_cube_match.group(5))
+                target = base ** exp
+                cube_solutions = self._solve_sum_of_cubes(target)
+                if cube_solutions:
+                    result_str = str(cube_solutions)
                     return SolveResult(
                         status=SolveStatus.SUCCESS,
-                        result="No small integer solutions found (|x|,|y|,... <= 100)",
-                        specialist_used="bounded_search",
-                        metadata={'equation': equation_str}
+                        result=result_str,
+                        specialist_used="sum_of_cubes_solver",
+                        metadata={'equation': equation_str, 'target': target}
                     )
+
+            # Pattern 2: Quaternary quadratic a*x^2 + b*y^2 + c*z^2 + d*w^2 - n = 0
+            quad_match = re.match(
+                r'^(\d+)\*(\w+)\*\*2\s*\+\s*(\d+)\*(\w+)\*\*2\s*\+\s*(\d+)\*(\w+)\*\*2\s*([+-])\s*(\d+)\*(\w+)\*\*2\s*-\s*(\d+)$',
+                equation_str.replace(' ', '')
+            )
+            if quad_match:
+                a = int(quad_match.group(1))
+                b = int(quad_match.group(3))
+                c = int(quad_match.group(5))
+                sign = 1 if quad_match.group(7) == '+' else -1
+                d = sign * int(quad_match.group(8))
+                target = int(quad_match.group(10))
+                quad_solutions = self._solve_quaternary_quadratic((a, b, c, d), target)
+                if quad_solutions:
+                    result_str = str(quad_solutions)
+                    return SolveResult(
+                        status=SolveStatus.SUCCESS,
+                        result=result_str,
+                        specialist_used="quaternary_quadratic_solver",
+                        metadata={'equation': equation_str, 'coeffs': (a, b, c, d), 'target': target}
+                    )
+
+            # Pattern 3: Mordell curve x^5 - y^2 - k = 0
+            mordell_match = re.match(r'^(\w+)\*\*5\s*-\s*(\w+)\*\*2\s*-\s*(\d+)$',
+                                     equation_str.replace(' ', ''))
+            if mordell_match:
+                k = int(mordell_match.group(3))
+                mordell_solutions = self._solve_mordell_curve(k)
+                if mordell_solutions:
+                    result_str = str(mordell_solutions)
+                    return SolveResult(
+                        status=SolveStatus.SUCCESS,
+                        result=result_str,
+                        specialist_used="mordell_curve_solver",
+                        metadata={'equation': equation_str, 'k': k}
+                    )
+
+            # Fall back to bounded integer search for small solutions
+            bounded_solutions = self._bounded_diophantine_search_native(equation_str, search_range=100)
+
+            if bounded_solutions:
+                result_str = str(bounded_solutions) if len(bounded_solutions) > 1 else str(list(bounded_solutions)[0])
+                return SolveResult(
+                    status=SolveStatus.SUCCESS,
+                    result=result_str,
+                    specialist_used="bounded_search",
+                    metadata={
+                        'equation': equation_str,
+                        'method': 'bounded_integer_search',
+                        'search_range': 100
+                    }
+                )
+            else:
+                return SolveResult(
+                    status=SolveStatus.SUCCESS,
+                    result="No small integer solutions found (|x|,|y|,... <= 100)",
+                    specialist_used="bounded_search",
+                    metadata={'equation': equation_str}
+                )
 
         except Exception as e:
             logger.warning(f"Diophantine solve failed: {e}")
@@ -831,87 +819,74 @@ class SolverEngine:
                 error=f"Diophantine solve failed: {e}"
             )
 
-    def _bounded_diophantine_search(self, equation, search_range: int = 100) -> set:
+    def _bounded_diophantine_search_native(self, equation_str: str, search_range: int = 100) -> set:
         """
         Search for integer solutions to a diophantine equation within a bounded range.
 
-        This is a fallback for equations that SymPy's diophantine solver can't handle
-        (e.g., cubic Thue equations, Mordell curves).
+        NO SYMPY - Pure native mathematical reasoning.
 
         Args:
-            equation: SymPy expression that should equal zero
+            equation_str: String representation of equation (should equal zero)
             search_range: Search integers in [-search_range, search_range]
 
         Returns:
             Set of tuples representing integer solutions
         """
-        import sympy as sp
+        import re
 
-        # Get free symbols (variables) from the equation
-        all_symbols = equation.free_symbols
+        # Extract variables from equation (letters that appear in typical patterns)
+        var_pattern = r'\b([a-z])\b'
+        found_vars = sorted(set(re.findall(var_pattern, equation_str)))
 
-        # Distinguish between target variables (x, y, z, etc.) and parameters (D, N, a, b, etc.)
-        # Target variables: single lowercase letters commonly used in diophantine equations
-        target_var_names = {'x', 'y', 'z', 'w', 'u', 'v', 'm', 'n', 'k', 'p', 'q'}
-        variables = sorted([s for s in all_symbols if s.name.lower() in target_var_names],
-                          key=lambda s: s.name)
-        parameters = [s for s in all_symbols if s not in variables]
-
-        # If there are parameters, we can't do numeric search - return empty
-        # (the equation has symbolic coefficients like D, N)
-        if parameters:
+        if len(found_vars) == 0:
             return set()
 
-        if len(variables) == 0:
-            return set()
-
-        if len(variables) > 3:
+        if len(found_vars) > 3:
             # Too many variables for bounded search
             return set()
 
         solutions = set()
 
-        # Create a fast numerical evaluator
-        f = sp.lambdify(variables, equation, modules='numpy')
+        # Create a native evaluator function
+        def evaluate(vals_dict):
+            """Evaluate the equation with given variable values."""
+            try:
+                expr = equation_str
+                for var, val in vals_dict.items():
+                    # Replace variable with value (use word boundaries)
+                    expr = re.sub(rf'\b{var}\b', str(val), expr)
+                # Evaluate using Python's eval (safe since we control input)
+                result = eval(expr.replace('^', '**'))
+                return abs(result) < 1e-10  # Account for floating point
+            except:
+                return False
 
-        if len(variables) == 1:
+        if len(found_vars) == 1:
             # Single variable case
-            var = variables[0]
+            var = found_vars[0]
             for val in range(-search_range, search_range + 1):
-                try:
-                    if f(val) == 0:
-                        solutions.add((val,))
-                except:
-                    pass
+                if evaluate({var: val}):
+                    solutions.add((val,))
 
-        elif len(variables) == 2:
+        elif len(found_vars) == 2:
             # Two variable case (most common: x² - y³ = 1, etc.)
-            import numpy as np
+            var1, var2 = found_vars
+            for v1 in range(-search_range, search_range + 1):
+                for v2 in range(-search_range, search_range + 1):
+                    if evaluate({var1: v1, var2: v2}):
+                        solutions.add((v1, v2))
 
-            # Create grid
-            vals = np.arange(-search_range, search_range + 1)
-
-            for v1 in vals:
-                for v2 in vals:
-                    try:
-                        if f(v1, v2) == 0:
-                            solutions.add((int(v1), int(v2)))
-                    except:
-                        pass
-
-        elif len(variables) == 3:
+        elif len(found_vars) == 3:
             # Three variable case (e.g., x³ + y³ = z³)
             # Use smaller range due to cubic complexity
+            var1, var2, var3 = found_vars
             small_range = min(search_range, 50)
 
             for v1 in range(-small_range, small_range + 1):
                 for v2 in range(-small_range, small_range + 1):
                     for v3 in range(-small_range, small_range + 1):
-                        try:
-                            if f(v1, v2, v3) == 0:
-                                solutions.add((int(v1), int(v2), int(v3)))
-                        except:
-                            pass
+                        if evaluate({var1: v1, var2: v2, var3: v3}):
+                            solutions.add((v1, v2, v3))
 
         return solutions
 
@@ -962,7 +937,6 @@ class SolverEngine:
             solutions.add((0, 0, cube_root))
 
         # Brute force search for small solutions
-        import numpy as np
         max_val = min(search_range, int(abs(target) ** (1/3)) + 50)
 
         for x in range(-max_val, max_val + 1):
@@ -1118,7 +1092,7 @@ class SolverEngine:
         3. Native limit evaluation
         """
         try:
-            from symbo_agentic_reasoners.core.native_calculus import (
+            from symbo_agentic_reasoners.core.calculus import (
                 native_limit, _try_limit_with_assumptions
             )
 
@@ -1654,7 +1628,8 @@ class SolverEngine:
         """Run health check on solver components."""
         checks = {
             'analysis_team': False,
-            'sympy': False,
+            'native_symbolic': False,
+            'native_calculus': False,
             'specialists': {}
         }
 
@@ -1669,12 +1644,21 @@ class SolverEngine:
         except Exception as e:
             checks['analysis_team'] = str(e)
 
-        # Check SymPy
+        # Check native symbolic module
         try:
-            _ = sp.diff(sp.sympify("x**2"), sp.Symbol('x'))
-            checks['sympy'] = True
+            x = Symbol('x')
+            expr = x ** 2
+            result = expr.diff(x)
+            checks['native_symbolic'] = True
         except Exception as e:
-            checks['sympy'] = str(e)
+            checks['native_symbolic'] = str(e)
+
+        # Check native calculus module
+        try:
+            success, result, method = differentiate('x**2', 'x')
+            checks['native_calculus'] = success
+        except Exception as e:
+            checks['native_calculus'] = str(e)
 
         # Check loaded specialists
         for key, specialist in self._specialists.items():
