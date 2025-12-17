@@ -197,6 +197,104 @@ class IsolatedExecutor:
             self._worker_file = path
         return self._worker_file
 
+    def _analyze_expression_complexity(self, expr_str: str) -> Dict[str, Any]:
+        """
+        Analyze expression for computational complexity before execution.
+
+        This prevents arithmetic DoS attacks like 2**1000000, factorial(10000).
+
+        Returns:
+            Dict with keys:
+            - safe: bool (whether expression is safe to execute)
+            - reason: str (explanation if unsafe)
+            - estimated_ops: int (estimated number of operations)
+        """
+        import ast
+        import re
+
+        # Dangerous patterns that bypass AST analysis
+        DANGEROUS_PATTERNS = [
+            (r'\*\*\s*\d{4,}', 'Exponent too large (>=1000)'),
+            (r'factorial\s*\(\s*\d{4,}', 'Factorial argument too large (>=1000)'),
+            (r'\d{100,}', 'Number too large (>=100 digits)'),
+            (r'factorial\s*\(\s*factorial', 'Nested factorials'),
+            (r'\*\*\s*\([^)]*\*\*', 'Nested exponentiation'),  # Matches 2**(3**4) but not 2**8 + 3**5
+        ]
+
+        for pattern, reason in DANGEROUS_PATTERNS:
+            if re.search(pattern, expr_str):
+                return {'safe': False, 'reason': reason, 'estimated_ops': float('inf')}
+
+        # Parse AST and analyze
+        try:
+            tree = ast.parse(expr_str, mode='eval')
+        except SyntaxError as e:
+            return {'safe': False, 'reason': f'Syntax error: {e}', 'estimated_ops': 0}
+
+        # Analyze complexity
+        class ComplexityAnalyzer(ast.NodeVisitor):
+            def __init__(self):
+                self.ops = 0
+                self.exponents = []
+                self.factorials = []
+
+            def visit_BinOp(self, node):
+                self.ops += 1
+                if isinstance(node.op, ast.Pow):
+                    # Check if exponent is a large constant
+                    if isinstance(node.right, ast.Constant):
+                        exp_val = node.right.value
+                        if isinstance(exp_val, (int, float)) and exp_val > 1000:
+                            self.exponents.append(exp_val)
+                self.generic_visit(node)
+
+            def visit_Call(self, node):
+                self.ops += 1
+                if isinstance(node.func, ast.Name):
+                    if node.func.id == 'factorial':
+                        if node.args and isinstance(node.args[0], ast.Constant):
+                            arg_val = node.args[0].value
+                            if isinstance(arg_val, int) and arg_val > 1000:
+                                self.factorials.append(arg_val)
+                self.generic_visit(node)
+
+        analyzer = ComplexityAnalyzer()
+        analyzer.visit(tree)
+
+        # Check limits
+        MAX_OPS = 10000
+        MAX_EXPONENT = 1000
+        MAX_FACTORIAL_ARG = 1000
+
+        if analyzer.ops > MAX_OPS:
+            return {
+                'safe': False,
+                'reason': f'Too many operations: {analyzer.ops}',
+                'estimated_ops': analyzer.ops
+            }
+
+        if analyzer.exponents:
+            max_exp = max(analyzer.exponents)
+            return {
+                'safe': False,
+                'reason': f'Exponent too large: {max_exp}',
+                'estimated_ops': float('inf')
+            }
+
+        if analyzer.factorials:
+            max_fac = max(analyzer.factorials)
+            return {
+                'safe': False,
+                'reason': f'Factorial argument too large: {max_fac}',
+                'estimated_ops': float('inf')
+            }
+
+        return {
+            'safe': True,
+            'reason': 'Expression within safe limits',
+            'estimated_ops': analyzer.ops
+        }
+
     def execute(self, expression: str) -> IsolationResult:
         """
         Execute expression in isolated process.
@@ -216,6 +314,18 @@ class IsolatedExecutor:
                 success=False,
                 result=None,
                 error="Expression too long (max 10000 chars)",
+                execution_time=0.0
+            )
+
+        # SECURITY: Analyze computational complexity before execution
+        # This prevents arithmetic DoS attacks like 2**1000000, factorial(10000)
+        complexity = self._analyze_expression_complexity(expression)
+        if not complexity['safe']:
+            logger.warning(f"Expression rejected (pre-execution): {complexity['reason']}")
+            return IsolationResult(
+                success=False,
+                result=None,
+                error=f"Expression rejected: {complexity['reason']}",
                 execution_time=0.0
             )
 

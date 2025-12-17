@@ -121,6 +121,61 @@ def _compile_regex_safe(pattern: str) -> Optional[Pattern]:
         return None
 
 
+def _canonicalize_resource_path(resource: str) -> str:
+    """
+    Canonicalize resource path to prevent bypass attacks.
+
+    Protections:
+    - Resolves relative paths (../, ./)
+    - Normalizes separators (\\ vs /)
+    - Converts to lowercase for case-insensitive matching
+    - Removes duplicate slashes
+    - Decodes URL encoding
+
+    Args:
+        resource: Resource path to canonicalize
+
+    Returns:
+        Canonical resource path (lowercase, normalized)
+    """
+    import urllib.parse
+    from pathlib import Path
+
+    # Step 1: URL decode
+    decoded = urllib.parse.unquote(resource)
+
+    # Step 2: Normalize path separators
+    normalized = decoded.replace('\\', '/')
+
+    # Step 3: Remove duplicate slashes
+    while '//' in normalized:
+        normalized = normalized.replace('//', '/')
+
+    # Step 4: Resolve relative paths
+    try:
+        # Manual path resolution (don't use Path.parts on Windows as it includes drive)
+        parts = []
+        for part in normalized.split('/'):
+            if part == '..':
+                if parts:
+                    parts.pop()
+            elif part and part != '.':
+                parts.append(part)
+        normalized = '/'.join(parts)
+    except (ValueError, OSError):
+        # If path manipulation fails, use original normalized version
+        pass
+
+    # Step 5: Convert to lowercase for case-insensitive comparison
+    canonical = normalized.lower()
+
+    # Step 6: Ensure leading slash
+    if canonical and not canonical.startswith('/'):
+        canonical = '/' + canonical
+
+    return canonical
+
+
 def _safe_regex_match(compiled_pattern: Optional[Pattern], text: str, timeout: float = REGEX_TIMEOUT_SECONDS) -> Optional[re.Match]:
     """
     Perform regex match with timeout protection.
@@ -255,18 +310,32 @@ class AccessPolicy:
 
     def match_agent(self, agent_id: str) -> bool:
         """Safely match agent ID against pattern."""
+        # SECURITY: Enforce length limit on patterns used in fallback
+        MAX_LITERAL_PATTERN_LENGTH = 100
+
         if self._compiled_agent_pattern is not None:
             result = _safe_regex_match(self._compiled_agent_pattern, agent_id)
             return result is not None
         # Fallback to literal match if pattern compilation failed
+        # But enforce strict length limit to prevent bypass attacks
+        if len(self.agent_pattern) > MAX_LITERAL_PATTERN_LENGTH:
+            logger.error(f"Policy {self.policy_id}: agent_pattern too long for literal fallback ({len(self.agent_pattern)} > {MAX_LITERAL_PATTERN_LENGTH})")
+            return False
         return agent_id == self.agent_pattern
 
     def match_resource(self, resource: str) -> bool:
         """Safely match resource against pattern."""
+        # SECURITY: Enforce length limit on patterns used in fallback
+        MAX_LITERAL_PATTERN_LENGTH = 100
+
         if self._compiled_resource_pattern is not None:
             result = _safe_regex_match(self._compiled_resource_pattern, resource)
             return result is not None
         # Fallback to literal match if pattern compilation failed
+        # But enforce strict length limit to prevent bypass attacks
+        if len(self.resource_pattern) > MAX_LITERAL_PATTERN_LENGTH:
+            logger.error(f"Policy {self.policy_id}: resource_pattern too long for literal fallback ({len(self.resource_pattern)} > {MAX_LITERAL_PATTERN_LENGTH})")
+            return False
         return resource == self.resource_pattern
 
     def to_dict(self) -> Dict[str, Any]:
@@ -464,10 +533,13 @@ class SecurityMonitor(BDIAgent):
                     f"Unknown agent {agent_id} attempted {action} on {resource}",
                     "Verify agent identity and register if legitimate"
                 )
+                # SECURITY: Canonicalize resource path before checking
+                canonical_resource = _canonicalize_resource_path(resource)
+
                 # DENY access to restricted resources for unknown agents
-                restricted_prefixes = ('admin/', 'system/', 'ams/', 'config/',
-                                      'infrastructure/', 'supervisor/')
-                if resource.startswith(restricted_prefixes):
+                restricted_prefixes = ('/admin/', '/system/', '/ams/', '/config/',
+                                      '/infrastructure/', '/supervisor/')
+                if canonical_resource.startswith(restricted_prefixes):
                     decision = AccessDecision.DENY
                     self._log_access(agent_id, resource, action, decision)
                     self.access_denials += 1
@@ -491,18 +563,21 @@ class SecurityMonitor(BDIAgent):
                 self.access_denials += 1
                 return decision
             
+            # SECURITY: Canonicalize resource path to prevent bypass attacks
+            canonical_resource = _canonicalize_resource_path(resource)
+
             # Check for restricted resources first (deny non-privileged access)
             # Admin/system/infrastructure resources require privileged agent
-            if resource.startswith(('admin/', 'system/', 'ams/', 'config/', 'infrastructure/')):
-                if not agent_id.startswith(('admin', 'system', 'ams', 'infrastructure')):
+            if canonical_resource.startswith(('/admin/', '/system/', '/ams/', '/config/', '/infrastructure/')):
+                if not agent_id.lower().startswith(('admin', 'system', 'ams', 'infrastructure')):
                     decision = AccessDecision.DENY
                     self._log_access(agent_id, resource, action, decision)
                     self.access_denials += 1
                     return decision
 
             # Supervisor resources require supervisor prefix
-            if resource.startswith('supervisor/'):
-                if not any(agent_id.startswith(p) for p in ('admin', 'system', 'supervisor', 'orchestrator')):
+            if canonical_resource.startswith('/supervisor/'):
+                if not any(agent_id.lower().startswith(p) for p in ('admin', 'system', 'supervisor', 'orchestrator')):
                     decision = AccessDecision.DENY
                     self._log_access(agent_id, resource, action, decision)
                     self.access_denials += 1
