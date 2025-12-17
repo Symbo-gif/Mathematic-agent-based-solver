@@ -159,27 +159,60 @@ class DirectoryFacilitator:
     Reference: Phase_0_Build_Order_Breakdown.md: Lines 381-413
     """
 
-    def __init__(self):
-        """Initialize Directory Facilitator"""
+    def __init__(self, enable_auth: bool = True):
+        """
+        Initialize Directory Facilitator
+
+        Args:
+            enable_auth: Enable agent authentication (Phase 5 - Issue #4)
+        """
         self._services: Dict[str, List[ServiceRegistration]] = {}  # service_type -> registrations
         self._agent_services: Dict[str, List[str]] = {}  # agent_id -> service_types
         self._lock = threading.RLock()
 
-    def register(self, registration: ServiceRegistration) -> bool:
+        # Phase 5 - Issue #4: Agent Authentication System
+        # Import here to avoid circular dependency
+        from symbo_agentic_reasoners.infrastructure.security.agent_auth import AgentAuthenticator
+        self.authenticator = AgentAuthenticator(enable_auth=enable_auth)
+        logger.info("DF: Agent authentication system initialized")
+
+    def register(self, registration: ServiceRegistration,
+                auth_token: Optional[str] = None,
+                auth_timestamp: Optional[int] = None) -> bool:
         """
         Register agent service capability
 
+        Phase 5 - Issue #4: Now includes agent authentication verification.
+
         Args:
             registration: ServiceRegistration describing the service
+            auth_token: Optional HMAC authentication token (Issue #4)
+            auth_timestamp: Optional token timestamp (Issue #4)
 
         Returns:
             bool: True if registration successful
+
+        Security:
+            If auth_token and auth_timestamp provided, verifies agent identity
+            before service registration. Prevents unauthorized service spoofing.
 
         Reference: Phase_0_Build_Order_Breakdown.md: Lines 387-399
         """
         with self._lock:
             service_type = registration.service_type
             agent_id = registration.agent_id
+
+            # Phase 5 - Issue #4: Verify agent credentials if provided
+            if auth_token is not None and auth_timestamp is not None:
+                if not self.authenticator.verify_credential(
+                    agent_id, auth_token, auth_timestamp
+                ):
+                    logger.warning(
+                        f"Service registration DENIED (authentication failed): "
+                        f"{service_type} by {agent_id}"
+                    )
+                    return False
+                logger.debug(f"Service registration authentication verified: {agent_id}")
 
             # Add to service index
             if service_type not in self._services:
@@ -371,6 +404,39 @@ class DirectoryFacilitator:
                 return []
             return list(set(r.agent_id for r in self._services[service_type]))
 
+    # =========================================================================
+    # PHASE 5 - ISSUE #4: AGENT AUTHENTICATION METHODS
+    # =========================================================================
+
+    def issue_agent_credential(self, agent_id: str) -> 'AgentCredential':
+        """
+        Issue authentication credential for agent.
+
+        Phase 5 - Issue #4: Helper method for agents to obtain credentials
+        before service registration.
+
+        Args:
+            agent_id: Agent identifier
+
+        Returns:
+            AgentCredential with HMAC token
+        """
+        return self.authenticator.issue_credential(agent_id)
+
+    def revoke_agent_credential(self, agent_id: str) -> bool:
+        """
+        Revoke agent authentication credential.
+
+        Args:
+            agent_id: Agent identifier
+
+        Returns:
+            True if credential was revoked
+        """
+        return self.authenticator.revoke_credential(agent_id)
+
+    # =========================================================================
+
     def get_statistics(self) -> Dict[str, any]:
         """
         Get DF statistics
@@ -390,7 +456,9 @@ class DirectoryFacilitator:
                 'total_services': len(self._services),
                 'total_registrations': total_registrations,
                 'registered_agents': len(self._agent_services),
-                'service_counts': service_counts
+                'service_counts': service_counts,
+                # Phase 5 - Issue #4: Authentication statistics
+                'authentication': self.authenticator.get_statistics()
             }
 
     def __repr__(self) -> str:

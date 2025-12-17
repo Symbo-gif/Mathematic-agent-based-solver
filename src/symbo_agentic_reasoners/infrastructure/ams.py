@@ -86,6 +86,9 @@ try:
 except ImportError:
     HAS_PSUTIL = False
 
+# Import agent authentication system (Phase 5 - Issue #4)
+from symbo_agentic_reasoners.infrastructure.security.agent_auth import AgentAuthenticator
+
 # Setup logging for resource events
 logger = logging.getLogger('symbo_agentic_reasoners.ams')
 
@@ -276,6 +279,11 @@ class AgentManagementSystem:
         self._sustained_vram_high_count = 0
         self._sustained_threshold = 3  # Must be high for 3 consecutive checks
 
+        # Phase 5 - Issue #4: Agent Authentication System
+        # Initialize HMAC-based authenticator for agent identity verification
+        self.authenticator = AgentAuthenticator(enable_auth=True)
+        logger.info("AMS: Agent authentication system initialized")
+
         # Register AMS itself as an infrastructural agent
         self.create_agent(
             agent_id='ams',
@@ -421,9 +429,13 @@ class AgentManagementSystem:
     def create_agent(self, agent_id: str, agent_type: AgentType,
                     vram_req: float = 0.0, ram_req: float = 0.5,
                     services: List[str] = None,
-                    metadata: Dict[str, Any] = None) -> bool:
+                    metadata: Dict[str, Any] = None,
+                    auth_token: Optional[str] = None,
+                    auth_timestamp: Optional[int] = None) -> bool:
         """
         Register new agent - gatekeeper for resource allocation
+
+        Phase 5 - Issue #4: Now includes agent authentication verification.
 
         Args:
             agent_id: Unique agent identifier
@@ -432,13 +444,30 @@ class AgentManagementSystem:
             ram_req: RAM requirement in GB
             services: List of service names (for DF registration)
             metadata: Additional metadata
+            auth_token: Optional HMAC authentication token (Issue #4)
+            auth_timestamp: Optional token timestamp (Issue #4)
 
         Returns:
             bool: True if agent was created successfully
 
+        Security:
+            If auth_token and auth_timestamp provided, verifies agent identity
+            before registration. Prevents agent spoofing attacks.
+
         Reference: Phase_0_Build_Order_Breakdown.md: Lines 320-335
         """
         with self._lock:
+            # Phase 5 - Issue #4: Verify agent credentials if provided
+            if auth_token is not None and auth_timestamp is not None:
+                if not self.authenticator.verify_credential(
+                    agent_id, auth_token, auth_timestamp
+                ):
+                    logger.warning(
+                        f"Agent creation DENIED (authentication failed): {agent_id}"
+                    )
+                    return False
+                logger.debug(f"Agent authentication verified: {agent_id}")
+
             # Check if agent already exists
             if agent_id in self._agents:
                 logger.warning(f"Agent {agent_id} already exists")
@@ -614,6 +643,51 @@ class AgentManagementSystem:
 
             return results
 
+    # =========================================================================
+    # PHASE 5 - ISSUE #4: AGENT AUTHENTICATION METHODS
+    # =========================================================================
+
+    def issue_agent_credential(self, agent_id: str) -> 'AgentCredential':
+        """
+        Issue authentication credential for agent.
+
+        Phase 5 - Issue #4: Helper method for agents to obtain credentials
+        before registration.
+
+        Args:
+            agent_id: Agent identifier
+
+        Returns:
+            AgentCredential with HMAC token
+
+        Example:
+            credential = ams.issue_agent_credential('agent_001')
+            ams.create_agent(
+                agent_id='agent_001',
+                agent_type=AgentType.COGNITIVE,
+                auth_token=credential.token,
+                auth_timestamp=credential.timestamp
+            )
+        """
+        return self.authenticator.issue_credential(agent_id)
+
+    def revoke_agent_credential(self, agent_id: str) -> bool:
+        """
+        Revoke agent authentication credential.
+
+        Phase 5 - Issue #4: Invalidates agent's credential, preventing
+        future authentication.
+
+        Args:
+            agent_id: Agent identifier
+
+        Returns:
+            True if credential was revoked
+        """
+        return self.authenticator.revoke_credential(agent_id)
+
+    # =========================================================================
+
     def get_statistics(self) -> Dict[str, Any]:
         """
         Get AMS statistics
@@ -650,7 +724,9 @@ class AgentManagementSystem:
                 'status_distribution': status_counts,
                 'type_distribution': type_counts,
                 'can_activate_cognitive': self.can_activate_cognitive_agent(),
-                'psutil_available': HAS_PSUTIL
+                'psutil_available': HAS_PSUTIL,
+                # Phase 5 - Issue #4: Authentication statistics
+                'authentication': self.authenticator.get_statistics()
             }
 
     def _monitor_loop(self):
