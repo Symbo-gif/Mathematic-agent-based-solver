@@ -1,0 +1,64 @@
+# Copyright 2025 Damien Davison & Michael Maillet, Recursive AI Devs
+# Licensed under the Apache License, Version 2.0
+
+"""Category Theory Problem Generator - Research-level problems"""
+
+import random
+from typing import Dict, Any
+
+class CategoryTheoryProblemGenerator:
+    """Generate category theory problems for autonomous exploration."""
+
+    def __init__(self):
+        self.problem_count = 0
+
+    def generate_problem(self, difficulty: int = None) -> Dict[str, Any]:
+        if difficulty is None:
+            difficulty = random.randint(1, 4)
+
+        generators = [
+            lambda d: self._morphism_problem(d),
+            lambda d: self._functor_problem(d),
+            lambda d: self._adjunction_problem(d),
+            lambda d: self._universal_property(d)
+        ]
+
+        problem = random.choice(generators)(difficulty)
+        problem['difficulty'] = difficulty
+        problem['problem_id'] = f'CAT_{self.problem_count:04d}'
+        self.problem_count += 1
+        return problem
+
+    def _morphism_problem(self, difficulty: int) -> Dict[str, Any]:
+        if difficulty <= 2:
+            return {'type': 'morphism_composition', 'category': 'Set', 'task': 'Verify associativity'}
+        else:
+            return {'type': 'isomorphism_detection', 'objects': ['A', 'B'], 'task': 'Prove A ≅ B via morphisms'}
+
+    def _functor_problem(self, difficulty: int) -> Dict[str, Any]:
+        if difficulty == 1:
+            return {'type': 'verify_functor', 'functor': 'Forgetful: Group → Set', 'axioms': ['identity', 'composition']}
+        elif difficulty == 2:
+            return {'type': 'natural_transformation', 'functors': ['F', 'G'], 'task': 'Verify naturality square'}
+        elif difficulty == 3:
+            return {'type': 'yoneda_lemma', 'task': 'Apply Yoneda: Nat(Hom(A,-), F) ≅ F(A)'}
+        else:
+            return {'type': 'representable_functor', 'functor': 'F: C → Set', 'task': 'Find representing object', 'theorem': 'Yoneda'}
+
+    def _adjunction_problem(self, difficulty: int) -> Dict[str, Any]:
+        if difficulty <= 2:
+            adj = random.choice(['Free ⊣ Forgetful', '(-) ⊗ V ⊣ Hom(V, -)', '(-) × A ⊣ (-)^A'])
+            return {'type': 'verify_adjunction', 'adjunction': adj, 'verify': ['unit', 'counit', 'triangles']}
+        else:
+            return {'type': 'kan_extension', 'task': 'Compute Lan_K F', 'method': 'colimit_over_comma_category'}
+
+    def _universal_property(self, difficulty: int) -> Dict[str, Any]:
+        if difficulty <= 2:
+            return {'type': 'product', 'objects': ['A', 'B'], 'verify': 'universal_property_of_product'}
+        else:
+            return {'type': 'limit', 'diagram': 'general_diagram', 'task': 'Construct limit via universal property'}
+
+
+def generate_category_theory_problem(difficulty=None):
+    gen = CategoryTheoryProblemGenerator()
+    return gen.generate_problem(difficulty)
