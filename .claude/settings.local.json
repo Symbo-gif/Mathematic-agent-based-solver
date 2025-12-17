@@ -31,7 +31,8 @@
       "Bash(timeout 120 python:*)",
       "Bash(sort:*)",
       "Bash(for d in */)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(python3:*)"
     ]
   }
 }

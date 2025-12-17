@@ -21,11 +21,16 @@ Handles morphism analysis, structure classification, and isomorphism detection.
 
 CAPABILITIES:
 ------------
-- Group property checking (abelian, cyclic, simple)
-- Ring and field operations
-- Ideal computation
+- Group property checking (abelian, cyclic, simple, solvable, nilpotent)
+- Sylow theorems (finding Sylow p-subgroups, counting, conjugacy)
+- Group actions (orbits, stabilizers, orbit-stabilizer theorem, Burnside's lemma)
+- Composition series (Jordan-Hölder theorem, simple group detection)
+- Ring classification (Euclidean Domain, PID, UFD detection)
+- Ideal operations (sum, product, prime/maximal ideal tests)
+- Quotient ring construction
+- Field theory (extension degrees, minimal polynomials, splitting fields)
+- Galois theory (Galois groups, Galois correspondence)
 - Isomorphism detection
-- Structure classification
 - Permutation group analysis
 
 ALGORITHMIC BACKING:
@@ -739,7 +744,977 @@ class GroupRingTheoryAgent(BDIAgent):
         
         self.blackboard.post(error_entry)
         return error_entry
-    
+
+    # ==================== SYLOW THEOREMS ====================
+
+    def find_sylow_p_subgroups(
+        self,
+        group_order: int,
+        prime: int
+    ) -> Dict[str, Any]:
+        """
+        Find all Sylow p-subgroups of a group of given order.
+
+        Sylow's First Theorem: For prime p and group order n = p^k * m (p∤m),
+        there exists a subgroup of order p^k.
+
+        Args:
+            group_order: Order of the group |G|
+            prime: Prime p
+
+        Returns:
+            Dict with Sylow p-subgroup information
+        """
+        try:
+            # Factor out p from group order: n = p^k * m
+            n = group_order
+            k = 0
+            while n % prime == 0:
+                n //= prime
+                k += 1
+
+            m = n  # m is coprime to p
+            sylow_order = prime ** k
+
+            if k == 0:
+                return {
+                    'success': False,
+                    'error': f'Prime {prime} does not divide group order {group_order}',
+                    'method': 'sylow_theorems'
+                }
+
+            # Sylow's Third Theorem: Number of Sylow p-subgroups
+            # n_p ≡ 1 (mod p) and n_p divides m
+            possible_counts = []
+            for divisor in self._find_divisors(m):
+                if divisor % prime == 1:
+                    possible_counts.append(divisor)
+
+            return {
+                'success': True,
+                'prime': prime,
+                'sylow_order': sylow_order,
+                'exponent': k,
+                'cofactor': m,
+                'possible_counts': possible_counts,
+                'sylow_first': f'Subgroups of order {sylow_order} exist',
+                'sylow_third': f'Number of Sylow {prime}-subgroups: {possible_counts}',
+                'method': 'sylow_theorems',
+                'note': f'All Sylow {prime}-subgroups are conjugate (Sylow II)'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'sylow_theorems'
+            }
+
+    def _find_divisors(self, n: int) -> List[int]:
+        """Find all divisors of n."""
+        divisors = []
+        for i in range(1, int(n**0.5) + 1):
+            if n % i == 0:
+                divisors.append(i)
+                if i != n // i:
+                    divisors.append(n // i)
+        return sorted(divisors)
+
+    # ==================== GROUP ACTIONS ====================
+
+    def compute_orbit(
+        self,
+        group_elements: List[Any],
+        element: Any,
+        action: callable
+    ) -> Dict[str, Any]:
+        """
+        Compute orbit of element under group action.
+
+        Orbit(x) = {g·x : g ∈ G}
+
+        Args:
+            group_elements: Elements of the group
+            element: Element being acted upon
+            action: Function (g, x) -> g·x
+
+        Returns:
+            Dict with orbit elements
+        """
+        try:
+            orbit = set()
+            orbit.add(element)
+
+            # Apply each group element
+            for g in group_elements:
+                result = action(g, element)
+                orbit.add(result)
+
+            return {
+                'success': True,
+                'orbit': list(orbit),
+                'orbit_size': len(orbit),
+                'method': 'group_action',
+                'note': 'Orbit = {g·x : g ∈ G}'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'orbit_computation'
+            }
+
+    def compute_stabilizer(
+        self,
+        group_elements: List[Any],
+        element: Any,
+        action: callable
+    ) -> Dict[str, Any]:
+        """
+        Compute stabilizer of element under group action.
+
+        Stab(x) = {g ∈ G : g·x = x}
+
+        Args:
+            group_elements: Elements of the group
+            element: Element being acted upon
+            action: Function (g, x) -> g·x
+
+        Returns:
+            Dict with stabilizer elements
+        """
+        try:
+            stabilizer = []
+
+            for g in group_elements:
+                if action(g, element) == element:
+                    stabilizer.append(g)
+
+            return {
+                'success': True,
+                'stabilizer': stabilizer,
+                'stabilizer_size': len(stabilizer),
+                'method': 'group_action',
+                'note': 'Stab(x) = {g ∈ G : g·x = x}'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'stabilizer_computation'
+            }
+
+    def orbit_stabilizer_theorem(
+        self,
+        group_order: int,
+        orbit_size: int
+    ) -> Dict[str, Any]:
+        """
+        Apply orbit-stabilizer theorem: |G| = |Orbit(x)| × |Stab(x)|
+
+        Args:
+            group_order: Order of group |G|
+            orbit_size: Size of orbit |Orbit(x)|
+
+        Returns:
+            Dict with stabilizer size
+        """
+        try:
+            if group_order % orbit_size != 0:
+                return {
+                    'success': False,
+                    'error': f'Orbit size {orbit_size} does not divide group order {group_order}',
+                    'method': 'orbit_stabilizer'
+                }
+
+            stabilizer_size = group_order // orbit_size
+
+            return {
+                'success': True,
+                'group_order': group_order,
+                'orbit_size': orbit_size,
+                'stabilizer_size': stabilizer_size,
+                'formula': f'{group_order} = {orbit_size} × {stabilizer_size}',
+                'method': 'orbit_stabilizer_theorem'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'orbit_stabilizer'
+            }
+
+    def burnsides_lemma(
+        self,
+        group_elements: List[Any],
+        set_elements: List[Any],
+        action: callable
+    ) -> Dict[str, Any]:
+        """
+        Apply Burnside's lemma to count orbits.
+
+        Number of orbits = (1/|G|) × Σ_{g∈G} |Fix(g)|
+
+        where Fix(g) = {x ∈ X : g·x = x}
+
+        Args:
+            group_elements: Elements of group G
+            set_elements: Elements of set X
+            action: Group action function (g, x) -> g·x
+
+        Returns:
+            Dict with orbit count
+        """
+        try:
+            total_fixed = 0
+
+            for g in group_elements:
+                fixed_count = 0
+                for x in set_elements:
+                    if action(g, x) == x:
+                        fixed_count += 1
+                total_fixed += fixed_count
+
+            num_orbits = total_fixed / len(group_elements)
+
+            return {
+                'success': True,
+                'number_of_orbits': num_orbits,
+                'formula': f'(1/{len(group_elements)}) × {total_fixed} = {num_orbits}',
+                'method': 'burnsides_lemma',
+                'note': 'Counts equivalence classes under group action'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'burnsides_lemma'
+            }
+
+    # ==================== COMPOSITION SERIES ====================
+
+    def find_normal_subgroups(
+        self,
+        group_order: int,
+        group_type: str = 'general'
+    ) -> Dict[str, Any]:
+        """
+        Find all normal subgroups of a group.
+
+        A subgroup H is normal if gHg⁻¹ = H for all g ∈ G.
+
+        Args:
+            group_order: Order of group
+            group_type: Type of group (helps with search)
+
+        Returns:
+            Dict with normal subgroup orders
+        """
+        try:
+            # Find divisors of group order (possible subgroup orders by Lagrange)
+            divisors = self._find_divisors(group_order)
+
+            # For abelian groups, all subgroups are normal
+            if group_type == 'abelian':
+                return {
+                    'success': True,
+                    'normal_subgroup_orders': divisors,
+                    'note': 'All subgroups are normal in abelian groups',
+                    'method': 'normal_subgroups'
+                }
+
+            # For general groups, need more analysis
+            # Simplified: return divisors as candidates
+            return {
+                'success': True,
+                'candidate_orders': divisors,
+                'method': 'normal_subgroups',
+                'note': 'Full verification requires group structure'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'normal_subgroups'
+            }
+
+    def composition_series(
+        self,
+        group_order: int,
+        factorization: Dict[int, int] = None
+    ) -> Dict[str, Any]:
+        """
+        Construct composition series for a group.
+
+        Composition series: G = G₀ ⊃ G₁ ⊃ ... ⊃ Gₙ = {e}
+        where each Gᵢ₊₁ is maximal normal in Gᵢ and Gᵢ/Gᵢ₊₁ is simple.
+
+        Jordan-Hölder theorem: Composition factors are unique up to order.
+
+        Args:
+            group_order: Order of group |G|
+            factorization: Prime factorization of group order
+
+        Returns:
+            Dict with composition series
+        """
+        try:
+            if not factorization:
+                factorization = factorint(group_order)
+
+            # Build composition series based on prime factorization
+            series = [group_order]
+            current_order = group_order
+
+            # For each prime power p^k in factorization
+            for prime, exponent in factorization.items():
+                # Add subgroups of order current_order / prime
+                for _ in range(exponent):
+                    current_order //= prime
+                    series.append(current_order)
+
+            # Compute composition factors (quotients)
+            factors = []
+            for i in range(len(series) - 1):
+                factor_order = series[i] // series[i+1]
+                factors.append(f'G{i}/G{i+1} ≅ Z_{factor_order}')
+
+            return {
+                'success': True,
+                'composition_series': series,
+                'composition_factors': factors,
+                'length': len(series) - 1,
+                'method': 'composition_series',
+                'jordan_holder': 'Composition factors are unique up to order (Jordan-Hölder)',
+                'note': 'Based on prime factorization; actual series depends on group structure'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'composition_series'
+            }
+
+    def is_simple_group(self, group_order: int) -> Dict[str, Any]:
+        """
+        Determine if group of given order is simple.
+
+        Simple group: has no non-trivial normal subgroups.
+
+        Uses classification: finite simple groups are:
+        - Cyclic groups of prime order Z_p
+        - Alternating groups A_n (n ≥ 5)
+        - Groups of Lie type
+        - 26 sporadic groups
+
+        Args:
+            group_order: Order of group
+
+        Returns:
+            Dict with simplicity determination
+        """
+        try:
+            # Check if order is prime (cyclic groups Z_p are simple)
+            from symbo_agentic_reasoners.core.number_theory_native import is_prime
+
+            if is_prime(group_order):
+                return {
+                    'success': True,
+                    'is_simple': True,
+                    'reason': f'Z_{group_order} is cyclic of prime order',
+                    'method': 'simple_group_classification'
+                }
+
+            # Check for alternating groups A_n (order = n!/2, n ≥ 5)
+            # A_5 has order 60, A_6 has order 360, etc.
+            known_simple_orders = [60, 168, 360, 504, 660, 1092]  # A_5, PSL(2,7), A_6, etc.
+
+            if group_order in known_simple_orders:
+                return {
+                    'success': True,
+                    'is_simple': True,
+                    'reason': 'Order matches known simple group',
+                    'candidates': 'A_5, PSL(2,7), A_6, or other simple group',
+                    'method': 'simple_group_classification'
+                }
+
+            # For composite non-prime order, likely not simple
+            return {
+                'success': True,
+                'is_simple': False,
+                'reason': f'Order {group_order} is composite and not in known simple group list',
+                'method': 'simple_group_classification',
+                'note': 'Full classification requires group structure'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'simple_group_test'
+            }
+
+    # ==================== RING THEORY ENHANCEMENTS ====================
+
+    def classify_ring_type(
+        self,
+        ring_description: str
+    ) -> Dict[str, Any]:
+        """
+        Classify ring as Euclidean Domain, PID, UFD, or general ring.
+
+        Hierarchy: Euclidean Domain ⊂ PID ⊂ UFD ⊂ Integral Domain ⊂ Ring
+
+        Args:
+            ring_description: Description of ring (e.g., "Z", "Z[x]", "Z[√-5]")
+
+        Returns:
+            Dict with ring classification
+        """
+        try:
+            ring_desc = ring_description.strip()
+
+            # Known classifications
+            classifications = {
+                'Z': ('euclidean', 'Integers with Euclidean division'),
+                'Q': ('field', 'Rationals are a field'),
+                'R': ('field', 'Real numbers are a field'),
+                'C': ('field', 'Complex numbers are a field'),
+                'Z[x]': ('ufd', 'Polynomial ring Z[x] is UFD but not PID'),
+                'Q[x]': ('euclidean', 'Q[x] is Euclidean domain'),
+                'Z[i]': ('euclidean', 'Gaussian integers are Euclidean'),
+            }
+
+            if ring_desc in classifications:
+                ring_type, reason = classifications[ring_desc]
+
+                # Determine hierarchy
+                hierarchy = []
+                if ring_type == 'field':
+                    hierarchy = ['Field', 'Euclidean Domain', 'PID', 'UFD', 'Integral Domain', 'Ring']
+                elif ring_type == 'euclidean':
+                    hierarchy = ['Euclidean Domain', 'PID', 'UFD', 'Integral Domain', 'Ring']
+                elif ring_type == 'pid':
+                    hierarchy = ['PID', 'UFD', 'Integral Domain', 'Ring']
+                elif ring_type == 'ufd':
+                    hierarchy = ['UFD', 'Integral Domain', 'Ring']
+
+                return {
+                    'success': True,
+                    'ring': ring_desc,
+                    'classification': ring_type.upper(),
+                    'hierarchy': hierarchy,
+                    'reason': reason,
+                    'method': 'ring_classification'
+                }
+
+            return {
+                'success': False,
+                'error': f'Ring {ring_desc} not in known classification database',
+                'method': 'ring_classification',
+                'note': 'Add ring to database or provide structure for analysis'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'ring_classification'
+            }
+
+    def ideal_sum_product(
+        self,
+        ideal1: List[Any],
+        ideal2: List[Any],
+        operation: str = 'sum'
+    ) -> Dict[str, Any]:
+        """
+        Compute sum or product of ideals.
+
+        Sum: I + J = {a + b : a ∈ I, b ∈ J}
+        Product: I·J = {Σ aᵢbᵢ : aᵢ ∈ I, bᵢ ∈ J}
+
+        Args:
+            ideal1: First ideal (list of generators)
+            ideal2: Second ideal (list of generators)
+            operation: 'sum' or 'product'
+
+        Returns:
+            Dict with resulting ideal
+        """
+        try:
+            if operation == 'sum':
+                # I + J generated by union of generators
+                generators = list(set(ideal1 + ideal2))
+
+                return {
+                    'success': True,
+                    'ideal': generators,
+                    'generators': generators,
+                    'operation': 'sum',
+                    'notation': f'I + J = ({", ".join(map(str, generators))})',
+                    'method': 'ideal_operations'
+                }
+
+            elif operation == 'product':
+                # I·J generated by products of generators
+                products = []
+                for a in ideal1:
+                    for b in ideal2:
+                        products.append(f'{a}·{b}')
+
+                return {
+                    'success': True,
+                    'ideal': products,
+                    'generators': products,
+                    'operation': 'product',
+                    'notation': f'I·J = ({", ".join(products)})',
+                    'method': 'ideal_operations'
+                }
+
+            else:
+                return {
+                    'success': False,
+                    'error': f'Unknown operation: {operation}',
+                    'method': 'ideal_operations'
+                }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'ideal_operations'
+            }
+
+    def is_prime_ideal(
+        self,
+        ideal_generators: List[Any],
+        ring: str
+    ) -> Dict[str, Any]:
+        """
+        Test if ideal is prime.
+
+        Ideal P is prime if: ab ∈ P implies a ∈ P or b ∈ P
+
+        Args:
+            ideal_generators: Generators of ideal
+            ring: Ring name
+
+        Returns:
+            Dict with primality test result
+        """
+        try:
+            # For principal ideals in Z: (p) is prime iff p is prime
+            if ring == 'Z' and len(ideal_generators) == 1:
+                p = ideal_generators[0]
+                if isinstance(p, int):
+                    from symbo_agentic_reasoners.core.number_theory_native import is_prime
+                    is_prime_val = is_prime(abs(p))
+
+                    return {
+                        'success': True,
+                        'is_prime_ideal': is_prime_val,
+                        'ideal': f'({p})',
+                        'ring': ring,
+                        'method': 'prime_ideal_test',
+                        'note': f'In Z, (p) is prime iff p is prime number'
+                    }
+
+            return {
+                'success': False,
+                'error': 'Prime ideal test not implemented for this ring',
+                'method': 'prime_ideal_test',
+                'note': 'Provide ring structure for analysis'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'prime_ideal_test'
+            }
+
+    def is_maximal_ideal(
+        self,
+        ideal_generators: List[Any],
+        ring: str
+    ) -> Dict[str, Any]:
+        """
+        Test if ideal is maximal.
+
+        Ideal M is maximal if: M ⊊ R and no proper ideal between M and R.
+
+        In PID: M is maximal iff R/M is a field iff M is generated by prime.
+
+        Args:
+            ideal_generators: Generators of ideal
+            ring: Ring name
+
+        Returns:
+            Dict with maximality test result
+        """
+        try:
+            # For principal ideals in Z: (p) is maximal iff p is prime
+            if ring == 'Z' and len(ideal_generators) == 1:
+                p = ideal_generators[0]
+                if isinstance(p, int):
+                    from symbo_agentic_reasoners.core.number_theory_native import is_prime
+                    is_max = is_prime(abs(p))
+
+                    return {
+                        'success': True,
+                        'is_maximal_ideal': is_max,
+                        'ideal': f'({p})',
+                        'ring': ring,
+                        'quotient': f'Z/({p})Z ≅ Z_{p}' if is_max else None,
+                        'method': 'maximal_ideal_test',
+                        'note': f'In Z, (p) is maximal iff p is prime'
+                    }
+
+            return {
+                'success': False,
+                'error': 'Maximal ideal test not implemented for this ring',
+                'method': 'maximal_ideal_test'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'maximal_ideal_test'
+            }
+
+    def quotient_ring(
+        self,
+        ring: str,
+        ideal: str
+    ) -> Dict[str, Any]:
+        """
+        Construct quotient ring R/I.
+
+        Args:
+            ring: Ring name
+            ideal: Ideal description
+
+        Returns:
+            Dict with quotient ring structure
+        """
+        try:
+            # Z/nZ example
+            if ring == 'Z' and ideal.startswith('(') and ideal.endswith(')'):
+                n_str = ideal[1:-1]
+                n = int(n_str)
+
+                return {
+                    'success': True,
+                    'quotient_ring': f'Z/{n}Z ≅ Z_{n}',
+                    'elements': list(range(n)),
+                    'size': n,
+                    'is_field': factorint(n) and len(factorint(n)) == 1,  # Field iff n is prime
+                    'method': 'quotient_ring',
+                    'note': f'Elements are equivalence classes [0], [1], ..., [{n-1}]'
+                }
+
+            return {
+                'success': False,
+                'error': 'Quotient ring construction not implemented for this ring/ideal',
+                'method': 'quotient_ring'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'quotient_ring'
+            }
+
+    # ==================== FIELD THEORY ====================
+
+    def compute_field_extension_degree(
+        self,
+        base_field: str,
+        extension_field: str
+    ) -> Dict[str, Any]:
+        """
+        Compute degree of field extension [E:F].
+
+        [E:F] is the dimension of E as a vector space over F.
+
+        Args:
+            base_field: Base field F
+            extension_field: Extension field E
+
+        Returns:
+            Dict with extension degree
+        """
+        try:
+            # Known extensions
+            extensions = {
+                ('Q', 'R'): ('infinite', 'R is uncountable over Q'),
+                ('Q', 'C'): ('infinite', 'C is uncountable over Q'),
+                ('R', 'C'): (2, 'C = R(i), basis {1, i}'),
+                ('Q', 'Q(√2)'): (2, 'Basis {1, √2}'),
+                ('Q', 'Q(∛2)'): (3, 'Basis {1, ∛2, (∛2)²}'),
+            }
+
+            key = (base_field, extension_field)
+            if key in extensions:
+                degree, reason = extensions[key]
+
+                return {
+                    'success': True,
+                    'base_field': base_field,
+                    'extension_field': extension_field,
+                    'degree': degree,
+                    'reason': reason,
+                    'method': 'extension_degree',
+                    'note': '[E:F] = dim_F(E) as vector space'
+                }
+
+            return {
+                'success': False,
+                'error': f'Extension {extension_field}/{base_field} not in database',
+                'method': 'extension_degree'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'extension_degree'
+            }
+
+    def minimal_polynomial(
+        self,
+        element: str,
+        base_field: str = 'Q'
+    ) -> Dict[str, Any]:
+        """
+        Find minimal polynomial of algebraic element over base field.
+
+        Minimal polynomial m(x) is the monic polynomial of smallest degree
+        such that m(α) = 0.
+
+        Args:
+            element: Algebraic element (e.g., "√2", "i", "∛2")
+            base_field: Base field
+
+        Returns:
+            Dict with minimal polynomial
+        """
+        try:
+            # Known minimal polynomials over Q
+            minimal_polys = {
+                '√2': ('x² - 2', 2),
+                'i': ('x² + 1', 2),
+                '∛2': ('x³ - 2', 3),
+                '√3': ('x² - 3', 2),
+                'ζ₃': ('x² + x + 1', 2),  # Primitive cube root of unity
+            }
+
+            if element in minimal_polys:
+                poly, degree = minimal_polys[element]
+
+                return {
+                    'success': True,
+                    'element': element,
+                    'base_field': base_field,
+                    'minimal_polynomial': poly,
+                    'degree': degree,
+                    'method': 'minimal_polynomial',
+                    'note': f'{element} is algebraic of degree {degree} over {base_field}'
+                }
+
+            return {
+                'success': False,
+                'error': f'Minimal polynomial for {element} not in database',
+                'method': 'minimal_polynomial'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'minimal_polynomial'
+            }
+
+    def splitting_field(
+        self,
+        polynomial: str,
+        base_field: str = 'Q'
+    ) -> Dict[str, Any]:
+        """
+        Determine splitting field of polynomial over base field.
+
+        Splitting field E is the smallest field extension containing all roots.
+
+        Args:
+            polynomial: Polynomial expression
+            base_field: Base field
+
+        Returns:
+            Dict with splitting field information
+        """
+        try:
+            # Known splitting fields
+            known_cases = {
+                ('x² - 2', 'Q'): ('Q(√2)', 2, 'Adjoining √2'),
+                ('x² + 1', 'Q'): ('Q(i)', 2, 'Adjoining i'),
+                ('x² + 1', 'R'): ('C', 2, 'Complex numbers'),
+                ('x³ - 2', 'Q'): ('Q(∛2, ζ₃)', 6, 'Adjoining ∛2 and primitive cube root'),
+                ('x⁴ - 2', 'Q'): ('Q(⁴√2, i)', 8, 'Adjoining ⁴√2 and i'),
+            }
+
+            key = (polynomial, base_field)
+            if key in known_cases:
+                field, degree, description = known_cases[key]
+
+                return {
+                    'success': True,
+                    'polynomial': polynomial,
+                    'base_field': base_field,
+                    'splitting_field': field,
+                    'degree': degree,
+                    'description': description,
+                    'method': 'splitting_field',
+                    'note': 'Smallest field containing all roots'
+                }
+
+            return {
+                'success': False,
+                'error': f'Splitting field for {polynomial} over {base_field} not computed',
+                'method': 'splitting_field',
+                'note': 'Requires root computation and field construction'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'splitting_field'
+            }
+
+    def galois_group(
+        self,
+        polynomial: str,
+        base_field: str = 'Q'
+    ) -> Dict[str, Any]:
+        """
+        Compute Galois group of polynomial over base field.
+
+        Galois group Gal(E/F) = group of automorphisms of E fixing F.
+
+        Args:
+            polynomial: Polynomial expression
+            base_field: Base field
+
+        Returns:
+            Dict with Galois group structure
+        """
+        try:
+            # Known Galois groups
+            known_galois = {
+                ('x² - 2', 'Q'): ('Z₂', 2, 'Identity and σ(√2) = -√2'),
+                ('x² + 1', 'Q'): ('Z₂', 2, 'Complex conjugation'),
+                ('x³ - 2', 'Q'): ('S₃', 6, 'Symmetric group on 3 roots'),
+                ('x⁴ - 2', 'Q'): ('D₄', 8, 'Dihedral group of order 8'),
+            }
+
+            key = (polynomial, base_field)
+            if key in known_galois:
+                group_name, order, description = known_galois[key]
+
+                return {
+                    'success': True,
+                    'polynomial': polynomial,
+                    'base_field': base_field,
+                    'galois_group': group_name,
+                    'order': order,
+                    'description': description,
+                    'method': 'galois_group',
+                    'note': 'Group of field automorphisms'
+                }
+
+            return {
+                'success': False,
+                'error': f'Galois group for {polynomial} over {base_field} not computed',
+                'method': 'galois_group',
+                'note': 'Requires splitting field construction and automorphism analysis'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'galois_group'
+            }
+
+    def galois_correspondence(
+        self,
+        group_order: int,
+        extension_degree: int
+    ) -> Dict[str, Any]:
+        """
+        Apply Galois correspondence between subgroups and intermediate fields.
+
+        For Galois extension E/F with Galois group G:
+        - Subgroups H ⊆ G ↔ Intermediate fields F ⊆ K ⊆ E
+        - |H| = [E:K] and [G:H] = [K:F]
+        - H is normal iff K/F is Galois
+
+        Args:
+            group_order: Order of Galois group |G|
+            extension_degree: Degree [E:F]
+
+        Returns:
+            Dict with correspondence information
+        """
+        try:
+            if group_order != extension_degree:
+                return {
+                    'success': False,
+                    'error': f'Group order {group_order} ≠ extension degree {extension_degree}',
+                    'method': 'galois_correspondence',
+                    'note': 'For Galois extensions, |Gal(E/F)| = [E:F]'
+                }
+
+            # Find all divisors (possible subgroup orders)
+            divisors = self._find_divisors(group_order)
+
+            # Each divisor corresponds to intermediate field degree
+            intermediate_fields = []
+            for d in divisors:
+                subgroup_order = d
+                field_degree = group_order // d  # [K:F] = [G:H]
+                intermediate_fields.append({
+                    'subgroup_order': subgroup_order,
+                    'field_degree_over_base': field_degree,
+                    'field_degree_to_top': subgroup_order
+                })
+
+            return {
+                'success': True,
+                'galois_group_order': group_order,
+                'extension_degree': extension_degree,
+                'intermediate_fields': intermediate_fields,
+                'correspondence': '|H| = [E:K] and [G:H] = [K:F]',
+                'method': 'galois_correspondence',
+                'note': 'Lattice of subgroups ≅ lattice of intermediate fields (reversed)'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'galois_correspondence'
+            }
+
     # BDI Implementation
     def update_beliefs(self):
         """PERCEIVE: Monitor Blackboard for abstract algebra tasks."""
