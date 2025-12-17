@@ -60,6 +60,10 @@ desktop.ini
 nul
 thought_traces/
 
-# Batch results go in data/batch_results/ (not root)
-# If you accidentally create batch_results_*.json at root, move them:
-#   python -c "import shutil; [shutil.move(f, 'data/batch_results/') for f in __import__('glob').glob('batch_results_*.json')]"
+# Project-specific data files
+batch_results_*.json
+*.log
+*.jsonl
+data/traces/
+data/security/audit/
+data/batch_results/
