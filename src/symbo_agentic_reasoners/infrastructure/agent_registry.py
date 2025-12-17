@@ -42,109 +42,134 @@ logger = logging.getLogger('symbo_agentic_reasoners.agent_registry')
 
 # Lazy import functions - only load agent classes when needed
 def _get_algebra_supervisor() -> Type:
+    """Lazy import AlgebraSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.algebra_supervisor import AlgebraSupervisor
     return AlgebraSupervisor
 
 def _get_calculus_supervisor() -> Type:
+    """Lazy import CalculusSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.calculus_supervisor import CalculusSupervisor
     return CalculusSupervisor
 
 def _get_linalg_supervisor() -> Type:
+    """Lazy import LinearAlgebraSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.linalg_supervisor import LinearAlgebraSupervisor
     return LinearAlgebraSupervisor
 
 def _get_stats_supervisor() -> Type:
+    """Lazy import StatisticsSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.stats_supervisor import StatisticsSupervisor
     return StatisticsSupervisor
 
 def _get_discrete_math_supervisor() -> Type:
+    """Lazy import DiscreteMathSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.discrete_math_supervisor import DiscreteMathSupervisor
     return DiscreteMathSupervisor
 
 # Algebra specialists
 def _get_arithmetic_specialist() -> Type:
+    """Lazy import ArithmeticSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.algebra.arithmetic_specialist import ArithmeticSpecialist
     return ArithmeticSpecialist
 
 def _get_polynomial_specialist() -> Type:
+    """Lazy import PolynomialSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.algebra.polynomial_specialist import PolynomialSpecialist
     return PolynomialSpecialist
 
 def _get_number_theory_specialist() -> Type:
+    """Lazy import NumberTheorySpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.algebra.number_theory_specialist import NumberTheorySpecialist
     return NumberTheorySpecialist
 
 def _get_equation_system_solver() -> Type:
+    """Lazy import EquationSystemSolver class."""
     from symbo_agentic_reasoners.agents.specialists.algebra.equation_system_solver import EquationSystemSolver
     return EquationSystemSolver
 
 # Calculus specialists
 def _get_differentiation_specialist() -> Type:
+    """Lazy import DifferentiationSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.differentiation_specialist import DifferentiationSpecialist
     return DifferentiationSpecialist
 
 def _get_integration_specialist() -> Type:
+    """Lazy import IntegrationSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.integration_specialist import IntegrationSpecialist
     return IntegrationSpecialist
 
 def _get_limit_evaluator() -> Type:
+    """Lazy import LimitEvaluator class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.limit_evaluator import LimitEvaluator
     return LimitEvaluator
 
 def _get_ode_solver() -> Type:
+    """Lazy import ODESolver class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import ODESolver
     return ODESolver
 
 def _get_series_specialist() -> Type:
+    """Lazy import SeriesSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.series_specialist import SeriesSpecialist
     return SeriesSpecialist
 
 # Linear algebra specialists
 def _get_matrix_ops_specialist() -> Type:
+    """Lazy import MatrixOperationsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.linear_algebra.matrix_ops_specialist import MatrixOperationsSpecialist
     return MatrixOperationsSpecialist
 
 def _get_decomposition_specialist() -> Type:
+    """Lazy import DecompositionSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.linear_algebra.decomposition_specialist import DecompositionSpecialist
     return DecompositionSpecialist
 
 def _get_vector_space_analyst() -> Type:
+    """Lazy import VectorSpaceAnalyst class."""
     from symbo_agentic_reasoners.agents.specialists.linear_algebra.vector_space_analyst import VectorSpaceAnalyst
     return VectorSpaceAnalyst
 
 # Statistics specialists
 def _get_bayesian_engine() -> Type:
+    """Lazy import BayesianInferenceEngine class."""
     from symbo_agentic_reasoners.agents.specialists.statistics.bayesian_engine import BayesianInferenceEngine
     return BayesianInferenceEngine
 
 def _get_distribution_specialist() -> Type:
+    """Lazy import DistributionSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.statistics.distribution_specialist import DistributionSpecialist
     return DistributionSpecialist
 
 def _get_frequentist_agent() -> Type:
+    """Lazy import FrequentistAgent class."""
     from symbo_agentic_reasoners.agents.specialists.statistics.frequentist_agent import FrequentistAgent
     return FrequentistAgent
 
 # Discrete math specialists
 def _get_combinatorics_agent() -> Type:
+    """Lazy import CombinatoricsAgent class."""
     from symbo_agentic_reasoners.agents.specialists.discrete_math.combinatorics_agent import CombinatoricsAgent
     return CombinatoricsAgent
 
 def _get_graph_theory_agent() -> Type:
+    """Lazy import GraphTheoryAgent class."""
     from symbo_agentic_reasoners.agents.specialists.discrete_math.graph_theory_agent import GraphTheoryAgent
     return GraphTheoryAgent
 
 
 # Geometry specialists
 def _get_geometry_supervisor() -> Type:
+    """Lazy import GeometrySupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.geometry_supervisor import GeometrySupervisor
     return GeometrySupervisor
 
 def _get_euclidean_specialist() -> Type:
+    """Lazy import EuclideanGeometrySpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.geometry.euclidean_specialist import EuclideanGeometrySpecialist
     return EuclideanGeometrySpecialist
 
 def _get_analytic_specialist() -> Type:
+    """Lazy import AnalyticGeometrySpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.geometry.analytic_specialist import AnalyticGeometrySpecialist
     return AnalyticGeometrySpecialist
 

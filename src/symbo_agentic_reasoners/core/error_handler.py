@@ -1,9 +1,35 @@
 class ErrorHandler:
+    """
+    Central error handling and recovery system.
+
+    Manages error recovery strategies, retry logic, and error escalation
+    for mathematical agent operations.
+
+    Attributes:
+        error_history: List of error records with timestamps
+        max_retries: Maximum retry attempts before escalation (default: 3)
+    """
+
     def __init__(self):
+        """Initialize error handler with default configuration."""
         self.error_history = []
         self.max_retries = 3
-        
+
     def handle_error(self, agent, error, context):
+        """
+        Handle error with appropriate recovery strategy.
+
+        Determines if error is recoverable and either attempts recovery
+        or escalates to higher-level error handling.
+
+        Args:
+            agent: Agent that encountered the error
+            error: Exception object
+            context: Problem-solving context
+
+        Returns:
+            Dictionary with action ('retry' or 'escalate') and context
+        """
         # Record error with timestamp and context
         error_record = {
             'timestamp': time.time(),
