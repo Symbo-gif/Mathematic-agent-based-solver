@@ -373,6 +373,66 @@ class SolverEngine:
             # Fallback to direct native computation
             return self._solve_native(expr, operation, variable, raw_input)
 
+    def _solve_mixed_quartic(self, coeffs: tuple, target: int, search_range: int = 20) -> set:
+        """
+        Solve mixed quartic-quadratic Diophantine equation.
+
+        ax⁴ + by⁴ + cz⁴ + dw² = target
+
+        Args:
+            coeffs: Tuple (a, b, c, d) of coefficients
+            target: Target value
+            search_range: Maximum search range
+
+        Returns:
+            Set of (x, y, z, w) solution tuples
+        """
+        from .specialized_solvers import solve_mixed_quartic
+        return solve_mixed_quartic(coeffs, target, search_range)
+
+    def _solve_sum_of_cubes(self, target: int, search_range: int = 500) -> set:
+        """
+        Find solutions to x³ + y³ + z³ = target.
+
+        Args:
+            target: Target sum of cubes
+            search_range: Maximum search range
+
+        Returns:
+            Set of (x, y, z) solution tuples
+        """
+        from .specialized_solvers import solve_sum_of_cubes
+        return solve_sum_of_cubes(target, search_range)
+
+    def _solve_quaternary_quadratic(self, coeffs: tuple, target: int, search_range: int = 100) -> set:
+        """
+        Find solutions to a*x² + b*y² + c*z² + d*w² = target.
+
+        Args:
+            coeffs: Tuple (a, b, c, d) of coefficients
+            target: Target value
+            search_range: Maximum search range
+
+        Returns:
+            Set of (x, y, z, w) solution tuples
+        """
+        from .specialized_solvers import solve_quaternary_quadratic
+        return solve_quaternary_quadratic(coeffs, target, search_range)
+
+    def _solve_mordell_curve(self, k: int, search_range: int = 1000) -> set:
+        """
+        Find integer solutions to y² = x³ + k (Mordell curve).
+
+        Args:
+            k: Constant in the Mordell curve equation
+            search_range: Maximum search range
+
+        Returns:
+            Set of (x, y) solution tuples
+        """
+        from .specialized_solvers import solve_mordell_curve
+        return solve_mordell_curve(k, search_range)
+
     def _solve_direct(self, expr, operation: str, variable: str) -> SolveResult:
         """Direct solve using native engine (fast path)."""
         return self._solve_native(expr, operation, variable)

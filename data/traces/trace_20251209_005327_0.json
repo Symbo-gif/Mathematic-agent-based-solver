@@ -1,0 +1,27 @@
+{
+  "trace_id": "trace_20251209_005327_0",
+  "timestamp": "2025-12-09T00:53:27.264544",
+  "original_query": "diff sin(x)",
+  "query_type": "calculus",
+  "complexity_score": 0.27,
+  "orchestrator_decomposition": [],
+  "supervisor_strategy": "",
+  "specialist_agents_invoked": [
+    "differentiation_specialist"
+  ],
+  "symbolic_expressions": [
+    "differentiate: sin(x)"
+  ],
+  "fitted_coefficients": {},
+  "taylor_expansion_order": 0,
+  "groebner_basis_used": false,
+  "verification_status": "verified",
+  "formal_proof_lean4": null,
+  "debate_consensus_score": null,
+  "final_answer": "cos(x)",
+  "confidence_score": 0.95,
+  "total_latency_ms": 100.0,
+  "agents_activated": 1,
+  "symbolic_ops_count": 1,
+  "metadata": {}
+}

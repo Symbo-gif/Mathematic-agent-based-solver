@@ -1,0 +1,27 @@
+{
+  "trace_id": "test_integration_d48d839b-0d4e-468f-a513-d75d0a67ed72",
+  "timestamp": "2025-12-13T07:04:55.343523",
+  "original_query": "test_query_d48d839b-0d4e-468f-a513-d75d0a67ed72",
+  "query_type": "arithmetic",
+  "complexity_score": 0.1,
+  "orchestrator_decomposition": [],
+  "supervisor_strategy": "AlgebraSupervisor",
+  "specialist_agents_invoked": [
+    "ArithmeticSpecialist"
+  ],
+  "symbolic_expressions": [
+    "2 + 2 = 4"
+  ],
+  "fitted_coefficients": {},
+  "taylor_expansion_order": 0,
+  "groebner_basis_used": false,
+  "verification_status": "verified",
+  "formal_proof_lean4": null,
+  "debate_consensus_score": null,
+  "final_answer": "result_d48d839b-0d4e-468f-a513-d75d0a67ed72",
+  "confidence_score": 1.0,
+  "total_latency_ms": 10.0,
+  "agents_activated": 1,
+  "symbolic_ops_count": 1,
+  "metadata": {}
+}

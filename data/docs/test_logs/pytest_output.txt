@@ -1,0 +1,71 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.9, pytest-9.0.1, pluggy-1.6.0 -- C:\Users\there\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\dev\Mathematic agent based solver
+configfile: pyproject.toml
+plugins: anyio-3.7.1, hydra-core-1.3.2
+collecting ... collected 6 items
+
+tests/test_phase6_prover_fix.py::test_no_mock_prover_in_production FAILED [ 16%]
+tests/test_phase6_prover_fix.py::test_mock_prover_available_in_tests PASSED [ 33%]
+tests/test_phase6_prover_fix.py::test_mock_prover_in_exports PASSED      [ 50%]
+tests/test_phase6_prover_fix.py::test_production_exports_updated FAILED  [ 66%]
+tests/test_phase6_prover_fix.py::test_sympy_prover_no_fallback FAILED    [ 83%]
+tests/test_phase6_prover_fix.py::test_sympy_prover_functional PASSED     [100%]
+
+================================== FAILURES ===================================
+______________________ test_no_mock_prover_in_production ______________________
+tests\test_phase6_prover_fix.py:57: in test_no_mock_prover_in_production
+    with open(source_path, 'r') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\dev\\Mathematic agent based solver\\tests\\symbo_agentic_reasoners_phase6\\deep_search\\prover_engine.py'
+---------------------------- Captured stdout call -----------------------------
+
+======================================================================
+TEST 1: Verify MockProver removed from production
+======================================================================
+_______________________ test_production_exports_updated _______________________
+tests\test_phase6_prover_fix.py:154: in test_production_exports_updated
+    with open(init_path, 'r') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\dev\\Mathematic agent based solver\\tests\\symbo_agentic_reasoners_phase6\\deep_search\\__init__.py'
+---------------------------- Captured stdout call -----------------------------
+
+======================================================================
+TEST 4: Verify deep_search exports don't include MockProver
+======================================================================
+________________________ test_sympy_prover_no_fallback ________________________
+tests\test_phase6_prover_fix.py:195: in test_sympy_prover_no_fallback
+    with open(source_path, 'r') as f:
+         ^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\dev\\Mathematic agent based solver\\tests\\symbo_agentic_reasoners_phase6\\deep_search\\prover_engine.py'
+---------------------------- Captured stdout call -----------------------------
+
+======================================================================
+TEST 5: Verify SymPyProver has no MockProver fallback
+======================================================================
+============================== warnings summary ===============================
+tests/test_phase6_prover_fix.py::test_mock_prover_available_in_tests
+  C:\Users\there\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_phase6_prover_fix.py::test_mock_prover_available_in_tests returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_phase6_prover_fix.py::test_mock_prover_in_exports
+  C:\Users\there\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_phase6_prover_fix.py::test_mock_prover_in_exports returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_phase6_prover_fix.py::test_sympy_prover_functional
+  C:\Users\there\AppData\Local\Programs\Python\Python312\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_phase6_prover_fix.py::test_sympy_prover_functional returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_phase6_prover_fix.py::test_no_mock_prover_in_production - F...
+FAILED tests/test_phase6_prover_fix.py::test_production_exports_updated - Fil...
+FAILED tests/test_phase6_prover_fix.py::test_sympy_prover_no_fallback - FileN...
+=================== 3 failed, 3 passed, 3 warnings in 0.11s ===================

@@ -1,0 +1,27 @@
+{
+  "trace_id": "trace_20251209_004035_3",
+  "timestamp": "2025-12-09T00:40:35.987675",
+  "original_query": "Stress test query 3 at 1765255235.987665",
+  "query_type": "computation",
+  "complexity_score": 0.22000000000000003,
+  "orchestrator_decomposition": [],
+  "supervisor_strategy": "",
+  "specialist_agents_invoked": [
+    "test_agent"
+  ],
+  "symbolic_expressions": [
+    "test: step_3"
+  ],
+  "fitted_coefficients": {},
+  "taylor_expansion_order": 0,
+  "groebner_basis_used": false,
+  "verification_status": "verified",
+  "formal_proof_lean4": null,
+  "debate_consensus_score": null,
+  "final_answer": "result_3",
+  "confidence_score": 0.9,
+  "total_latency_ms": 100.0,
+  "agents_activated": 1,
+  "symbolic_ops_count": 1,
+  "metadata": {}
+}

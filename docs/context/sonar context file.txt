@@ -1,0 +1,13 @@
+sonar-perplexity context.
+
+you are systematically finishing what will be an automated learning, thinking mathematical reasoning system. named the Symbo mathematical multi-agentic reasoning system.
+
+always output a single file in here after all outputs to catalog the changes youve made.
+"C:\dev\Mathematic agent based solver\sonar files\individulal session change logs"
+
+keep context here for goals, next steps, recent changes, etc.
+"C:\dev\Mathematic agent based solver\sonar files\sonar context file.txt"
+
+these are reference context docs to look at.
+"C:\dev\Mathematic agent based solver\sonar files\terminal output for context.txt"
+"C:\dev\Mathematic agent based solver\sonar files\system analysis.txt"

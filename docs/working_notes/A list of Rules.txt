@@ -1,0 +1,96 @@
+1) Series convergence rules still to add
+----------------------------------------
+- Divergence (n-th term) test:
+  - If lim_{n→∞} a_n ≠ 0, then ∑ a_n diverges.
+  - Implement as a quick pre-check before any deeper test. [web:405][web:410]
+
+- Geometric series test:
+  - ∑ a*r^n converges to a/(1-r) if |r|<1; diverges if |r|≥1.
+  - You already create SeriesSum(x**n, ...); add detection + radius/convergence metadata. [web:395][web:411]
+
+- Ratio + root tests:
+  - Ratio: L = lim |a_{n+1}/a_n| → radius R = 1/L.
+  - Root: L = lim sup |a_n|^{1/n} → radius R = 1/L.
+  - These give automatic radius-of-convergence info for power series. [web:395][web:410]
+
+- Alternating series test:
+  - For ∑ (-1)^n b_n with b_n decreasing → 0, classify as conditionally convergent.
+  - Apply to series like (-1)^n/n, (-1)^n x^n/(n log(n)^2). [web:405][web:411]
+
+- Limit comparison & direct comparison tests (for series):
+  - For ∑ a_n, ∑ b_n with a_n,b_n ≥0, if lim a_n/b_n = c∈(0,∞), both converge or diverge together.
+  - Useful for things like 1/(n (log n)^p) vs 1/(n (log n)^2). [web:405][web:410]
+
+
+2) Improper integral rules not fully encoded
+--------------------------------------------
+- Systematic limit representation:
+  - Every improper integral should be internally rewritten as one or more limits (∞ or endpoint singularities) before evaluation. [web:321][web:404]
+
+- Direct comparison and limit comparison tests (integrals):
+  - If 0 ≤ f(x) ≤ g(x) and ∫ g converges, then ∫ f converges; similarly for divergence.
+  - This is the continuous analogue of your p-test and would generalize many convergence decisions. [web:82][web:305]
+
+- Formal split at interior singularities:
+  - For integrals like ∫_a^b f(x) dx with singularity at c∈(a,b), always split into ∫_a^c + ∫_c^b with separate limit checks.
+  - Your 1/(1-x^2) example shows this is not yet canonicalized. [web:321]
+
+- Log-power classification:
+  - General rule for ∫_0^1 x^{-p} (log x)^m dx:
+    - Convergent iff p<1; diverges for p≥1 (independent of m).
+  - Would instantly classify (log x)^2/x as divergent, rather than just “singularity detected”. [web:310]
+
+
+3) Oscillatory integral rules beyond current ones
+-------------------------------------------------
+- General Dirichlet test for integrals:
+  - If F(x) = ∫_a^x f(t) dt is bounded and g(x) monotone → 0, then ∫ f(x)g(x) dx converges.
+  - This underlies sin(x)/x and sin(x)/x^p classification. [web:297][web:300]
+
+- Asymptotic integration by parts template:
+  - For ∫ e^{i λ φ(x)} a(x) dx with nonvanishing φ'(x), repeated integration by parts shows decay in λ.
+  - You can at least:
+    - Detect “oscillatory with sufficient decay” → “convergent; no closed form”.
+    - Distinguish from “oscillatory without decay” → divergent. [web:297][web:328]
+
+- Symmetry rules:
+  - For odd integrands over symmetric bounds, automatically return 0.
+  - You already do this for 1/(x(x^2+1)); encode it as a general parity rule. [web:367]
+
+
+4) Limit engine rules
+---------------------
+- Growth comparison:
+  - log^k x vs x^α vs e^x as x→∞: establish standard hierarchy to decide 0/∞/indeterminate. [web:400]
+
+- Oscillation + decay:
+  - For lim_{x→∞} sin(x^2)/x^p:
+    - If p>0, classify as 0.
+  - For lim_{x→0+} sin(1/x)/x:
+    - Mark as divergent (unbounded oscillation). [web:297]
+
+- “e-limit” patterns:
+  - lim_{n→∞} (1 + 1/n)^n = e, and higher-order corrections like n((1+1/n)^n - e).
+  - Use series expansion of log(1+1/n). [web:400]
+
+
+5) Multi-dimensional Gaussian / PDF rules
+-----------------------------------------
+- General nD normal:
+  - ∫ exp(-x^T A x)/((2π)^{n/2} sqrt(det A)) dx over R^n = 1, for A positive definite. [web:376]
+- Separable 2D case:
+  - For exp(-x^2 - y^2)/(2π), do the product of two 1D Gaussian integrals, not numeric double integration. [web:382]
+
+
+6) Series “bookkeeping” rules
+------------------------------
+- Always record:
+  - domain: where the series converges (e.g., |x|<1).
+  - absolute: True/False (absolute vs conditional convergence).
+  - linked_function: name (exp, log, normal_cdf, etc.) when a closed-form function is known. [web:395][web:410]
+
+- Fix parsing edge cases:
+  - summation(x**n/factorial(n)) should map to exp(x), not SeriesSum(None,...).
+
+
+If you implement these as **general rule modules** (improper integrals, oscillatory, series, limits, Gaussian/PDFs), you cover a huge fraction of undergraduate–graduate calculus behavior without chasing individual test problems. [web:82][web:405][web:297]

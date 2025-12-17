@@ -58,6 +58,18 @@ def solve_polynomial(expr_str: str, var: str = 'x') -> list:
         if a != 0:
             return [str(-b / a)]
 
+    # Linear alternate form: b + ax = 0 (constant first)
+    linear_alt_match = re.match(rf'^(-?\d+\.?\d*)\s*([+-])\s*(\d*\.?\d*)\*?{var}$', expr)
+    if linear_alt_match:
+        b = float(linear_alt_match.group(1))
+        sign = linear_alt_match.group(2)
+        a_str = linear_alt_match.group(3) or '1'
+        a = float(a_str) if a_str else 1.0
+        if sign == '-':
+            a = -a
+        if a != 0:
+            return [str(-b / a)]
+
     # Quadratic: ax^2 + bx + c = 0
     # Extract coefficients by pattern matching
     quad_pattern = rf'(-?\d*\.?\d*)\*?{var}\*\*2\s*([+-]\s*\d*\.?\d*)\*?{var}\s*([+-]\s*\d*\.?\d+)?'

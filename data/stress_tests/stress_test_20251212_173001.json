@@ -1,0 +1,189 @@
+{
+  "timestamp": "2025-12-12T17:30:05.597185",
+  "config": {
+    "timeout_minutes": 5,
+    "max_equations": 10,
+    "total_equations": 640
+  },
+  "stats": {
+    "total": 10,
+    "success": 10,
+    "failed": 0,
+    "timeout": 0,
+    "error": 0,
+    "by_category": {
+      "definite_integrals": {
+        "total": 10,
+        "success": 10,
+        "failed": 0,
+        "error": 0
+      },
+      "indefinite_integrals": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "infinite_series": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "limits": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "derivatives": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "differential_equations": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "linear_algebra": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "number_theory": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "probability_statistics": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "physics_applied": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "equation": "integrate(exp(-x**2), (x, -oo, oo))",
+      "status": "success",
+      "result": "sqrt(pi)",
+      "time_ms": 3685.2073669433594,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 0
+    },
+    {
+      "equation": "integrate(exp(-x**2/2), (x, -oo, oo))",
+      "status": "success",
+      "result": "sqrt(2)*sqrt(pi)",
+      "time_ms": 19.93107795715332,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 1
+    },
+    {
+      "equation": "integrate(x**2 * exp(-x**2), (x, -oo, oo))",
+      "status": "success",
+      "result": "sqrt(pi)/2",
+      "time_ms": 10.40506362915039,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 2
+    },
+    {
+      "equation": "integrate(x**4 * exp(-x**2), (x, -oo, oo))",
+      "status": "success",
+      "result": "1.329340388179137",
+      "time_ms": 9.660005569458008,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 3
+    },
+    {
+      "equation": "integrate(exp(-x**2) * cos(x), (x, -oo, oo))",
+      "status": "success",
+      "result": "1.38038844700000",
+      "time_ms": 16.05820655822754,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 4
+    },
+    {
+      "equation": "integrate(exp(-x**2 - y**2), (x, -oo, oo), (y, -oo, oo))",
+      "status": "success",
+      "result": "-2*x*exp(-x**2 - y**2)",
+      "time_ms": 5.487918853759766,
+      "error": null,
+      "specialist": "calculus.diff",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 5
+    },
+    {
+      "equation": "integrate(exp(-abs(x)), (x, -oo, oo))",
+      "status": "success",
+      "result": "2",
+      "time_ms": 11.486053466796875,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 6
+    },
+    {
+      "equation": "integrate(x * exp(-x), (x, 0, oo))",
+      "status": "success",
+      "result": "1",
+      "time_ms": 2.9783248901367188,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 7
+    },
+    {
+      "equation": "integrate(x**2 * exp(-x), (x, 0, oo))",
+      "status": "success",
+      "result": "2",
+      "time_ms": 2.2535324096679688,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 8
+    },
+    {
+      "equation": "integrate(x**3 * exp(-x), (x, 0, oo))",
+      "status": "success",
+      "result": "6",
+      "time_ms": 2.262115478515625,
+      "error": null,
+      "specialist": "calculus.integrate",
+      "domain": "calculus",
+      "category": "definite_integrals",
+      "index": 9
+    }
+  ]
+}

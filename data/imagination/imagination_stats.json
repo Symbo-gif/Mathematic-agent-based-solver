@@ -1,0 +1,15 @@
+{
+  "total_explorations": 0,
+  "successful_explorations": 0,
+  "success_rate": 0.0,
+  "interesting_discoveries": 0,
+  "remarkable_discoveries": 0,
+  "discovery_rate": 0.0,
+  "total_idle_time_seconds": 0,
+  "total_exploration_time_seconds": 0,
+  "efficiency": 0.0,
+  "explorations_by_category": {},
+  "discoveries_by_category": {},
+  "session_start": "2025-12-17T06:08:28.937471",
+  "last_discovery": null
+}

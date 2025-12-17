@@ -1,0 +1,168 @@
+# Edit Log: Rule-Engine Module Implementation
+# Date: 2025-12-12
+# Time: ~15:25
+# Session: Implementing rule-based modules from STATUS REPORT roadmap
+
+## Summary
+Implemented comprehensive rule-engine modules as outlined in the Second Opinion Analysis.
+Moved from individual test fixes to general rule families for calculus operations.
+
+## Files Modified
+
+### 1. src/symbo_agentic_reasoners/core/native_calculus.py
+
+#### New Feature: 2D Gaussian/PDF Normalization (lines ~8662-8810)
+- Added `_try_2d_gaussian_integral()` function
+- Added `definite_integrate_2d()` function
+- Added `_try_separable_2d_integral()` helper
+- Added `_get_symbols()` utility function
+- Patterns implemented:
+  - exp(-x^2 - y^2)/(2*pi) over R^2 -> 1 (standard normal)
+  - exp(-x^2 - y^2) over R^2 -> pi
+  - exp(-a*x^2 - b*y^2) over R^2 -> pi/sqrt(a*b)
+  - Separable integral detection and factorization
+
+#### New Feature: Native Limit Engine (lines ~8696-8870)
+- Added `native_limit()` main function
+- Helper functions added:
+  - `_try_oscillatory_decay_limit()` - sin(x^n)/x^m -> 0
+  - `_try_power_decay_limit()` - 1/x^n -> 0
+  - `_try_log_polynomial_limit()` - log(x)^k/x^a -> 0
+  - `_try_exp_polynomial_limit()` - x^n*exp(-x) -> 0
+  - `_try_pure_oscillatory_limit()` - sin(x) -> DNE
+  - `_try_e_type_limit()` - (1+1/n)^n -> e
+  - `_try_constant_limit()` - constants stay constant
+  - `_try_sinc_limit()` - sin(x)/x -> 1
+  - `_try_one_minus_cos_limit()` - (1-cos(x))/x -> 0
+  - `_try_one_minus_cos_sq_limit()` - (1-cos(x))/x^2 -> 1/2
+  - `_try_direct_substitution()` - finite limit evaluation
+
+#### Enhancement: Interior Singularity Detection (lines ~7324-7428)
+- Added `_check_pole_singularity()` function
+- Detects poles from patterns like:
+  - 1/(1-x^2) -> poles at x = +/-1
+  - 1/(x^2-1) -> poles at x = +/-1
+  - 1/(x-a) -> pole at x = a
+- Classifies as interior vs endpoint singularities
+- Called from `definite_integrate()` before numeric fallback (line 3672)
+
+#### Enhancement: _find_zeros Extended (lines ~7691-7820)
+- Extended to handle quadratic expressions
+- Now solves a*x^2 + b*x + c = 0 forms
+- Handles forms like 1-x^2, x^2-4, etc.
+- Properly extracts coefficients from AST
+
+#### New Feature: Series Convergence Analysis (lines ~8468-8693)
+- Added `analyze_series_convergence()` function
+- Added `series_with_metadata()` wrapper
+- Tests implemented:
+  - p-series test (sum 1/n^p)
+  - Alternating series test
+  - Power series radius via ratio test
+  - Geometric series detection
+  - Factorial growth test
+  - Comparison test for 1/(n*log(n)^p)
+  - Harmonic series detection
+- Returns structured metadata:
+  - status: convergent/divergent/conditional/unknown
+  - absolute_convergence: True/False/None
+  - radius: for power series
+  - tests_applied: list
+  - value: if known
+  - reason: explanation
+
+### 2. src/symbo_agentic_reasoners/core/input_normalizer.py
+
+#### New Feature: Multiple Problem Detection (lines ~380-554)
+- Added `detect_multiple_problems()` function
+- Added `_split_respecting_parens()` helper
+- Added `get_problem_count()` utility
+- Handles input formats:
+  - Numbered lists (1. problem, 2. problem)
+  - Bullet points (-, *, bullet characters)
+  - Semicolon-separated
+  - Newline-separated (smart detection)
+  - Natural language ("and", "also", "then")
+  - Comma-separated (via existing function)
+
+## Test Expectations
+
+### 2D Gaussian
+- integrate(exp(-x^2-y^2)/(2*pi), (x,-oo,oo), (y,-oo,oo)) -> 1 [NEW]
+- integrate(exp(-x^2-y^2), (x,-oo,oo), (y,-oo,oo)) -> pi [NEW]
+
+### Limits
+- limit(sin(x^2)/x^(1/3), x, oo) -> 0 [NEW]
+- limit((1+1/n)^n, n, oo) -> e [NEW]
+- limit(sin(x), x, oo) -> does not exist [NEW]
+- limit(sin(x)/x, x, 0) -> 1 [NEW]
+
+### Interior Singularities
+- integrate(1/(1-x^2), (x,-1,1)) -> divergent (endpoint singularities) [NEW]
+- integrate(1/(x^2-1), (x,0,2)) -> divergent (interior singularity at x=1) [NEW]
+
+### Series Convergence
+- analyze_series_convergence("1/n**2") -> convergent, p > 1 [NEW]
+- analyze_series_convergence("1/n") -> divergent, harmonic [NEW]
+- analyze_series_convergence("(-1)**n/n") -> conditional [NEW]
+- analyze_series_convergence("x**n") -> R=1, geometric [NEW]
+
+## Phase 2 Additions (from "A list of Rules.txt")
+
+### Additional Rule Functions Added
+
+#### N-th Term Divergence Test
+- `_check_nth_term_divergence()` - Quick pre-check if terms don't -> 0
+- Catches: constants, polynomial growth, exponential growth, factorial
+
+#### Symmetry Rule for Integrals
+- `_check_symmetry_integral()` - Odd functions over [-a, a] = 0
+- Patterns: x, x^(odd), sin(x), x*cos(x), sinh(x), tan(x), x/(x^2+a^2)
+- Called early in `definite_integrate()` (line 3557)
+
+#### Log-Power Classification
+- `_check_log_power_integral()` - Classifies int_0^1 x^(-p) * log(x)^m dx
+- Rule: Converges iff p < 1 (independent of m)
+- Replaces vague "singularity detected" with precise classification
+
+#### Enhanced Taylor Series Recognition
+- x^n/n! = exp(x) (exponential series)
+- (-x)^n/n! = exp(-x)
+- x^n/n = -log(1-x) for |x| < 1
+- (-1)^(n+1)*x^n/n = log(1+x) for |x| < 1
+
+### Additional Test Cases
+
+#### N-th Term Test
+- summation(5) -> divergent (constant terms)
+- summation(n) -> divergent (polynomial growth)
+- summation(2**n) -> divergent (exponential growth)
+
+#### Symmetry Rule
+- integrate(x, (x, -1, 1)) -> 0 [NEW]
+- integrate(sin(x), (x, -pi, pi)) -> 0 [NEW]
+- integrate(x/(1+x**2), (x, -oo, oo)) -> 0 [NEW]
+
+#### Log-Power
+- integrate(log(x)/x, (x, 0, 1)) -> divergent (p=1) [NEW]
+- integrate(log(x)/sqrt(x), (x, 0, 1)) -> convergent (p=0.5) [NEW]
+
+#### Taylor Series
+- summation(x**n/factorial(n), n=0..inf) -> exp(x) [FIXED]
+- summation(x**n/n, n=1..inf) -> -log(1-x) for |x|<1 [NEW]
+
+## Status
+All rule-engine modules implemented as per roadmap sections 3.1-3.5:
+- [x] 3.1 Improper integral rules (enhanced singularity detection)
+- [x] 3.2 Oscillatory integral rules (via limit engine)
+- [x] 3.3 Multi-dimensional Gaussian rules
+- [x] 3.4 Series convergence metadata
+- [x] 3.5 Limit engine module
+- [x] Multiple problem detection (user request)
+
+Additional rules from "A list of Rules.txt":
+- [x] Divergence (n-th term) test
+- [x] Symmetry rule (odd functions)
+- [x] Log-power classification
+- [x] Taylor series recognition (exp, log)
+- [x] Series bookkeeping (domain, linked_function fields)

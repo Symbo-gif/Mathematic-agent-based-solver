@@ -150,6 +150,7 @@ from .calculus_utils import native_trig_simplify
 from .definite_integration_specialist import (
     definite_integrate,
     _check_log_singularity,
+    _try_gamma_power_integral,
 )
 
 

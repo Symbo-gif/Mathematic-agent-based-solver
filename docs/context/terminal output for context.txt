@@ -1,0 +1,371 @@
+2025-12-13 09:50:10 [INFO    ] symbo_agentic_reasoners.ams    [-] AMS: Loaded configuration from centralized config system
+2025-12-13 09:50:27 [INFO    ] symbo_agentic_reasoners.core.resource_coordinator [-] ResourceCoordinator initialized
+2025-12-13 09:50:27 [INFO    ] symbo_agentic_reasoners.watchdog [-] Watchdog initialized
+2025-12-13 09:50:27 [INFO    ] symbo_agentic_reasoners.watchdog [-] Watchdog monitoring started
+2025-12-13 09:50:27 [INFO    ] symbo_agentic_reasoners.core.solver_engine [-] SolverEngine initialized (timeouts=enabled)
+[syntax_parser_001_translator] Notation Translator initialized
+  Supported formats: ['sympy', 'latex', 'natural', 'unicode', 'ascii', 'mathml', 'wolfram', 'infix']
+[Problem Analysis Team] Initialized
+  - syntax_parser_001: Syntax Parser ready
+  - structure_recognizer_001: Structure Recognizer ready
+
+[Problem Analysis Team] Processing: 'x^2 + 2*x - 3 = 0'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+[polynomial_specialist_001] Polynomial Specialist initialized
+  Architecture: Domain-First, SymPy-Fallback
+  Domain Algorithms: Quadratic formula, Rational roots, Pattern factoring
+  Fallback: SymPy (Gröbner bases, general solver)
+
+[polynomial_specialist_001] Processing polynomial task
+  Operation: solve
+  Input: x^2 + 2*x - 3 = 0
+2025-12-13 09:50:37 [INFO    ] symbo_agentic_reasoners.phase2.polynomial [-] [DOMAIN] Solved using quadratic_formula
+  [OK] Result: [1, -3]
+
+[Problem Analysis Team] Processing: 'diff(sin(x)*x^2, x)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+[differentiation_specialist_001] Differentiation Specialist initialized
+  Library: SymPy symbolic differentiation
+  Capabilities: Single/multi-variable, gradients, Jacobians, Hessians
+
+[differentiation_specialist_001] Processing differentiation task
+  Operation: derivative
+  Input: diff(sin(x)*x^2, x)
+2025-12-13 09:50:39 [INFO    ] symbo_agentic_reasoners.phase2.differentiation [-] [differentiation_specialist_001] Native calculus: d/dx(sin(x)*x**2) = cos(x)*x**2 + sin(x)*2*x
+  [OK] Result: x**2*cos(x) + 2*x*sin(x)
+
+[Problem Analysis Team] Processing: 'integrate(x^2, x)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+[integration_specialist_001] Integration Specialist initialized
+  DUAL-ENGINE ARCHITECTURE:
+    [1] Symbolic Engine: Risch Algorithm (SymPy)
+    [2] Numerical Engine: Adaptive Quadrature (SciPy)
+  Fallback Logic: Symbolic -> Numerical
+
+[integration_specialist_001] Processing integration task
+  Input: integrate(x^2, x)
+  Engine preference: symbolic
+  [SYMBOLIC ENGINE] Attempting Risch algorithm
+2025-12-13 09:50:42 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native calculus: ∫x**2 dx = x**3*3**-1
+  [OK] Result (native): x**3/3
+
+[Problem Analysis Team] Processing: 'limit((log(Gamma(x + a)) - log(Gamma(x)) - a*log(x) + a*(a-1)/(2*x)) * x**2, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2) - 1/(120*x**4))*x**4, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:52:23 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2) - 1/(120*x**4))*x**4': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((erf(x) - 1 + exp(-x**2)/(sqrt(pi)*x) - exp(-x**2)/(2*sqrt(pi)*x**3))*x**5*exp(x**2), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:52:30 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(erf(x) - 1 + exp((-1)*x**2)/(sqrt(pi )*x) - exp((-1)*x**2)/(2*sqrt(pi )*x**3))*x**5*exp(x**2)': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4) + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+[arithmetic_specialist_001] Arithmetic Specialist initialized
+  Precision: 50 decimal places
+  Architecture: DOMAIN-FIRST (Python exact -> SymPy fallback)
+  Mode: EXACT arithmetic only (floating-point FORBIDDEN)
+
+[arithmetic_specialist_001] Processing arithmetic task
+  Operation: compute
+  Input: limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4) + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)
+  [ERROR] Computation failed: SYMPY_DISABLED: SymPy fallback attempted for 'arithmetic_fallback' (algebra).
+Reason: domain parse failed: contains_symbols
+A domain-specific solver should handle this computation.
+2025-12-13 09:52:46 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse 'limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4) + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)': Unexpected token: Token(type=<TokenType.LPAREN: 8>, value='(')
+
+[Problem Analysis Team] Processing: '- 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4)) * x**(7/2), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[arithmetic_specialist_001] Processing arithmetic task
+  Operation: compute
+  Input: - 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4)) * x**(7/2), x, oo)
+  [ERROR] Computation failed: SYMPY_DISABLED: SymPy fallback attempted for 'arithmetic_fallback' (algebra).
+Reason: domain parse failed: contains_symbols
+A domain-specific solver should handle this computation.
+2025-12-13 09:52:54 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '- 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4)) * x**(7/2), x, oo)': Unexpected token: Token(type=<TokenType.RPAREN: 9>, value=')')
+
+[Problem Analysis Team] Processing: 'limit((Li(x) - x/log(x) - x/(log(x))**2 - 2*x/(log(x))**3 - 6*x/(log(x))**4)/(x/(log(x))**5), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:53:07 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(Li(x) - x/log(x) - x/(log(x))**2 - 2*x/(log(x))**3 - 6*x/(log(x))**4)/(x/(log(x))**5)': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'integrate(cos(x**3), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate(cos(x**3), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 09:53:16 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf cos(x**3) dx = 0.7733429421
+  [OK] Result (native_definite): 0.773342942100000
+
+[Problem Analysis Team] Processing: 'integrate(exp(-x**2) * cos(x**3), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate(exp(-x**2) * cos(x**3), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 09:53:22 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf exp(-1*1*x**2)*cos(x**3) dx = 0.6940541336
+  [OK] Result (native_definite): 0.694054133600000
+
+[Problem Analysis Team] Processing: 'integrate((sin(x)/x) * log(x), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate((sin(x)/x) * log(x), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 09:53:31 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf sin(x)*(1/x)*log(x) dx = conditionally convergent, value = pi/2 (Dirichlet integral)
+  [OK] Result (native_definite): conditionally convergent, value = pi/2 (Dirichlet integral)
+
+[Problem Analysis Team] Processing: 'integrate((e**(-x) - 1/(1 + x)) / x, (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate((e**(-x) - 1/(1 + x)) / x, (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 09:53:34 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf (exp(-1*x) - 1*1*(1/1 + x))*(1/x) dx = improper integral (endpoint singularities at x=0.0) - may diverge
+  [OK] Result (native_definite): improper integral (endpoint singularities at x=0.0) - may diverge
+
+[Problem Analysis Team] Processing: 'diophantine(x**3 + y**3 + z**3 - 3*(10**3))        # x^3 + y^3 + z^3 = 3000'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'diophantine(x**3 + y**3 + z**3 - 3*(10**3))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'diophantine(5*x**4 + 7*y**4 - 3*z**4 + 11*w**2 - 1)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'limit( (P(N(0,1) > x)*x*sqrt(2*pi)*exp(x**2/2) - 1
+        + 1/x**2) * x**2, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:54:38 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse 'limit((P(N(0,1) > x)*x*sqrt(2* pi )*exp(x**2/2) - 1 + 1/x**2) * x**2, x, oo)': Unexpected token: Token(type=<TokenType.LPAREN: 8>, value='(')
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[arithmetic_specialist_001] Processing arithmetic task
+  Operation: compute
+  Input: limit( (P(N(0,1) > x)*x*sqrt(2*pi)*exp(x**2/2) - 1
+        + 1/x**2) * x**2, x, oo)
+  [ERROR] Computation failed: SYMPY_DISABLED: SymPy fallback attempted for 'arithmetic_fallback' (algebra).
+Reason: domain parse failed: contains_symbols
+A domain-specific solver should handle this computation.
+2025-12-13 09:54:38 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse 'limit( (P(N(0,1) > x)*x*sqrt(2*pi)*exp(x**2/2) - 1
+        + 1/x**2) * x**2, x, oo)': Unexpected token: Token(type=<TokenType.LPAREN: 8>, value='(')
+
+[Problem Analysis Team] Processing: 'limit( (log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5,
+       t, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:54:48 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit( (log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5, t, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 09:54:59 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2) - 1/(120*x**4))*x**4, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:00:59 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2) - 1/(120*x**4))*x**4': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((erf(x) - 1 + exp(-x**2)/(sqrt(pi)*x) - exp(-x**2)/(2*sqrt(pi)*x**3))*x**5*exp(x**2), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:01:09 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(erf(x) - 1 + exp((-1)*x**2)/(sqrt(pi )*x) - exp((-1)*x**2)/(2*sqrt(pi )*x**3))*x**5*exp(x**2)': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4)
+       + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)
+       - 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4))*x**(7/2), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:01:26 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse 'limit((BesselJ(0,x) - sqrt(2/( pi *x))*cos(x - pi /4) + 1/(8*sqrt(2* pi )*x**(3/2))*sin(x - pi /4) - 9/(128*sqrt(2* pi )*x**(5/2))*cos(x - pi /4))*x**(7/2), x, oo)': Unexpected token: Token(type=<TokenType.LPAREN: 8>, value='(')
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[arithmetic_specialist_001] Processing arithmetic task
+  Operation: compute
+  Input: limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4)
+       + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)
+       - 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4))*x**(7/2), x, oo)
+  [ERROR] Computation failed: SYMPY_DISABLED: SymPy fallback attempted for 'arithmetic_fallback' (algebra).
+Reason: domain parse failed: contains_symbols
+A domain-specific solver should handle this computation.
+2025-12-13 10:01:26 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse 'limit((BesselJ(0,x) - sqrt(2/(pi*x))*cos(x - pi/4)
+       + 1/(8*sqrt(2*pi)*x**(3/2))*sin(x - pi/4)
+       - 9/(128*sqrt(2*pi)*x**(5/2))*cos(x - pi/4))*x**(7/2), x, oo)': Unexpected token: Token(type=<TokenType.LPAREN: 8>, value='(')
+
+[Problem Analysis Team] Processing: 'limit((Li(x) - x/log(x) - x/(log(x))**2 - 2*x/(log(x))**3 - 6*x/(log(x))**4)/(x/(log(x))**5), x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:01:36 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(Li(x) - x/log(x) - x/(log(x))**2 - 2*x/(log(x))**3 - 6*x/(log(x))**4)/(x/(log(x))**5)': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(Gamma(x + a)) - log(Gamma(x)) - a*log(x) + a*(a-1)/(2*x)) * x**2, x, oo)
+
+limit((log(Gamma(x + a)) - log(Gamma(x)) - a*log(x) + a*(a-1)/(2*x) - a*(a-1)*(a-2)/(6*x**2))*x**3, x, oo)
+
+limit((zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2))*x**3, x, oo)
+
+limit((erf(sqrt(x)) - 2*sqrt(x)/sqrt(pi) + 2*x**(3/2)/(3*sqrt(pi)) - 4*x**(5/2)/(15*sqrt(pi)))/x**(7/2), x, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(Gamma(x + a)) - log(Gamma(x)) - a*log(x) + a*(a-1)/(2*x)) * x**2, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(Gamma(x + a)) - log(Gamma(x)) - a*log(x) + a*(a-1)/(2*x) - a*(a-1)*(a-2)/(6*x**2))*x**3, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2))*x**3, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:02:44 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(zeta(1 + 1/x) - x - gamma - 1/(2*x) + 1/(12*x**2))*x**3': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((erf(sqrt(x)) - 2*sqrt(x)/sqrt(pi) + 2*x**(3/2)/(3*sqrt(pi)) - 4*x**(5/2)/(15*sqrt(pi)))/x**(7/2), x, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:03:07 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(erf(sqrt(x)) - 2*sqrt(x)/sqrt(pi ) + 2*x**(3/2)/(3*sqrt(pi )) - 4*x**(5/2)/(15*sqrt(pi )))/x**(7/2)': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'integrate((sin(x)/x) * log(x), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate((sin(x)/x) * log(x), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 10:03:29 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf sin(x)*(1/x)*log(x) dx = conditionally convergent, value = pi/2 (Dirichlet integral)
+  [OK] Result (native_definite): conditionally convergent, value = pi/2 (Dirichlet integral)
+
+[Problem Analysis Team] Processing: 'integrate((e**(-x) - 1/(1 + x)) / x, (x, 0, oo)) # improper, endpoint singularity at 0'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate((e**(-x) - 1/(1 + x)) / x, (x, 0, oo)) # improper, endpoint singularity at 0
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 10:03:36 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf (exp(-1*x) - 1*1*(1/1 + x))*(1/x) dx = improper integral (endpoint singularities at x=0.0) - may diverge
+  [OK] Result (native_definite): improper integral (endpoint singularities at x=0.0) - may diverge
+
+[Problem Analysis Team] Processing: 'integrate(exp(-x**2) * cos(x**3), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate(exp(-x**2) * cos(x**3), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 10:03:43 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf exp(-1*1*x**2)*cos(x**3) dx = 0.6940541336
+  [OK] Result (native_definite): 0.694054133600000
+
+[Problem Analysis Team] Processing: 'integrate(cos(x**3), (x, 0, oo))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[integration_specialist_001] Processing integration task
+  Input: integrate(cos(x**3), (x, 0, oo))
+  Engine preference: symbolic
+  [NATIVE DEFINITE ENGINE] Definite integral with bounds (0.0, 'inf')
+2025-12-13 10:03:53 [INFO    ] symbo_agentic_reasoners.phase2.integration [-] [integration_specialist_001] Native definite calculus: ∫_0.0^inf cos(x**3) dx = 0.7733429421
+  [OK] Result (native_definite): 0.773342942100000
+
+[Problem Analysis Team] Processing: 'limit((P(N(0,1) > x)*x*sqrt(2*pi)*exp(x**2/2) - 1 + 1/x**2) * x**2, x, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:04:04 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(P(N*(0,1) > x)*x*sqrt(2* pi )*exp(x**2/2) - 1 + 1/x**2) * x**2': Expected TokenType.RPAREN, got TokenType.COMMA
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5, t, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:04:12 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(log(M_X(t)) - mu*t - sigma**2*t**2/2 - kappa_3*t**3/6 - kappa_4*t**4/24) / t**5': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(M_X(t)) - mu*t - sigma**2*t**2/2) / t**3, t, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:04:23 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(log(M_X(t)) - mu*t - sigma**2*t**2/2) / t**3': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((log(M_X(t)) - mu*t - sigma**2*t**2/2) / t**3, t, 0)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:04:28 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(log(M_X(t)) - mu*t - sigma**2*t**2/2) / t**3': Expected TokenType.RPAREN, got TokenType.LPAREN
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'limit((P(X_n <= x) - Phi(x)), n, oo)'
+  [syntax_parser_001] Parsing to OMDoc...
+2025-12-13 10:04:35 [WARNING ] symbo_agentic_reasoners.native_symbolic [-] Failed to parse '(P(X_n <= x) - Phi(x))': Expected TokenType.RPAREN, got TokenType.SYMBOL
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Calculus
+
+[Problem Analysis Team] Processing: 'diophantine(x**3 + y**3 + z**3 - 3*(10**3))'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'diophantine(5*x**4 + 7*y**4 - 3*z**4 + 11*w**2 - 1)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'diophantine(x**3 + y**3 + z**3 - 33)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra
+
+[Problem Analysis Team] Processing: 'diophantine(2*x**2 + 3*y**2 + 5*z**2 - 7*w**2 - 1)'
+  [syntax_parser_001] Parsing to OMDoc...
+  [structure_recognizer_001] Classifying...
+  [Result] Type: computation, Domain: Algebra

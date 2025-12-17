@@ -1,0 +1,25 @@
+{
+    "name": "Symbo Math",
+    "background": "#0D1117",
+    "foreground": "#E6EDF3",
+    "cursorColor": "#DAA520",
+    "selectionBackground": "#264F78",
+
+    "black": "#0D1117",
+    "red": "#FF7B72",
+    "green": "#2ECC71",
+    "yellow": "#DAA520",
+    "blue": "#008B8B",
+    "purple": "#A371F7",
+    "cyan": "#40E0D0",
+    "white": "#E6EDF3",
+
+    "brightBlack": "#21262D",
+    "brightRed": "#FFA198",
+    "brightGreen": "#56D364",
+    "brightYellow": "#FFD700",
+    "brightBlue": "#00CED1",
+    "brightPurple": "#D2A8FF",
+    "brightCyan": "#79F2E6",
+    "brightWhite": "#FFFFFF"
+}

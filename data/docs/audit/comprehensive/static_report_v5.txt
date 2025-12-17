@@ -1,0 +1,32 @@
+================================================================================
+STATIC ANALYSIS REPORT
+================================================================================
+
+[MISSING_IMPLEMENTATIONS] - 18 findings
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\decomposition_specialist.py', 'line': 38, 'function': 'update_beliefs', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\decomposition_specialist.py', 'line': 40, 'function': 'execute_step', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\matrix_ops_specialist.py', 'line': 37, 'function': 'update_beliefs', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\matrix_ops_specialist.py', 'line': 39, 'function': 'execute_step', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\vector_space_analyst.py', 'line': 37, 'function': 'update_beliefs', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\linear_algebra\\vector_space_analyst.py', 'line': 39, 'function': 'execute_step', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\numerical\\numerical_utility.py', 'line': 67, 'function': 'update_beliefs', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\numerical\\numerical_utility.py', 'line': 69, 'function': 'execute_step', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\statistics\\bayesian_engine.py', 'line': 36, 'function': 'update_beliefs', 'message': 'Function implementation missing (pass or empty)'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase2\\agents\\statistics\\bayesian_engine.py', 'line': 38, 'function': 'execute_step', 'message': 'Function implementation missing (pass or empty)'}
+  ... and 8 more
+
+[TODOS] - 2 findings
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase5\\phase5_system.py', 'line': 660, 'content': '# See P0-2c fix in TODO.md for details.'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase6\\deep_search\\prover_engine.py', 'line': 52, 'content': '# See P0-2d fix in TODO.md for details.'}
+
+[MOCKS] - 0 findings
+
+[HARDCODED_DATA] - 8 findings
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase1\\agents\\problem_analysis.py', 'line': 441, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase5\\distillation\\thought_trace_harvester.py', 'line': 171, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase5\\hybrid_deployment\\complexity_gatekeeper.py', 'line': 122, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase5\\hybrid_deployment\\complexity_gatekeeper.py', 'line': 133, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\symbo_agentic_reasoners_phase6\\deep_search\\policy_network.py', 'line': 103, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\Reference Documents\\phase - 5\\symbo_llm.py', 'line': 732, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\Reference Documents\\phase - 5\\symbo_llm.py', 'line': 141, 'message': 'Potential large hardcoded data structure detected'}
+  - {'file': 'C:\\dev\\Mathematic agent based solver\\Reference Documents\\phase - 6\\phase6_discovery_engine.py', 'line': 653, 'message': 'Potential large hardcoded data structure detected'}

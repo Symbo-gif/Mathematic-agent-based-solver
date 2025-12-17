@@ -280,6 +280,236 @@ class GenericFunction(Function):
         return rf'\text{{{self.name}}}\left({args_latex}\right)'
 
 
+# =============================================================================
+# ADDITIONAL MATHEMATICAL FUNCTIONS
+# =============================================================================
+
+class Factorial(Function):
+    """Factorial function n!"""
+    name = "factorial"
+
+    def diff(self, var: Symbol) -> Expr:
+        # Factorial is only defined for non-negative integers
+        # Derivative via gamma function: d/dn n! = n! * psi(n+1)
+        # where psi is the digamma function
+        return GenericFunction("digamma", Add(self.args[0], Integer(1)))
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            arg_val = self.args[0].evalf(precision)
+            if isinstance(arg_val, (int, float)):
+                n = int(arg_val)
+                if n >= 0 and n == arg_val:  # Non-negative integer
+                    return float(math.factorial(n))
+            return self
+        except (TypeError, ValueError, OverflowError):
+            return self
+
+    def simplify(self) -> Expr:
+        arg = self.args[0]
+        if isinstance(arg, Integer) and arg.value >= 0:
+            return Integer(math.factorial(arg.value))
+        return self
+
+    def to_latex(self) -> str:
+        return rf'{self.args[0].to_latex()}!'
+
+
+class Gamma(Function):
+    """Gamma function - generalized factorial."""
+    name = "gamma"
+
+    def diff(self, var: Symbol) -> Expr:
+        # d/dx Gamma(x) = Gamma(x) * psi(x)
+        return Mul(self, GenericFunction("digamma", self.args[0]))
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            arg_val = self.args[0].evalf(precision)
+            if isinstance(arg_val, (int, float)):
+                return math.gamma(arg_val)
+            return self
+        except (TypeError, ValueError, OverflowError):
+            return self
+
+    def to_latex(self) -> str:
+        return rf'\Gamma\left({self.args[0].to_latex()}\right)'
+
+
+class Gcd(Function):
+    """Greatest common divisor of two integers."""
+    name = "gcd"
+
+    def __init__(self, *args: Expr):
+        if len(args) < 2:
+            raise ValueError("gcd requires at least 2 arguments")
+        super().__init__(*args)
+
+    def diff(self, var: Symbol) -> Expr:
+        # GCD is not differentiable
+        return Integer(0)
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            vals = [int(a.evalf(precision)) for a in self.args]
+            result = vals[0]
+            for v in vals[1:]:
+                result = math.gcd(result, v)
+            return float(result)
+        except (TypeError, ValueError):
+            return self
+
+    def simplify(self) -> Expr:
+        try:
+            vals = []
+            for a in self.args:
+                if isinstance(a, Integer):
+                    vals.append(a.value)
+                else:
+                    return self
+            result = vals[0]
+            for v in vals[1:]:
+                result = math.gcd(result, v)
+            return Integer(result)
+        except (TypeError, ValueError):
+            return self
+
+    def to_latex(self) -> str:
+        args_latex = ', '.join(a.to_latex() for a in self.args)
+        return rf'\gcd\left({args_latex}\right)'
+
+
+class Lcm(Function):
+    """Least common multiple of two integers."""
+    name = "lcm"
+
+    def __init__(self, *args: Expr):
+        if len(args) < 2:
+            raise ValueError("lcm requires at least 2 arguments")
+        super().__init__(*args)
+
+    def diff(self, var: Symbol) -> Expr:
+        return Integer(0)
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            vals = [int(a.evalf(precision)) for a in self.args]
+            result = vals[0]
+            for v in vals[1:]:
+                result = (result * v) // math.gcd(result, v)
+            return float(result)
+        except (TypeError, ValueError):
+            return self
+
+    def simplify(self) -> Expr:
+        try:
+            vals = []
+            for a in self.args:
+                if isinstance(a, Integer):
+                    vals.append(a.value)
+                else:
+                    return self
+            result = vals[0]
+            for v in vals[1:]:
+                result = (result * v) // math.gcd(result, v)
+            return Integer(result)
+        except (TypeError, ValueError):
+            return self
+
+    def to_latex(self) -> str:
+        args_latex = ', '.join(a.to_latex() for a in self.args)
+        return rf'\text{{lcm}}\left({args_latex}\right)'
+
+
+class Floor(Function):
+    """Floor function - greatest integer less than or equal to x."""
+    name = "floor"
+
+    def diff(self, var: Symbol) -> Expr:
+        return Integer(0)  # Derivative is 0 almost everywhere
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            arg_val = self.args[0].evalf(precision)
+            if isinstance(arg_val, (int, float)):
+                return float(math.floor(arg_val))
+            return self
+        except (TypeError, ValueError):
+            return self
+
+    def simplify(self) -> Expr:
+        arg = self.args[0]
+        if isinstance(arg, Integer):
+            return arg
+        if isinstance(arg, Float):
+            return Integer(math.floor(arg.value))
+        return self
+
+    def to_latex(self) -> str:
+        return rf'\lfloor {self.args[0].to_latex()} \rfloor'
+
+
+class Ceil(Function):
+    """Ceiling function - smallest integer greater than or equal to x."""
+    name = "ceil"
+
+    def diff(self, var: Symbol) -> Expr:
+        return Integer(0)
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            arg_val = self.args[0].evalf(precision)
+            if isinstance(arg_val, (int, float)):
+                return float(math.ceil(arg_val))
+            return self
+        except (TypeError, ValueError):
+            return self
+
+    def simplify(self) -> Expr:
+        arg = self.args[0]
+        if isinstance(arg, Integer):
+            return arg
+        if isinstance(arg, Float):
+            return Integer(math.ceil(arg.value))
+        return self
+
+    def to_latex(self) -> str:
+        return rf'\lceil {self.args[0].to_latex()} \rceil'
+
+
+class Mod(Function):
+    """Modulo function."""
+    name = "mod"
+
+    def __init__(self, *args: Expr):
+        if len(args) != 2:
+            raise ValueError("mod requires exactly 2 arguments")
+        super().__init__(*args)
+
+    def diff(self, var: Symbol) -> Expr:
+        # d/dx (f mod g) = f' (when g is constant)
+        return self.args[0].diff(var)
+
+    def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        try:
+            a_val = self.args[0].evalf(precision)
+            b_val = self.args[1].evalf(precision)
+            if isinstance(a_val, (int, float)) and isinstance(b_val, (int, float)):
+                return a_val % b_val
+            return self
+        except (TypeError, ValueError):
+            return self
+
+    def simplify(self) -> Expr:
+        a, b = self.args[0], self.args[1]
+        if isinstance(a, Integer) and isinstance(b, Integer):
+            return Integer(a.value % b.value)
+        return self
+
+    def to_latex(self) -> str:
+        return rf'{self.args[0].to_latex()} \mod {self.args[1].to_latex()}'
+
+
 # Lowercase aliases for SymPy compatibility
 sin = Sin
 cos = Cos
@@ -287,6 +517,46 @@ tan = Tan
 exp = Exp
 log = Log
 sqrt = Sqrt
+factorial = Factorial
+gamma = Gamma
+gcd = Gcd
+lcm = Lcm
+floor = Floor
+ceil = Ceil
+mod = Mod
+
+
+def Fraction(numerator, denominator=1):
+    """
+    Create a Rational from numerator and denominator.
+
+    This is a wrapper function that handles Integer objects
+    and converts them to Python ints before creating a Rational.
+
+    Usage:
+        Fraction(1, 2) -> Rational(1, 2) = 1/2
+        Fraction(Integer(3), Integer(4)) -> Rational(3, 4) = 3/4
+    """
+    from .numeric_types import Rational
+
+    # Extract integer values from Integer objects
+    if isinstance(numerator, Integer):
+        numerator = numerator.value
+    elif hasattr(numerator, 'evalf'):
+        try:
+            numerator = int(numerator.evalf())
+        except (TypeError, ValueError):
+            pass
+
+    if isinstance(denominator, Integer):
+        denominator = denominator.value
+    elif hasattr(denominator, 'evalf'):
+        try:
+            denominator = int(denominator.evalf())
+        except (TypeError, ValueError):
+            pass
+
+    return Rational(int(numerator), int(denominator))
 
 
 __all__ = [
@@ -294,6 +564,11 @@ __all__ = [
     'Sin', 'Cos', 'Tan',
     'Exp', 'Log', 'Sqrt',
     'Abs', 'Sign',
+    'Factorial', 'Gamma',
+    'Gcd', 'Lcm',
+    'Floor', 'Ceil', 'Mod',
     'GenericFunction',
+    'Fraction',
     'sin', 'cos', 'tan', 'exp', 'log', 'sqrt',  # lowercase aliases
+    'factorial', 'gamma', 'gcd', 'lcm', 'floor', 'ceil', 'mod',
 ]

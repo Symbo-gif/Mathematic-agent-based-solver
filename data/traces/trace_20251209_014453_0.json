@@ -1,0 +1,23 @@
+{
+  "trace_id": "trace_20251209_014453_0",
+  "timestamp": "2025-12-09T01:44:53.622734",
+  "original_query": "Prove x^2 >= 0 (test_d7c06c88a796424fa31aded1873384ca)",
+  "query_type": "proof",
+  "complexity_score": 0.35,
+  "orchestrator_decomposition": [],
+  "supervisor_strategy": "",
+  "specialist_agents_invoked": [],
+  "symbolic_expressions": [],
+  "fitted_coefficients": {},
+  "taylor_expansion_order": 0,
+  "groebner_basis_used": false,
+  "verification_status": "verified",
+  "formal_proof_lean4": null,
+  "debate_consensus_score": null,
+  "final_answer": "x^2 >= 0 verified",
+  "confidence_score": 1.0,
+  "total_latency_ms": 100.0,
+  "agents_activated": 0,
+  "symbolic_ops_count": 0,
+  "metadata": {}
+}

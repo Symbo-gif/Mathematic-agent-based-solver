@@ -1,0 +1,124 @@
+# Edit Log: Rule Engine Improvements - Session 4 Part 2
+# Date: 2025-12-12
+# Time: ~17:06
+# Session: Adding parity, series convergence, and limit evaluation rules
+
+## Summary
+Implemented high-impact mathematical rules identified in the second analysis:
+- Parity/symmetry detection using SymPy substitution (f(-x) = -f(x) check)
+- Series convergence: n-th term divergence test, geometric series, exp series
+- Limit evaluation: Fixed routing and metadata passing
+- Fixed SymPy symbol assumption issues for limit computation
+
+## Files Modified
+
+### 1. src/symbo_agentic_reasoners/core/native_calculus.py
+
+#### A. Parity/Symmetry Detection (lines 8860-8927)
+- Enhanced `_check_symmetry_integral()` to use SymPy's symbolic substitution
+- Fast-path pattern matching retained for common cases
+- Robust detection: f + f.subs(x, -x) == 0 implies odd function
+- Returns "0 (odd function over symmetric bounds)" for odd functions
+
+Note: The analysis file incorrectly identified x**3*sin(x) as odd - it's actually EVEN:
+- f(-x) = (-x)^3 * sin(-x) = -x^3 * (-sin(x)) = x^3 * sin(x) = f(x)
+- So the numeric result 0.354 is correct, not a bug!
+
+#### B. N-th Term Divergence Test (lines 8678-8760)
+- New `_check_nth_term_divergence_sympy()` function using SymPy limits
+- CRITICAL FIX: Symbol assumption substitution (lines 8693-8699)
+  - sympify creates symbols without assumptions
+  - Replaced with properly-assumed symbol (positive=True, integer=True)
+  - This fixes limit computation for expressions like (1/2)**n
+- Polynomial degree analysis for rational functions
+- Fallback numerical evaluation for complex cases
+
+#### C. Geometric Series Recognition (lines 8763-8825)
+- New `_try_geometric_series()` function
+- Pattern matching for (fraction)**n, decimal**n
+- SymPy-based detection via ratio a_{n+1}/a_n
+- Returns closed-form sum: r^n -> r/(1-r) for start=1, 1/(1-r) for start=0
+
+#### D. Exp Series Recognition (lines 8828-8894)
+- New `_try_exp_series()` function
+- Pattern matching for lambda**n/factorial(n)
+- SymPy-based detection via ratio test (ratio = lambda/(n+1))
+- Returns exp(lambda) for recognized exponential series
+
+#### E. series_sum() Integration (lines 8441-8460)
+- Added calls to new convergence tests BEFORE pattern matching:
+  1. n-th term divergence test (returns early if divergent)
+  2. Geometric series recognition
+  3. Exp series recognition
+- Pattern-based recognition follows for known series (Basel, etc.)
+
+### 2. src/symbo_agentic_reasoners/agents/supervisors/calculus_supervisor.py
+
+#### Limit Routing (lines 245-251)
+- Added routing for limit operations to 'math.calculus.limit' service
+- Keywords: 'limit', 'lim_', 'lim{', 'lim ', '->'
+- Also checks operation == 'limit' from metadata
+
+#### Summation Routing (lines 237-243)
+- Added routing for summation to Series Specialist
+- Keywords: 'summation', 'sum(', 'sum_', '\\sum'
+
+### 3. src/symbo_agentic_reasoners/agents/base/problem_analysis.py
+
+#### Limit Metadata Extraction (lines 367-370)
+- Added extraction of 'point' and 'direction' from cmd_meta
+- These are now passed to the LimitEvaluator specialist
+- Fixes: limits were being parsed but point wasn't passed to evaluator
+
+## Test Results (All Pass)
+
+### Series Tests:
+1. sum((3n+5)/(n+2), n=1..inf) -> "divergent (lim a_n = 3 != 0)"
+2. sum((1/2)**n, n=0..inf) -> "2.0" (geometric series)
+3. sum(5**n/factorial(n), n=0..inf) -> "exp(5.0)" (exp series)
+4. sum(1/n**2, n=1..inf) -> "pi**2/6" (Basel problem)
+
+### Limit Tests:
+1. lim(sin(x)/x) as x->0 -> "1" (sinc limit)
+2. lim((1+1/n)**n) as n->oo -> "e" (e-type limit)
+
+### Integration Tests:
+1. int(exp(-x**2), -inf, inf) -> "sqrt(pi)" (Gaussian)
+2. int(1/sqrt(4-x**2), -2, 2) -> "pi" (arcsin)
+
+## Technical Notes
+
+### Symbol Assumption Fix
+The key insight was that SymPy's sympify() creates symbols without mathematical assumptions.
+For limit computation of expressions like (1/2)**n to work correctly, the symbol n must have:
+- positive=True
+- integer=True
+
+Without these, sp.limit((1/2)**n, n, oo) returns the expression unchanged instead of 0.
+
+Solution: Replace the symbol in the parsed expression with a properly-assumed symbol:
+```python
+n = sp.Symbol(var, positive=True, integer=True)
+expr = sp.sympify(expr_str)
+for s in expr.free_symbols:
+    if s.name == var:
+        expr = expr.subs(s, n)
+        break
+```
+
+### Parity Clarification
+The analysis file claimed x**3*sin(x) is odd, but mathematical verification shows:
+- odd * odd = even (since (-1)^3 * (-1) = 1)
+- x^3 is odd, sin(x) is odd
+- Product is EVEN: f(-x) = (-x)^3 * sin(-x) = -x^3 * -sin(x) = x^3 * sin(x) = f(x)
+
+So the numeric integral result of 0.354 over [-1,1] is mathematically correct.
+
+## Status
+All identified rule improvements implemented and tested:
+- [x] Parity/symmetry detection (with SymPy symbolic check)
+- [x] Series n-th term divergence test (with proper symbol assumptions)
+- [x] Geometric series recognition
+- [x] Exp series recognition
+- [x] Limit routing to LimitEvaluator
+- [x] Limit metadata (point, direction) passing

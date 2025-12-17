@@ -1,0 +1,31 @@
+======================================================================
+SYMBO STRESS TEST SUMMARY
+======================================================================
+Date: 2025-12-12 17:29:44
+Duration: 0.0 minutes
+Equations tested: 5 / 5
+
+OVERALL RESULTS:
+  Success: 0 (0.0%)
+  Failed:  0 (0.0%)
+  Timeout: 0 (0.0%)
+  Error:   5 (100.0%)
+
+BY CATEGORY:
+  definite_integrals:
+    Total: 5, Success: 0 (0.0%)
+
+FAILED EQUATIONS:
+--------------------------------------------------
+  [ERROR] integrate(exp(-x**2), (x, -oo, oo))
+    Error: ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C
+  [ERROR] integrate(exp(-x**2/2), (x, -oo, oo))
+    Error: ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C
+  [ERROR] integrate(x**2 * exp(-x**2), (x, -oo, oo))
+    Error: ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C
+  [ERROR] integrate(x**4 * exp(-x**2), (x, -oo, oo))
+    Error: ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C
+  [ERROR] integrate(exp(-x**2) * cos(x), (x, -oo, oo))
+    Error: ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C
+
+======================================================================

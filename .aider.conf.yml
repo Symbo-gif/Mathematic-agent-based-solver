@@ -1,0 +1,50 @@
+# Aider Configuration for SYMBO_AGENTIC_REASONERS
+
+# Project context file
+read:
+  - .claude/CLAUDE.md
+
+# Conventions reference
+conventions: |
+  ## SYMBO_AGENTIC_REASONERS (v0.6.0)
+  Multi-agent mathematical discovery engine with BDI architecture.
+
+  ## File Locations
+  - Source: src/symbo_agentic_reasoners/
+  - Tests: tests/
+  - Audits: audit/reports/
+  - Assessments: docs/assessments/critical/ (current) or archive/
+  - Traces: data/traces/{thought,audit,test}/
+  - Legacy (READ-ONLY): docs/MASTER_ARCHIVE/
+
+  ## ARCHIVING RULE (MANDATORY)
+  When archiving assessments/audits:
+  1. Copy to archive: {NAME}_v{VERSION}_{YYYY-MM-DD}.md
+  2. DELETE original after confirming archive exists
+  3. Never leave duplicates
+
+  Archive locations:
+  - docs/assessments/archive/
+  - audit/reports/archive/
+
+  ## Imports
+  Always use: from symbo_agentic_reasoners.{module} import ...
+  Never use legacy phase folder imports.
+
+  ## Agent Hierarchy
+  Tier 1: Orchestrator
+  Tier 2: Domain Supervisors (Algebra, Calculus, LinAlg, Stats)
+  Tier 3: Task Specialists
+
+  ## Testing
+  python -m pytest tests/
+  python scripts/quick_test.py
+
+# Auto-commits disabled by default
+auto-commits: false
+
+# Linting
+lint-cmd: ruff check --fix
+
+# Test command
+test-cmd: python -m pytest tests/ -x

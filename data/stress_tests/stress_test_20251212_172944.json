@@ -1,0 +1,129 @@
+{
+  "timestamp": "2025-12-12T17:29:44.124797",
+  "config": {
+    "timeout_minutes": 5,
+    "max_equations": 5,
+    "total_equations": 640
+  },
+  "stats": {
+    "total": 5,
+    "success": 0,
+    "failed": 0,
+    "timeout": 0,
+    "error": 5,
+    "by_category": {
+      "definite_integrals": {
+        "total": 5,
+        "success": 0,
+        "failed": 0,
+        "error": 5
+      },
+      "indefinite_integrals": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "infinite_series": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "limits": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "derivatives": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "differential_equations": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "linear_algebra": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "number_theory": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "probability_statistics": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "physics_applied": {
+        "total": 0,
+        "success": 0,
+        "failed": 0,
+        "error": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "equation": "integrate(exp(-x**2), (x, -oo, oo))",
+      "status": "error",
+      "result": null,
+      "time_ms": 13.216972351074219,
+      "error": "ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\Mathematic agent based solver\\tests\\stress_test_runner.py\", line 99, in _solve_equation\n    from symbo_agentic_reasoners.cli import SymboCLI\nImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)\n",
+      "category": "definite_integrals",
+      "index": 0
+    },
+    {
+      "equation": "integrate(exp(-x**2/2), (x, -oo, oo))",
+      "status": "error",
+      "result": null,
+      "time_ms": 0.006198883056640625,
+      "error": "ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\Mathematic agent based solver\\tests\\stress_test_runner.py\", line 99, in _solve_equation\n    from symbo_agentic_reasoners.cli import SymboCLI\nImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)\n",
+      "category": "definite_integrals",
+      "index": 1
+    },
+    {
+      "equation": "integrate(x**2 * exp(-x**2), (x, -oo, oo))",
+      "status": "error",
+      "result": null,
+      "time_ms": 0.004291534423828125,
+      "error": "ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\Mathematic agent based solver\\tests\\stress_test_runner.py\", line 99, in _solve_equation\n    from symbo_agentic_reasoners.cli import SymboCLI\nImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)\n",
+      "category": "definite_integrals",
+      "index": 2
+    },
+    {
+      "equation": "integrate(x**4 * exp(-x**2), (x, -oo, oo))",
+      "status": "error",
+      "result": null,
+      "time_ms": 0.0040531158447265625,
+      "error": "ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\Mathematic agent based solver\\tests\\stress_test_runner.py\", line 99, in _solve_equation\n    from symbo_agentic_reasoners.cli import SymboCLI\nImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)\n",
+      "category": "definite_integrals",
+      "index": 3
+    },
+    {
+      "equation": "integrate(exp(-x**2) * cos(x), (x, -oo, oo))",
+      "status": "error",
+      "result": null,
+      "time_ms": 0.0035762786865234375,
+      "error": "ImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\dev\\Mathematic agent based solver\\tests\\stress_test_runner.py\", line 99, in _solve_equation\n    from symbo_agentic_reasoners.cli import SymboCLI\nImportError: cannot import name 'SymboCLI' from 'symbo_agentic_reasoners.cli' (C:\\dev\\Mathematic agent based solver\\tests\\..\\src\\symbo_agentic_reasoners\\cli.py)\n",
+      "category": "definite_integrals",
+      "index": 4
+    }
+  ]
+}

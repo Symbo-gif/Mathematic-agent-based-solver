@@ -1,0 +1,69 @@
+# SYMBO_AGENTIC_REASONERS - Cursor AI Rules
+
+## Project Overview
+Multi-agent mathematical discovery engine (v0.6.0) using BDI cognitive architecture, FIPA-ACL messaging, and symbolic computation.
+
+## File Placement Rules
+
+### Source Code
+- ALL code goes in `src/symbo_agentic_reasoners/`
+- Tests go in `tests/` (mirror src structure)
+- NEVER put code in root or legacy `symbo_agentic_reasoners_phase*` folders
+
+### File Type Locations
+- Source (.py): `src/symbo_agentic_reasoners/{core,agents,protocols,etc}/`
+- Tests: `tests/{unit,integration}/`
+- Audit reports: `audit/reports/`
+- Current assessments: `docs/assessments/critical/`
+- Architecture docs: `docs/architecture/`
+- Traces: `data/traces/{thought,audit,test}/`
+- Scripts: `scripts/`
+
+## CRITICAL: Archiving Protocol
+
+When archiving assessments, audits, or any versioned documents:
+
+1. COPY to archive with version + timestamp:
+   `docs/assessments/archive/{NAME}_v{VERSION}_{YYYY-MM-DD}.md`
+
+2. DELETE the original after successful copy
+
+3. VERIFY archive exists before deleting original
+
+Archive locations:
+- Assessments: `docs/assessments/archive/`
+- Audit reports: `audit/reports/archive/`
+- Legacy code (read-only): `docs/MASTER_ARCHIVE/`
+
+## Import Patterns
+```python
+from symbo_agentic_reasoners.core import OMObject, BDIAgent, Blackboard
+from symbo_agentic_reasoners.protocols import FIPAMessage
+from symbo_agentic_reasoners.infrastructure import AgentManagementSystem
+from symbo_agentic_reasoners.agents.supervisors.algebra_supervisor import AlgebraSupervisor
+```
+
+## Agent Hierarchy
+- Tier 1: Main Orchestrator
+- Tier 2: Domain Supervisors (Algebra, Calculus, LinAlg, Stats)
+- Tier 3: Task Specialists (Polynomial, Integration, Matrix, Bayesian, etc.)
+
+## Phases (Reference)
+0: Infrastructure (OMDoc, BDI, FIPA)
+1: Cognitive Chassis (Orchestrator, Parser)
+2: Mathematical Workforce (Supervisors, Specialists)
+3: Meta-Cognitive (Validation, Knowledge)
+4: Governance (Conflict, Failure Analysis)
+5: Optimization (Distillation, SymboLLM)
+6: Discovery (Conjecture, Deep Search)
+
+## Commands
+- Test: `python -m pytest tests/`
+- Quick test: `python scripts/quick_test.py`
+- Audit: `python scripts/run_all_audits.py`
+
+## Don'ts
+- Don't create files in legacy phase folders
+- Don't leave duplicates after archiving
+- Don't use relative imports across packages
+- Don't put traces in project root

@@ -36,14 +36,115 @@ REFERENCE:
 import sys
 import os
 import logging
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Pattern
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 import hashlib
 import re
+import signal
+import threading
 
 logger = logging.getLogger('symbo_agentic_reasoners.phase5.security_monitor')
+
+# Security constants for regex validation
+MAX_PATTERN_LENGTH = 500  # Maximum regex pattern length
+REGEX_TIMEOUT_SECONDS = 0.1  # Maximum time for regex matching
+
+# Patterns that could cause ReDoS (catastrophic backtracking)
+DANGEROUS_REGEX_PATTERNS = [
+    r'\(\.\*\)\+',           # (.*)+
+    r'\(\.\+\)\+',           # (.+)+
+    r'\([^)]*\+[^)]*\)\+',   # (a+)+ style patterns
+    r'\([^)]*\*[^)]*\)\+',   # (a*)+
+    r'\([^)]*\+[^)]*\)\*',   # (a+)*
+    r'\([^)]*\*[^)]*\)\*',   # (a*)*
+    r'\\d\+\\d\+',           # \d+\d+ adjacent quantifiers
+    r'\.\*\.\*\.\*',         # Multiple .* in sequence
+]
+DANGEROUS_REGEX = re.compile('|'.join(DANGEROUS_REGEX_PATTERNS))
+
+
+def _validate_regex_pattern(pattern: str) -> tuple:
+    """
+    Validate a regex pattern for safety.
+
+    Returns:
+        (is_safe: bool, error_message: str or None)
+    """
+    if not isinstance(pattern, str):
+        return False, "Pattern must be a string"
+
+    if len(pattern) > MAX_PATTERN_LENGTH:
+        return False, f"Pattern too long: {len(pattern)} > {MAX_PATTERN_LENGTH}"
+
+    # Check for dangerous patterns that could cause ReDoS
+    if DANGEROUS_REGEX.search(pattern):
+        return False, "Pattern contains potential ReDoS vulnerability"
+
+    # Check for deeply nested groups (potential exponential backtracking)
+    nesting_depth = 0
+    max_nesting = 0
+    for char in pattern:
+        if char == '(':
+            nesting_depth += 1
+            max_nesting = max(max_nesting, nesting_depth)
+        elif char == ')':
+            nesting_depth -= 1
+
+    if max_nesting > 5:
+        return False, f"Pattern nesting too deep: {max_nesting} > 5"
+
+    # Try to compile the pattern
+    try:
+        re.compile(pattern)
+    except re.error as e:
+        return False, f"Invalid regex: {e}"
+
+    return True, None
+
+
+def _compile_regex_safe(pattern: str) -> Optional[Pattern]:
+    """
+    Safely compile a regex pattern with validation.
+
+    Returns compiled pattern or None if invalid.
+    """
+    is_safe, error = _validate_regex_pattern(pattern)
+    if not is_safe:
+        logger.warning(f"Unsafe regex pattern rejected: {error}")
+        return None
+
+    try:
+        return re.compile(pattern)
+    except re.error:
+        return None
+
+
+def _safe_regex_match(compiled_pattern: Optional[Pattern], text: str, timeout: float = REGEX_TIMEOUT_SECONDS) -> Optional[re.Match]:
+    """
+    Perform regex match with timeout protection.
+
+    Uses a simple approach: limit text length and use compiled pattern.
+    On Windows where signal.alarm isn't available, we rely on pattern validation.
+    """
+    if compiled_pattern is None:
+        return None
+
+    # Limit input text length to prevent DoS
+    if len(text) > 10000:
+        text = text[:10000]
+
+    try:
+        # Use match with the compiled pattern
+        return compiled_pattern.match(text)
+    except Exception as e:
+        logger.warning(f"Regex match failed: {e}")
+        return None
+
+
+# Cache for compiled regex patterns
+_compiled_pattern_cache: Dict[str, Optional[Pattern]] = {}
 
 from symbo_agentic_reasoners.core.bdi_agent import BDIAgent, Intention
 from symbo_agentic_reasoners.infrastructure.directory_facilitator import (
@@ -134,7 +235,40 @@ class AccessPolicy:
     allowed_actions: Set[str]
     max_rate_per_minute: int = 100
     enabled: bool = True
-    
+    # Compiled patterns (cached for performance and security)
+    _compiled_agent_pattern: Optional[Pattern] = field(default=None, repr=False)
+    _compiled_resource_pattern: Optional[Pattern] = field(default=None, repr=False)
+
+    def __post_init__(self):
+        """Compile and validate regex patterns on initialization."""
+        # Compile agent pattern with validation
+        if self.agent_pattern and self._compiled_agent_pattern is None:
+            self._compiled_agent_pattern = _compile_regex_safe(self.agent_pattern)
+            if self._compiled_agent_pattern is None:
+                logger.warning(f"Policy {self.policy_id}: Invalid agent_pattern, using literal match")
+
+        # Compile resource pattern with validation
+        if self.resource_pattern and self._compiled_resource_pattern is None:
+            self._compiled_resource_pattern = _compile_regex_safe(self.resource_pattern)
+            if self._compiled_resource_pattern is None:
+                logger.warning(f"Policy {self.policy_id}: Invalid resource_pattern, using literal match")
+
+    def match_agent(self, agent_id: str) -> bool:
+        """Safely match agent ID against pattern."""
+        if self._compiled_agent_pattern is not None:
+            result = _safe_regex_match(self._compiled_agent_pattern, agent_id)
+            return result is not None
+        # Fallback to literal match if pattern compilation failed
+        return agent_id == self.agent_pattern
+
+    def match_resource(self, resource: str) -> bool:
+        """Safely match resource against pattern."""
+        if self._compiled_resource_pattern is not None:
+            result = _safe_regex_match(self._compiled_resource_pattern, resource)
+            return result is not None
+        # Fallback to literal match if pattern compilation failed
+        return resource == self.resource_pattern
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             'policy_id': self.policy_id,
@@ -330,7 +464,15 @@ class SecurityMonitor(BDIAgent):
                     f"Unknown agent {agent_id} attempted {action} on {resource}",
                     "Verify agent identity and register if legitimate"
                 )
-                # Allow but audit
+                # DENY access to restricted resources for unknown agents
+                restricted_prefixes = ('admin/', 'system/', 'ams/', 'config/',
+                                      'infrastructure/', 'supervisor/')
+                if resource.startswith(restricted_prefixes):
+                    decision = AccessDecision.DENY
+                    self._log_access(agent_id, resource, action, decision)
+                    self.access_denials += 1
+                    return decision
+                # Allow but audit non-restricted resources
                 decision = AccessDecision.AUDIT
                 self._log_access(agent_id, resource, action, decision)
                 return decision
@@ -349,21 +491,39 @@ class SecurityMonitor(BDIAgent):
                 self.access_denials += 1
                 return decision
             
+            # Check for restricted resources first (deny non-privileged access)
+            # Admin/system/infrastructure resources require privileged agent
+            if resource.startswith(('admin/', 'system/', 'ams/', 'config/', 'infrastructure/')):
+                if not agent_id.startswith(('admin', 'system', 'ams', 'infrastructure')):
+                    decision = AccessDecision.DENY
+                    self._log_access(agent_id, resource, action, decision)
+                    self.access_denials += 1
+                    return decision
+
+            # Supervisor resources require supervisor prefix
+            if resource.startswith('supervisor/'):
+                if not any(agent_id.startswith(p) for p in ('admin', 'system', 'supervisor', 'orchestrator')):
+                    decision = AccessDecision.DENY
+                    self._log_access(agent_id, resource, action, decision)
+                    self.access_denials += 1
+                    return decision
+
             # Check policies
             for policy in self.policies.values():
                 if not policy.enabled:
                     continue
-                
-                agent_match = re.match(policy.agent_pattern, agent_id)
-                resource_match = re.match(policy.resource_pattern, resource)
-                
+
+                # Use safe regex matching (validates patterns, prevents ReDoS)
+                agent_match = policy.match_agent(agent_id)
+                resource_match = policy.match_resource(resource)
+
                 if agent_match and resource_match:
                     if action in policy.allowed_actions:
                         decision = AccessDecision.ALLOW
                         self._log_access(agent_id, resource, action, decision)
                         self.tasks_succeeded += 1
                         return decision
-            
+
             # Default deny
             decision = AccessDecision.DENY
             self._log_access(agent_id, resource, action, decision)
@@ -393,10 +553,10 @@ class SecurityMonitor(BDIAgent):
         # Check count against policy
         current_rate = len(self.rate_counters[agent_id])
         
-        # Find applicable policy
+        # Find applicable policy (use safe matching)
         max_rate = 1000  # Default
         for policy in self.policies.values():
-            if re.match(policy.agent_pattern, agent_id):
+            if policy.match_agent(agent_id):
                 max_rate = min(max_rate, policy.max_rate_per_minute)
         
         if current_rate >= max_rate:

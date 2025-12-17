@@ -1,0 +1,61 @@
+# Windsurf/Codeium Rules for SYMBO_AGENTIC_REASONERS
+
+## Project: Multi-agent Mathematical Discovery Engine (v0.6.0)
+
+Architecture: BDI cognitive agents + FIPA-ACL messaging + SymPy symbolic computation
+
+## Source Code Location
+ALL code: `src/symbo_agentic_reasoners/`
+
+Subfolders:
+- core/ - OMDoc, BDI, Blackboard, Orchestrator
+- agents/supervisors/ - Tier 2 domain coordinators
+- agents/specialists/ - Tier 3 task experts
+- protocols/ - FIPA-ACL
+- infrastructure/ - AMS, ACC, DF
+- verification/, middleware/, solvers/, discovery/, optimization/
+
+## File Destinations
+
+| Type | Location |
+|------|----------|
+| Source (.py) | src/symbo_agentic_reasoners/ |
+| Tests | tests/ |
+| Audit reports | audit/reports/ |
+| Current assessments | docs/assessments/critical/ |
+| Archived assessments | docs/assessments/archive/ |
+| Traces | data/traces/{thought,audit,test}/ |
+| Legacy (READ-ONLY) | docs/MASTER_ARCHIVE/ |
+
+## ARCHIVING PROTOCOL (MANDATORY)
+
+When archiving assessments/audits:
+1. Copy: `{ARCHIVE_DIR}/{NAME}_v{VERSION}_{YYYY-MM-DD}.md`
+2. DELETE original after confirming archive
+3. NEVER leave duplicates
+
+## Imports
+```python
+from symbo_agentic_reasoners.core import OMObject, BDIAgent, Blackboard
+from symbo_agentic_reasoners.protocols import FIPAMessage
+from symbo_agentic_reasoners.agents.supervisors.algebra_supervisor import AlgebraSupervisor
+```
+
+## Agent Tiers
+1: Orchestrator | 2: Domain Supervisors | 3: Task Specialists
+
+## Phases
+0: Infrastructure | 1: Chassis | 2: Workforce | 3: Meta-Cognitive
+4: Governance | 5: Optimization | 6: Discovery
+
+## Testing
+```bash
+python -m pytest tests/
+python scripts/quick_test.py
+```
+
+## Prohibitions
+- No code in legacy phase folders
+- No duplicates after archiving
+- No traces in root (use data/traces/)
+- No modifying MASTER_ARCHIVE

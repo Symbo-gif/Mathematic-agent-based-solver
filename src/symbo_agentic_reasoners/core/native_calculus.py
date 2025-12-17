@@ -99,6 +99,7 @@ from .calculus import (
     # Definite integration
     definite_integrate,
     _check_log_singularity,
+    _try_gamma_power_integral,
 
     # Vector calculus
     gradient,

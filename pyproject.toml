@@ -1,0 +1,198 @@
+[project]
+name = "symbo_agentic_reasoners"
+version = "0.6.0"
+description = "Agent-Based Mathematical Discovery Engine - Multi-phase mathematical reasoning system"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "SYMBO_AGENTIC_REASONERS Development Team"}
+]
+keywords = ["mathematics", "multi-agent", "symbolic-computation", "neural-symbolic"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "sympy>=1.12,<2.0",
+    "numpy>=1.24.0,<2.0",
+    "scipy>=1.10.0",
+    "mpmath>=1.3.0",
+]
+
+[project.optional-dependencies]
+ml = [
+    "torch>=2.0.0",
+]
+vector = [
+    "chromadb>=0.4.0",
+    "sentence-transformers>=2.2.0",
+]
+graph = [
+    "networkx>=3.0",
+]
+optimization = [
+    "scikit-optimize>=0.9.0",
+]
+logic = [
+    "kanren>=0.2.3",
+]
+visualization = [
+    "matplotlib>=3.7.0",
+    "plotly>=5.14.0",
+]
+full = [
+    "torch>=2.0.0",
+    "chromadb>=0.4.0",
+    "sentence-transformers>=2.2.0",
+    "networkx>=3.0",
+    "scikit-optimize>=0.9.0",
+    "kanren>=0.2.3",
+    "matplotlib>=3.7.0",
+    "plotly>=5.14.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reasoners#readme"
+Repository = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reasoners"
+Issues = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reasoners/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["symbo_agentic_reasoners*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.md", "*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "audit"]
+python_files = ["test_*.py", "*_tests.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+# Filter warnings
+filterwarnings = [
+    # Ignore PytestReturnNotNoneWarning for tests that return True/False
+    "ignore::pytest.PytestReturnNotNoneWarning",
+    # Ignore scipy/numpy runtime warnings in spectral partitioner
+    "ignore:k >= N:RuntimeWarning",
+    # Ignore NumPy reload warning during test collection
+    "ignore:The NumPy module was reloaded:UserWarning",
+]
+# Custom markers
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "phase0: marks tests for Phase 0 infrastructure",
+    "phase1: marks tests for Phase 1 cognitive chassis",
+    "phase2: marks tests for Phase 2 mathematical workforce",
+    "phase3: marks tests for Phase 3 meta-cognitive",
+    "phase4: marks tests for Phase 4 governance",
+    "phase5: marks tests for Phase 5 optimization",
+    "phase6: marks tests for Phase 6 discovery",
+    "security: marks security-related tests",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | __pycache__
+    | Reference Documents
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # function call in default argument
+]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["src/symbo_agentic_reasoners"]
+branch = true
+omit = [
+    "*/__pycache__/*",
+    "*/tests/*",
+    "*/.venv/*",
+    "*/Reference Documents/*",
+]
+# Parallel mode for multi-process testing
+parallel = true
+
+[tool.coverage.report]
+# Show missing lines
+show_missing = true
+# Fail if coverage drops below threshold
+# Start at 10% - will increase as test coverage improves
+fail_under = 10
+# Exclude lines from coverage
+exclude_lines = [
+    # Standard pragmas
+    "pragma: no cover",
+    # Don't count defensive assertions
+    "raise AssertionError",
+    "raise NotImplementedError",
+    # Don't count debug-only code
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if typing.TYPE_CHECKING:",
+    # Don't count abstract methods
+    "@abstractmethod",
+    "@abc.abstractmethod",
+    # Don't count ... (ellipsis for Protocol methods)
+    "\\.\\.\\.",
+]
+# Precision for coverage percentages
+precision = 2
+
+[tool.coverage.html]
+directory = "htmlcov"
+title = "SYMBO_AGENTIC_REASONERS Coverage Report"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.coverage.json]
+output = "coverage.json"
+pretty_print = true

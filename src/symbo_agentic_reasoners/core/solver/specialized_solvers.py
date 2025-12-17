@@ -298,6 +298,54 @@ def solve_quaternary_quadratic(coeffs: tuple, target: int, search_range: int = 1
     return solutions
 
 
+def solve_mixed_quartic(coeffs: tuple, target: int, search_range: int = 20) -> set:
+    """
+    Find solutions to a*x⁴ + b*y⁴ + c*z⁴ + d*w² = target.
+
+    Mixed quartic-quadratic Diophantine equation solver.
+    Small search range due to O(n⁴) complexity.
+    """
+    solutions = set()
+    a, b, c, d = coeffs
+
+    # For quartic terms, the range shrinks rapidly
+    max_x = min(int((abs(target) / max(abs(a), 1)) ** 0.25) + 2, search_range)
+    max_y = min(int((abs(target) / max(abs(b), 1)) ** 0.25) + 2, search_range)
+    max_z = min(int((abs(target) / max(abs(c), 1)) ** 0.25) + 2, search_range)
+    max_w = min(int((abs(target) / max(abs(d), 1)) ** 0.5) + 2, search_range)
+
+    for x in range(-max_x, max_x + 1):
+        x4 = a * x**4
+        for y in range(-max_y, max_y + 1):
+            y4 = b * y**4
+            for z in range(-max_z, max_z + 1):
+                z4 = c * z**4
+                remainder = target - x4 - y4 - z4
+                # Check if remainder is achievable with d*w²
+                if d != 0 and remainder % 1 == 0:  # integer check
+                    # w² = remainder / d
+                    if d > 0:
+                        if remainder >= 0 and remainder % d == 0:
+                            w2 = remainder // d
+                            w = int(w2 ** 0.5)
+                            if w * w == w2:
+                                solutions.add((x, y, z, w))
+                                if w != 0:
+                                    solutions.add((x, y, z, -w))
+                    else:  # d < 0
+                        if remainder <= 0 and remainder % d == 0:
+                            w2 = remainder // d
+                            w = int(w2 ** 0.5)
+                            if w * w == w2:
+                                solutions.add((x, y, z, w))
+                                if w != 0:
+                                    solutions.add((x, y, z, -w))
+                elif d == 0 and remainder == 0:
+                    solutions.add((x, y, z, 0))
+
+    return solutions
+
+
 def solve_mordell_curve(k: int, search_range: int = 1000) -> set:
     """Find integer solutions to y^2 = x^3 + k (Mordell curve) or x^5 - y^2 = k."""
     solutions = set()

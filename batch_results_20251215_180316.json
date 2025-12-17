@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-12-15T18:03:16.967393",
+  "source": "C:\\Users\\there\\AppData\\Local\\Temp\\pytest-of-there\\pytest-149\\test_main_batch0\\test.txt",
+  "total_problems": 1,
+  "solved": 1,
+  "failed": 0,
+  "results": [
+    {
+      "status": "success",
+      "result": "2",
+      "original_problem": "1+1",
+      "source": "input"
+    }
+  ]
+}

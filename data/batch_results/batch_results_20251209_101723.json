@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-12-09T10:17:23.997978",
+  "source": "C:\\Users\\there\\AppData\\Local\\Temp\\pytest-of-there\\pytest-57\\test_batch_process_json_with_p0\\problems.json",
+  "total_problems": 2,
+  "solved": 2,
+  "failed": 0,
+  "results": [
+    {
+      "status": "success",
+      "result": "2",
+      "problem_type": "expression",
+      "domain": "algebra",
+      "specialist": "sympy_fallback",
+      "time_ms": 0.31,
+      "error": null,
+      "original_problem": "1+1",
+      "source": "input"
+    },
+    {
+      "status": "success",
+      "result": "4",
+      "problem_type": "expression",
+      "domain": "algebra",
+      "specialist": "sympy_fallback",
+      "time_ms": 0.26,
+      "error": null,
+      "original_problem": "2+2",
+      "source": "input"
+    }
+  ]
+}

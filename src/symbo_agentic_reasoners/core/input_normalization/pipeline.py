@@ -377,22 +377,26 @@ def normalize_input(
     return pipeline.normalize(text)
 
 
-def safe_normalize(text: str, default: str = "") -> str:
+def safe_normalize(text: str, default: str = "") -> tuple:
     """
-    Safely normalize input, returning default on error.
+    Safely normalize input, returning a tuple with status.
 
     Args:
         text: Raw mathematical input
-        default: Value to return on error
+        default: Value to return on error (unused, kept for compatibility)
 
     Returns:
-        Normalized expression or default
+        Tuple of (normalized_text, success, error_message)
+        - normalized_text: Normalized expression string
+        - success: True if normalization succeeded
+        - error_message: None if success, error string otherwise
     """
     try:
-        return normalize_input(text)
+        result = normalize_input(text)
+        return (result, True, None)
     except Exception as e:
         logger.warning(f"Normalization failed for '{text}': {e}")
-        return default
+        return (str(text), False, str(e))
 
 
 __all__ = [

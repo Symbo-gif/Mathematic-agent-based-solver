@@ -1,0 +1,57 @@
+======================================================================
+SYMBO STRESS TEST SUMMARY
+======================================================================
+Date: 2025-12-12 22:09:42
+Duration: 0.3 minutes
+Equations tested: 600 / 600
+
+OVERALL RESULTS:
+  Success: 591 (98.5%)
+  Failed:  9 (1.5%)
+  Timeout: 0 (0.0%)
+  Error:   0 (0.0%)
+
+BY CATEGORY:
+  definite_integrals:
+    Total: 100, Success: 100 (100.0%)
+  indefinite_integrals:
+    Total: 50, Success: 50 (100.0%)
+  infinite_series:
+    Total: 90, Success: 90 (100.0%)
+  limits:
+    Total: 100, Success: 94 (94.0%)
+  derivatives:
+    Total: 50, Success: 50 (100.0%)
+  differential_equations:
+    Total: 50, Success: 50 (100.0%)
+  linear_algebra:
+    Total: 50, Success: 50 (100.0%)
+  number_theory:
+    Total: 50, Success: 47 (94.0%)
+  probability_statistics:
+    Total: 50, Success: 50 (100.0%)
+  physics_applied:
+    Total: 10, Success: 10 (100.0%)
+
+FAILED EQUATIONS:
+--------------------------------------------------
+  [FAILED] limit((x**n - a**n)/(x - a), x, a)
+    Error: SymPy computation failed: Result depends on the sign of sign(n)
+  [FAILED] limit(exp(x)/x**n, x, oo)
+    Error: SymPy computation failed: Not sure of sign of -n
+  [FAILED] limit(x**n/exp(x), x, oo)
+    Error: SymPy computation failed: Not sure of sign of n
+  [FAILED] limit(x**a * log(x), x, 0)
+    Error: SymPy computation failed: Not sure of sign of a
+  [FAILED] limit(n * (x**(1/n) - 1), n, oo)
+    Error: SymPy computation failed: Result depends on the sign of sign(log(x))
+  [FAILED] limit(product((1 + 1/k**2), (k, 1, n)), n, oo)
+    Error: SymPy computation failed: Invalid comparison of non-real 1 + I
+  [FAILED] diophantine(x**2 - y**3 - 1)
+    Error: Failed to parse problem
+  [FAILED] diophantine(x**3 + y**3 - z**3)
+    Error: Failed to parse problem
+  [FAILED] diophantine(a*x + b*y - c)
+    Error: Failed to parse problem
+
+======================================================================

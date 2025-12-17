@@ -1,0 +1,423 @@
+{
+  "summary": {
+    "total_tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "pass_rate": "100.0%",
+    "total_time_seconds": 0.38
+  },
+  "comparison": {
+    "spectral_avg_purity": 0.9063,
+    "balanced_avg_purity": 0.9766,
+    "improvement": "-7.2%"
+  },
+  "scalability": {
+    "100": {
+      "partition_time_ms": 0.16117095947265625,
+      "total_time_ms": 3.6776065826416016
+    },
+    "500": {
+      "partition_time_ms": 0.5035400390625,
+      "total_time_ms": 20.2789306640625
+    },
+    "1000": {
+      "partition_time_ms": 0.8287429809570312,
+      "total_time_ms": 59.64541435241699
+    },
+    "2000": {
+      "partition_time_ms": 1.6257762908935547,
+      "total_time_ms": 242.82026290893555
+    }
+  },
+  "categories": {
+    "smoke_tests": {
+      "passed": 6,
+      "total": 6
+    },
+    "edge_cases": {
+      "passed": 5,
+      "total": 5
+    },
+    "comparisons": {
+      "passed": 6,
+      "total": 6
+    },
+    "scalability": {
+      "passed": 4,
+      "total": 4
+    }
+  },
+  "all_results": [
+    {
+      "test_name": "basic_tree",
+      "strategy": "spectral",
+      "num_states": 121,
+      "num_workers": 4,
+      "partition_sizes": [
+        31,
+        30,
+        30,
+        30
+      ],
+      "balance_ratio": 0.9677,
+      "spectral_gap": 0.0065,
+      "partition_time_ms": 0.36,
+      "total_time_ms": 4.65,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "strategy_spectral",
+      "strategy": "spectral",
+      "num_states": 15,
+      "num_workers": 4,
+      "partition_sizes": [
+        15,
+        0,
+        0,
+        0
+      ],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 1.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "strategy_balanced",
+      "strategy": "balanced",
+      "num_states": 15,
+      "num_workers": 4,
+      "partition_sizes": [
+        15,
+        0,
+        0,
+        0
+      ],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 1.34,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "strategy_value",
+      "strategy": "value",
+      "num_states": 15,
+      "num_workers": 4,
+      "partition_sizes": [
+        15,
+        0,
+        0,
+        0
+      ],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.92,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "worker_assignment_methods",
+      "strategy": "spectral",
+      "num_states": 50,
+      "num_workers": 4,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "empty_states",
+      "strategy": "spectral",
+      "num_states": 0,
+      "num_workers": 4,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "single_state",
+      "strategy": "spectral",
+      "num_states": 1,
+      "num_workers": 4,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "more_workers_than_states",
+      "strategy": "spectral",
+      "num_states": 3,
+      "num_workers": 10,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "disconnected_components",
+      "strategy": "spectral",
+      "num_states": 20,
+      "num_workers": 4,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "identical_values",
+      "strategy": "spectral",
+      "num_states": 50,
+      "num_workers": 4,
+      "partition_sizes": [],
+      "balance_ratio": 0.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 0.0,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "clustered_comparison_spectral",
+      "strategy": "spectral",
+      "num_states": 200,
+      "num_workers": 4,
+      "partition_sizes": [
+        50,
+        50,
+        50,
+        50
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.23,
+      "total_time_ms": 5.96,
+      "overlap_score": 0.0,
+      "frontier_coverage": 1.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "clustered_comparison_balanced",
+      "strategy": "balanced",
+      "num_states": 200,
+      "num_workers": 4,
+      "partition_sizes": [
+        50,
+        50,
+        50,
+        50
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": -0.0,
+      "partition_time_ms": 0.11,
+      "total_time_ms": 5.76,
+      "overlap_score": 0.0,
+      "frontier_coverage": 1.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "tree_comparison_spectral",
+      "strategy": "spectral",
+      "num_states": 364,
+      "num_workers": 4,
+      "partition_sizes": [
+        91,
+        93,
+        91,
+        89
+      ],
+      "balance_ratio": 0.957,
+      "spectral_gap": 0.002,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 8.09,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.8127,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "tree_comparison_balanced",
+      "strategy": "balanced",
+      "num_states": 364,
+      "num_workers": 4,
+      "partition_sizes": [
+        91,
+        91,
+        91,
+        91
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.002,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 6.33,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.9532,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "random_graph_spectral",
+      "strategy": "spectral",
+      "num_states": 200,
+      "num_workers": 4,
+      "partition_sizes": [
+        51,
+        50,
+        49,
+        50
+      ],
+      "balance_ratio": 0.9608,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 4.44,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "random_graph_balanced",
+      "strategy": "balanced",
+      "num_states": 200,
+      "num_workers": 4,
+      "partition_sizes": [
+        50,
+        50,
+        50,
+        50
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": -0.0,
+      "partition_time_ms": 0.0,
+      "total_time_ms": 4.84,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "scalability_100",
+      "strategy": "spectral",
+      "num_states": 100,
+      "num_workers": 4,
+      "partition_sizes": [
+        25,
+        25,
+        25,
+        25
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.0005,
+      "partition_time_ms": 0.16,
+      "total_time_ms": 3.68,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "scalability_500",
+      "strategy": "spectral",
+      "num_states": 500,
+      "num_workers": 4,
+      "partition_sizes": [
+        125,
+        125,
+        125,
+        125
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.5,
+      "total_time_ms": 20.28,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "scalability_1000",
+      "strategy": "spectral",
+      "num_states": 1000,
+      "num_workers": 4,
+      "partition_sizes": [
+        250,
+        250,
+        250,
+        250
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 0.83,
+      "total_time_ms": 59.65,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    },
+    {
+      "test_name": "scalability_2000",
+      "strategy": "spectral",
+      "num_states": 2000,
+      "num_workers": 4,
+      "partition_sizes": [
+        500,
+        500,
+        500,
+        500
+      ],
+      "balance_ratio": 1.0,
+      "spectral_gap": 0.0,
+      "partition_time_ms": 1.63,
+      "total_time_ms": 242.82,
+      "overlap_score": 0.0,
+      "frontier_coverage": 0.0,
+      "passed": true,
+      "error": null
+    }
+  ],
+  "failures": []
+}

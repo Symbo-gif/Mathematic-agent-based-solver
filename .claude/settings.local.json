@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /b \"c:\\dev\\Mathematic agent based solver\\src\\symbo_agentic_reasoners\")",
+      "Bash(python:*)",
+      "Bash(fc:*)",
+      "Bash(if not exist \"c:\\dev\\Mathematic agent based solver\\data\\docs\\MASTER_ARCHIVE\\decomposed_originals\" mkdir \"c:\\dev\\Mathematic agent based solver\\data\\docs\\MASTER_ARCHIVE\\decomposed_originals\")",
+      "Bash(find:*)",
+      "Bash(dir:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(cut:*)",
+      "Bash(copy:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(grep:*)",
+      "Bash(git stash push:*)",
+      "Bash(git stash:*)",
+      "Bash(for file in asymptotic_rules.py taylor_limits.py algebra_utilities.py gaussian_2d.py)",
+      "Bash(do sed -i 's/^from \\.ast_types/from ..ast_types/g; s/^from \\.differentiation/from ..differentiation/g; s/^from \\.expression_parser/from ..expression_parser/g; s/^from \\.validation/from ..validation/g; s/^from \\.calculus_utils/from ..calculus_utils/g' \"$file\")",
+      "Bash(done)",
+      "Bash(ls:*)",
+      "Bash(wc:*)",
+      "Bash(cat:*)",
+      "Bash(pip install:*)",
+      "Bash(cd c:devMathematic agent based solver)",
+      "Bash(timeout 600 python:*)",
+      "Bash(timeout 180 python scripts/run_brutal_stress_tests.py:*)",
+      "Bash(timeout 300 python:*)",
+      "Bash(move \"c:\\dev\\Mathematic agent based solver\\tests\\run_brutal_algebra_tests.py\" \"c:\\dev\\Mathematic agent based solver\\scripts\\run_brutal_algebra_tests.py\")",
+      "Bash(timeout 120 python:*)",
+      "Bash(sort:*)",
+      "Bash(for d in */)"
+    ]
+  }
+}

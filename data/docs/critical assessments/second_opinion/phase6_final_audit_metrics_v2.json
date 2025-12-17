@@ -1,0 +1,32 @@
+[
+  {
+    "test_path": "tests/test_phase6_prover_fix.py",
+    "timestamp": "2025-12-07T08:37:18.947562",
+    "duration_seconds": 0.7921562194824219,
+    "memory_start_mb": 33.75,
+    "memory_end_mb": 102.1484375,
+    "memory_delta_mb": 68.3984375,
+    "cpu_percent": 100.6,
+    "return_code": 0
+  },
+  {
+    "test_path": "tests/test_phase5_phase6_integration.py",
+    "timestamp": "2025-12-07T08:37:19.379675",
+    "duration_seconds": 0.4312560558319092,
+    "memory_start_mb": 102.1484375,
+    "memory_end_mb": 107.0078125,
+    "memory_delta_mb": 4.859375,
+    "cpu_percent": 97.8,
+    "return_code": 1
+  },
+  {
+    "test_path": "tests/unit/test_spectral_partitioner.py",
+    "timestamp": "2025-12-07T08:37:19.640505",
+    "duration_seconds": 0.26007533073425293,
+    "memory_start_mb": 107.0078125,
+    "memory_end_mb": 108.0703125,
+    "memory_delta_mb": 1.0625,
+    "cpu_percent": 96.1,
+    "return_code": 0
+  }
+]

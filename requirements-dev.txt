@@ -1,0 +1,19 @@
+# SYMBO_AGENTIC_REASONERS Development Dependencies
+# ==============================
+# Install with: pip install -r requirements-dev.txt
+# For development and testing
+
+-r requirements.txt
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Code formatting
+black>=23.0.0
+
+# Linting
+ruff>=0.1.0
+
+# Type checking
+mypy>=1.0.0

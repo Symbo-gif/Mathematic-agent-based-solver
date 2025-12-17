@@ -1,0 +1,129 @@
+## Project Structure
+
+```
+Mathematic agent based solver/
+├── src/                          # Source code (main package)
+│   └── symbo_agentic_reasoners/
+│       ├── agents/               # BDI agents organized by role
+│       │   ├── base/             # Base agent classes
+│       │   ├── supervisors/      # Domain supervisors (route work)
+│       │   └── specialists/      # Domain specialists (do work)
+│       ├── core/                 # Core infrastructure
+│       │   ├── calculus/         # Calculus subsystem
+│       │   ├── solver/           # Solver engine
+│       │   ├── symbolic/         # Native symbolic math (NO SYMPY)
+│       │   └── input_normalization/
+│       ├── infrastructure/       # System infrastructure
+│       │   ├── deployment/       # Deployment tools
+│       │   └── hardening/        # Security & resilience
+│       └── ...
+├── tests/                        # Test files
+├── scripts/                      # Utility scripts
+│   └── verification/             # Decomposition verification scripts
+├── bin/                          # Launcher scripts (.bat files)
+├── data/                         # Data and state
+│   ├── batch_results/            # Test batch results (JSON)
+│   └── docs/                     # Generated documentation
+├── docs/                         # Documentation
+│   ├── archive/                  # Historical documentation
+│   │   └── decomposition/        # Module decomposition records
+│   ├── context/                  # Context and research materials
+│   └── working_notes/            # Session notes and prompts
+├── main.py                       # Entry point
+├── pyproject.toml               # Project configuration
+├── config.yaml                  # Runtime configuration
+└── requirements*.txt            # Dependencies
+```
+
+## File Organization Rules
+
+### Where Files Should Go
+
+| File Type | Location | Example |
+|-----------|----------|---------|
+| Python source code | `src/symbo_agentic_reasoners/` | `core/solver.py` |
+| Tests | `tests/` | `test_solver.py` |
+| Utility scripts | `scripts/` | `run_audit.py` |
+| Launcher scripts (.bat) | `bin/` | `start_ui.bat` |
+| Batch test results | `data/batch_results/` | `batch_results_*.json` |
+| Decomposition docs | `docs/archive/decomposition/` | `SOLVER_DECOMPOSITION.md` |
+| Research/context | `docs/context/` | `research_synthesis.md` |
+| Working notes | `docs/working_notes/` | `session_notes.txt` |
+| Requirements | Root level | `requirements.txt` |
+| Project config | Root level | `pyproject.toml` |
+
+### Files That Should NOT Be at Root
+
+- Batch result JSON files → `data/batch_results/`
+- Decomposition documentation → `docs/archive/decomposition/`
+- Session notes/prompts → `docs/working_notes/`
+- Verification scripts → `scripts/verification/`
+- Launcher .bat files → `bin/`
+
+### Generated Files (gitignored)
+
+These are auto-generated and should not be committed:
+- `__pycache__/` - Python bytecode
+- `.pytest_cache/` - Pytest cache
+- `htmlcov/` - Coverage reports
+- `.coverage` - Coverage data
+- `.tmp/` - Temporary files
+
+## Architecture: Supervisor-Specialist Pattern
+
+The codebase follows a **supervisor-specialist architecture**:
+
+1. **Supervisors** (in `agents/supervisors/`)
+   - Route tasks to appropriate specialists
+   - Make strategic decisions (e.g., symbolic vs numerical)
+   - Never perform computations directly
+
+2. **Specialists** (in `agents/specialists/`)
+   - Perform actual mathematical computations
+   - Organized by domain (algebra, calculus, etc.)
+   - Register services with Directory Facilitator (DF)
+
+3. **Infrastructure** (Phase 0)
+   - AMS: Agent Management System
+   - DF: Directory Facilitator (service registry)
+   - ACC: Agent Communication Channel
+   - Blackboard: Shared memory
+
+## Key Guidelines
+
+1. **No SymPy**: All symbolic math uses native implementations in `core/symbolic/`
+2. **Lazy Loading**: Supervisors use lazy imports to avoid circular dependencies
+3. **Service Registration**: Specialists must register with DF to be discoverable
+4. **Thin Wrappers**: Decomposed modules export through backward-compatible wrappers
+5. **Test Coverage**: Maintain tests in `tests/` for all new functionality
+
+## When Adding New Files
+
+1. **New agent?** → `src/symbo_agentic_reasoners/agents/specialists/<domain>/`
+2. **New test?** → `tests/test_<module>.py`
+3. **New script?** → `scripts/<name>.py`
+4. **Documentation?** → `docs/` (archive if historical)
+5. **Batch results?** → `data/batch_results/`
+
+## Cleanup Commands
+
+If files accumulate at root, use these to organize:
+
+```bash
+# Move batch results to proper location
+python -c "import shutil, glob; [shutil.move(f, 'data/batch_results/') for f in glob.glob('batch_results_*.json')]"
+
+# Move .bat files to bin/
+python -c "import shutil, glob; [shutil.move(f, 'bin/') for f in glob.glob('start_*.bat')]"
+```
+
+## Running the System
+
+```bash
+# Interactive CLI
+python main.py
+
+# Or use launchers from bin/
+bin/start_symbo_cli.bat    # CLI interface
+bin/start_ui.bat           # GUI interface
+bin/start_no_sympy.bat     # Native-only mode (blocks fallbacks)

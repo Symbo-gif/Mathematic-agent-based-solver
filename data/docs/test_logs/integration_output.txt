@@ -1,0 +1,58 @@
+Running tests in tests/test_phase5_phase6_integration.py...
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\dev\Mathematic agent based solver
+configfile: pyproject.toml
+plugins: anyio-4.12.0, cov-7.0.0
+collecting ... collected 17 items
+
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_creation_for_discovery_query PASSED [  5%]
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_escalation_marking PASSED [ 11%]
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_groebner_basis_trace PASSED [ 17%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_distillation_readiness_check PASSED [ 23%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_distillation_with_discovery_traces PASSED [ 29%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_training_example_format PASSED [ 35%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_escalation_recording PASSED [ 41%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_evolution_trigger PASSED [ 47%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_learning_insights PASSED [ 52%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_conjecture_from_trace_pattern FAILED [ 58%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_deep_search_with_trace_hints FAILED [ 64%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_algorithm_discovery_from_escalation FAILED [ 70%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_knowledge_integration_flow PASSED [ 76%]
+tests/test_phase5_phase6_integration.py::TestComplexityGatekeeperRouting::test_discovery_query_routing PASSED [ 82%]
+tests/test_phase5_phase6_integration.py::TestComplexityGatekeeperRouting::test_simple_query_stays_student PASSED [ 88%]
+tests/test_phase5_phase6_integration.py::TestEndToEndFlow::test_full_discovery_cycle PASSED [ 94%]
+tests/test_phase5_phase6_integration.py::TestEndToEndFlow::test_escalation_feedback_loop PASSED [100%]
+
+================================== FAILURES ===================================
+______ TestPhase6ComponentIntegration.test_conjecture_from_trace_pattern ______
+tests\test_phase5_phase6_integration.py:372: in test_conjecture_from_trace_pattern
+    theorems = generator.generate_batch(size=3)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SyntheticDataGenerator' object has no attribute 'generate_batch'
+______ TestPhase6ComponentIntegration.test_deep_search_with_trace_hints _______
+tests\test_phase5_phase6_integration.py:383: in test_deep_search_with_trace_hints
+    state = ProofState(
+E   TypeError: ProofState.__init__() got an unexpected keyword argument 'state_id'
+___ TestPhase6ComponentIntegration.test_algorithm_discovery_from_escalation ___
+tests\test_phase5_phase6_integration.py:408: in test_algorithm_discovery_from_escalation
+    spec = ProblemSpecification(
+E   TypeError: ProblemSpecification.__init__() got an unexpected keyword argument 'problem_id'
+=========================== short test summary info ===========================
+FAILED tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_conjecture_from_trace_pattern - AttributeError: 'SyntheticDataGenerator' object has no attribute 'generate_batch'
+FAILED tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_deep_search_with_trace_hints - TypeError: ProofState.__init__() got an unexpected keyword argument 'state_id'
+FAILED tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_algorithm_discovery_from_escalation - TypeError: ProblemSpecification.__init__() got an unexpected keyword argument 'problem_id'
+======================== 3 failed, 14 passed in 0.69s =========================
+
+Metrics for tests/test_phase5_phase6_integration.py:
+{
+  "test_path": "tests/test_phase5_phase6_integration.py",
+  "timestamp": "2025-12-07T07:53:45.218705",
+  "duration_seconds": 1.1070456504821777,
+  "memory_start_mb": 33.77734375,
+  "memory_end_mb": 103.39453125,
+  "memory_delta_mb": 69.6171875,
+  "cpu_percent": 97.4,
+  "return_code": 1
+}

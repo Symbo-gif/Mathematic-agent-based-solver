@@ -1,0 +1,203 @@
+# SYMBO_AGENTIC_REASONERS Configuration
+# =====================================
+# This file provides centralized configuration for all system components.
+# Environment variables (SYMBO_*) override these values.
+#
+# To use: Set SYMBO_CONFIG_FILE=config.yaml before running the system.
+
+# =============================================================================
+# HARDWARE CONFIGURATION
+# =============================================================================
+# Configure these values to match your actual hardware.
+
+hardware:
+  # GPU Configuration (default: RTX 4060)
+  max_vram_gb: 8.0
+  llm_vram_requirement_gb: 5.5    # 7B model at 4-bit quantization
+  infrastructural_vram_gb: 0.5    # Reserved for OS/drivers
+
+  # System Memory
+  max_ram_gb: 32.0
+
+  # CPU Configuration
+  max_cpu_cores: 8
+
+  # GPU Detection ("auto" to detect, or specify e.g. "RTX 4090")
+  gpu_name: "auto"
+
+# =============================================================================
+# RESOURCE THRESHOLDS
+# =============================================================================
+# Utilization thresholds for monitoring and emergency response.
+# Values are fractions (0.0 to 1.0).
+
+thresholds:
+  # VRAM Thresholds (must be: warning < threshold < critical < emergency)
+  vram_warning: 0.85      # 85% - Start warning
+  vram_threshold: 0.90    # 90% - Reject new cognitive agents
+  vram_critical: 0.95     # 95% - Emergency state
+  vram_emergency: 0.98    # 98% - Force shutdown
+
+  # RAM Thresholds
+  ram_warning: 0.80       # 80% - Start warning
+  ram_threshold: 0.85     # 85% - Start throttling
+  ram_critical: 0.92      # 92% - Emergency state
+  ram_emergency: 0.95     # 95% - Force shutdown
+
+  # CPU Thresholds
+  cpu_warning: 0.80       # 80% - Start warning
+  cpu_threshold: 0.90     # 90% - Sustained throttling
+  cpu_critical: 0.95      # 95% - Emergency state
+
+  # Disk Thresholds
+  disk_warning: 0.90      # 90% - Start warning
+  disk_critical: 0.95     # 95% - Emergency state
+
+# =============================================================================
+# TIMEOUT CONFIGURATION
+# =============================================================================
+# Timeout values for various operations (in seconds).
+
+timeouts:
+  # General Operations
+  default: 60.0
+
+  # LLM Operations
+  llm_inference: 120.0
+  llm_generation: 180.0
+
+  # Mathematical Operations
+  symbolic_solve: 90.0
+  integration: 180.0
+  differentiation: 60.0
+  proof: 300.0
+  series_expansion: 120.0
+  matrix_operations: 90.0
+
+  # System Operations
+  search: 30.0
+  message: 10.0
+  agent_activation: 30.0
+  agent_deactivation: 10.0
+
+  # External Queries
+  nvidia_smi_query: 5.0
+  gpu_memory_query: 5.0
+
+  # Orchestration
+  result_poll_interval: 0.5
+  result_await_timeout: 30.0
+
+# =============================================================================
+# AGENT POOL CONFIGURATION
+# =============================================================================
+# Agent lifecycle and concurrency settings.
+
+agent_pool:
+  # Concurrency Limits
+  max_active_agents: 8
+  max_parallel_workers: 4
+  max_cognitive_agents: 1    # One-Model-At-A-Time rule (CRITICAL)
+
+  # Standby Timeouts (seconds) - Time before agent returns to dormant
+  specialist_standby_timeout: 300.0    # 5 minutes
+  supervisor_standby_timeout: 600.0    # 10 minutes
+  orchestrator_standby_timeout: 900.0  # 15 minutes
+
+  # Queue Configuration
+  max_queue_size: 100
+  queue_timeout: 30.0
+
+  # Memory Limits (MB)
+  max_memory_per_agent_mb: 512.0
+  total_agent_memory_mb: 4096.0
+
+# =============================================================================
+# MONITORING CONFIGURATION
+# =============================================================================
+# Health monitoring and watchdog settings.
+
+monitoring:
+  # Check Intervals (seconds)
+  watchdog_check_interval: 1.0
+  ams_monitor_interval: 5.0
+  resource_monitor_interval: 5.0
+  cpu_measurement_interval: 0.1
+
+  # History & Tracking
+  resource_history_size: 12           # ~1 minute at 5s intervals
+  sustained_threshold_count: 3        # Consecutive checks before action
+
+  # Thread Management
+  thread_join_timeout: 2.0
+  monitor_stop_timeout: 5.0
+
+  # Batch Processing
+  batch_poll_interval: 5.0
+  batch_max_workers: 4
+  batch_timeout_per_problem: 60.0
+
+# =============================================================================
+# LOGGING CONFIGURATION
+# =============================================================================
+# Logging levels and format settings.
+
+logging:
+  # Log Levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  default_level: "INFO"
+  infrastructure_level: "INFO"
+  agent_level: "INFO"
+  protocol_level: "WARNING"
+
+  # File Configuration
+  log_to_file: true
+  log_file_max_bytes: 10485760    # 10 MB
+  log_file_backup_count: 5
+
+  # Format
+  use_json_format: false
+  include_correlation_id: true
+
+  # Trace Logging
+  trace_enabled: true
+  trace_max_files: 100
+
+# =============================================================================
+# PATH CONFIGURATION
+# =============================================================================
+# File and directory paths (relative to project root).
+
+paths:
+  # Base Paths
+  data_dir: "data"
+  logs_dir: "data/logs"
+  traces_dir: "data/traces"
+  output_dir: "data/output"
+
+  # Trace Subdirectories
+  thought_traces_dir: "data/traces/thought"
+  audit_traces_dir: "data/traces/audit"
+  test_traces_dir: "data/traces/test"
+  error_traces_dir: "data/traces/error"
+  resource_traces_dir: "data/traces/resource"
+
+  # State Persistence
+  state_dir: "data/state"
+
+# =============================================================================
+# BATCH PROCESSING CONFIGURATION
+# =============================================================================
+# Settings for batch file processing.
+
+batch:
+  max_workers: 4
+  timeout_per_problem: 60.0
+  max_files: 10000
+  max_directory_depth: 10
+  supported_extensions:
+    - ".txt"
+    - ".json"
+    - ".csv"
+    - ".md"
+    - ".tex"
+  watch_poll_interval: 5.0

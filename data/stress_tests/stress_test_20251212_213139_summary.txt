@@ -1,0 +1,97 @@
+======================================================================
+SYMBO STRESS TEST SUMMARY
+======================================================================
+Date: 2025-12-12 21:31:54
+Duration: 0.3 minutes
+Equations tested: 640 / 640
+
+OVERALL RESULTS:
+  Success: 611 (95.5%)
+  Failed:  29 (4.5%)
+  Timeout: 0 (0.0%)
+  Error:   0 (0.0%)
+
+BY CATEGORY:
+  definite_integrals:
+    Total: 100, Success: 100 (100.0%)
+  indefinite_integrals:
+    Total: 50, Success: 50 (100.0%)
+  infinite_series:
+    Total: 90, Success: 90 (100.0%)
+  limits:
+    Total: 100, Success: 86 (86.0%)
+  derivatives:
+    Total: 50, Success: 50 (100.0%)
+  differential_equations:
+    Total: 50, Success: 50 (100.0%)
+  linear_algebra:
+    Total: 50, Success: 49 (98.0%)
+  number_theory:
+    Total: 50, Success: 47 (94.0%)
+  probability_statistics:
+    Total: 50, Success: 40 (80.0%)
+  physics_applied:
+    Total: 50, Success: 49 (98.0%)
+
+FAILED EQUATIONS:
+--------------------------------------------------
+  [FAILED] limit((x**n - a**n)/(x - a), x, a)
+    Error: SymPy computation failed: Result depends on the sign of sign(n)
+  [FAILED] limit(exp(x)/x**n, x, oo)
+    Error: SymPy computation failed: Not sure of sign of -n
+  [FAILED] limit(x**n/exp(x), x, oo)
+    Error: SymPy computation failed: Not sure of sign of n
+  [FAILED] limit(x**a * log(x), x, 0)
+    Error: SymPy computation failed: Not sure of sign of a
+  [FAILED] limit(n * (x**(1/n) - 1), n, oo)
+    Error: SymPy computation failed: Result depends on the sign of sign(log(x))
+  [FAILED] limit(binomial(2*n, n) / 4**n * sqrt(pi*n), n, oo)
+    Error: No expression to solve
+  [FAILED] limit(n * (zeta(1 + 1/n) - n), n, oo)
+    Error: No expression to solve
+  [FAILED] limit(limit((x*y)/(x**2 + y**2), y, 0), x, 0)
+    Error: No expression to solve
+  [FAILED] limit(limit(sin(x*y)/(x*y), y, 0), x, 0)
+    Error: No expression to solve
+  [FAILED] limit(sum(1/k, (k, 1, n))/log(n), n, oo)
+    Error: No expression to solve
+  [FAILED] limit(product((1 + 1/k**2), (k, 1, n)), n, oo)
+    Error: SymPy computation failed: Invalid comparison of non-real 1 + I
+  [FAILED] limit(sum(1/k**2, (k, 1, n)), n, oo)
+    Error: No expression to solve
+  [FAILED] limit(n * (sum(1/k, (k, 1, n)) - log(n) - gamma), n, oo)
+    Error: No expression to solve
+  [FAILED] limit(sum(k/2**k, (k, 1, n)), n, oo)
+    Error: No expression to solve
+  [FAILED] det(eye(n))
+    Error: No expression to solve
+  [FAILED] diophantine(x**2 - y**3 - 1)
+    Error: Failed to parse problem
+  [FAILED] diophantine(x**3 + y**3 - z**3)
+    Error: Failed to parse problem
+  [FAILED] diophantine(a*x + b*y - c)
+    Error: Failed to parse problem
+  [FAILED] exp(-lambda) * lambda**k / factorial(k)
+    Error: No expression to solve
+  [FAILED] binomial(K, k) * binomial(N-K, n-k) / binomial(N, n)
+    Error: No expression to solve
+  [FAILED] 1/N
+    Error: No expression to solve
+  [FAILED] 1/lambda
+    Error: No expression to solve
+  [FAILED] exp(lambda*(exp(t) - 1))
+    Error: No expression to solve
+  [FAILED] lambda / (lambda - t)
+    Error: No expression to solve
+  [FAILED] (1 - t/lambda)**(-k)
+    Error: No expression to solve
+  [FAILED] log(E[exp(t*X)])
+    Error: No expression to solve
+  [FAILED] E[X] * E[Y]
+    Error: No expression to solve
+  [FAILED] E[g(X)]
+    Error: No expression to solve
+  [FAILED] exp(-gamma*t) * cos(omega_d*t)
+    Error: No expression to solve
+
+======================================================================

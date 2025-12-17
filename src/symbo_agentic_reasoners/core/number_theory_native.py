@@ -539,15 +539,186 @@ def alternating_log_series(start: int = 3, max_terms: int = 100000) -> Tuple[flo
 
 
 # =============================================================================
-# GCD, LCM, AND RELATED FUNCTIONS
+# ADVANCED FACTORIZATION ALGORITHMS
 # =============================================================================
 
-def gcd(a: int, b: int) -> int:
-    """Greatest common divisor using Euclidean algorithm."""
+def pollard_rho(n: int, max_iterations: int = 1000000) -> Optional[int]:
+    """
+    Pollard's rho algorithm for integer factorization.
+
+    More efficient than trial division for large semi-primes.
+    Uses Brent's cycle detection improvement with multiple starting points.
+
+    Returns a non-trivial factor of n, or None if unsuccessful.
+    """
+    if n < 2:
+        return None
+    if n % 2 == 0:
+        return 2
+    if is_prime(n):
+        return n
+
+    # Try multiple starting points and polynomial constants
+    for c in [1, 2, 3, 5, 7, 11]:
+        # Polynomial f(x) = x^2 + c mod n
+        def f(x: int, c=c) -> int:
+            return (x * x + c) % n
+
+        x = 2
+        y = 2
+        d = 1
+
+        # Brent's improvement
+        r = 1
+        q = 1
+        iterations = 0
+
+        while d == 1 and iterations < max_iterations // 6:
+            x = y
+            for _ in range(r):
+                y = f(y)
+
+            k = 0
+            while k < r and d == 1:
+                ys = y
+                for _ in range(min(128, r - k)):
+                    y = f(y)
+                    q = (q * abs(x - y)) % n
+
+                d = _euclidean_gcd(q, n)  # Use simple GCD to avoid recursion
+                k += 128
+                iterations += 128
+
+            r *= 2
+
+        if d != 1 and d != n:
+            return d
+
+        if d == n:
+            # Backtrack
+            d = 1
+            while d == 1:
+                ys = f(ys)
+                d = _euclidean_gcd(abs(x - ys), n)
+
+            if d != n:
+                return d
+
+    return None
+
+
+def _euclidean_gcd(a: int, b: int) -> int:
+    """Simple Euclidean GCD for use in Pollard's rho (avoids recursion issues)."""
     a, b = abs(a), abs(b)
     while b:
         a, b = b, a % b
     return a
+
+
+def advanced_factorization(n: int, trial_limit: int = 10000) -> Tuple[Tuple[int, int], ...]:
+    """
+    Advanced prime factorization combining trial division with Pollard's rho.
+
+    More efficient for large numbers with large prime factors.
+    """
+    if n < 1:
+        return ()
+    if n == 1:
+        return ()
+
+    factors = []
+
+    # Trial division for small factors
+    d = 2
+    while d * d <= n and d <= trial_limit:
+        exp = 0
+        while n % d == 0:
+            exp += 1
+            n //= d
+        if exp > 0:
+            factors.append((d, exp))
+        d += 1
+
+    # If n is still composite, use Pollard's rho
+    while n > 1 and not is_prime(n):
+        factor = pollard_rho(n)
+        if factor is None:
+            # Fallback to trial division
+            for d in range(trial_limit + 1, int(n**0.5) + 1):
+                if n % d == 0:
+                    factor = d
+                    break
+            else:
+                # n is prime (Miller-Rabin might have false negative for huge n)
+                factors.append((n, 1))
+                return tuple(factors)
+
+        # Factor out all occurrences
+        exp = 0
+        while n % factor == 0:
+            exp += 1
+            n //= factor
+        if exp > 0:
+            factors.append((factor, exp))
+
+    if n > 1:
+        factors.append((n, 1))
+
+    # Sort by prime
+    factors.sort(key=lambda x: x[0])
+    return tuple(factors)
+
+
+# =============================================================================
+# GCD, LCM, AND RELATED FUNCTIONS
+# =============================================================================
+
+def binary_gcd(a: int, b: int) -> int:
+    """
+    Binary GCD (Stein's algorithm) - often faster than Euclidean.
+
+    Uses only subtraction and bit shifts (no division).
+    """
+    a, b = abs(a), abs(b)
+
+    if a == 0:
+        return b
+    if b == 0:
+        return a
+
+    # Find common power of 2
+    shift = 0
+    while ((a | b) & 1) == 0:
+        a >>= 1
+        b >>= 1
+        shift += 1
+
+    # Remove remaining factors of 2 from a
+    while (a & 1) == 0:
+        a >>= 1
+
+    while b != 0:
+        # Remove factors of 2 from b
+        while (b & 1) == 0:
+            b >>= 1
+
+        # Swap if necessary so a <= b
+        if a > b:
+            a, b = b, a
+
+        b -= a
+
+    return a << shift
+
+
+def gcd(a: int, b: int) -> int:
+    """
+    Greatest common divisor.
+
+    Uses binary GCD (Stein's algorithm) which is often faster
+    than the Euclidean algorithm on modern hardware.
+    """
+    return binary_gcd(a, b)
 
 
 def lcm(a: int, b: int) -> int:
@@ -732,6 +903,10 @@ __all__ = [
     'prime_factors',
     'divisors',
 
+    # Advanced factorization
+    'pollard_rho',
+    'advanced_factorization',
+
     # Core NT functions
     'mobius',
     'mangoldt',
@@ -752,6 +927,7 @@ __all__ = [
     # GCD/LCM
     'gcd',
     'lcm',
+    'binary_gcd',
     'extended_gcd',
     'mod_inverse',
     'chinese_remainder_theorem',

@@ -1,0 +1,24 @@
+# ============================================================================
+# SYMBO Math Solver - Problem Watch File
+# ============================================================================
+#
+# Add math problems here, one per line.
+# The solver will automatically detect and process new problems.
+#
+# Lines starting with # are comments and will be ignored.
+#
+# EXAMPLES:
+# ---------
+# Solve for x:           x^2 - 4 = 0
+# Derivative:            diff(x^3 + 2*x, x)
+# Integral:              integrate(sin(x), x)
+# Simplify:              simplify((x^2 - 1)/(x - 1))
+# Factor:                factor(x^2 - 5*x + 6)
+# Expand:                expand((x + 1)^3)
+# Limit:                 limit(sin(x)/x, x, 0)
+# Series:                series(exp(x), x, 0, 5)
+#
+# ============================================================================
+
+# Add your problems below this line:
+

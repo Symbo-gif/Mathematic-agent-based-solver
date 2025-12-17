@@ -1,3 +1,6 @@
+import random
+
+
 class RainbowDeployment:
     def __init__(self, orchestrator):
         self.orchestrator = orchestrator

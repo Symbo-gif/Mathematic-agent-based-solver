@@ -1,0 +1,141 @@
+Running tests in tests/test_phase6_prover_fix.py...
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\dev\Mathematic agent based solver
+configfile: pyproject.toml
+plugins: anyio-4.12.0, cov-7.0.0
+collecting ... collected 6 items
+
+tests/test_phase6_prover_fix.py::test_no_mock_prover_in_production PASSED [ 16%]
+tests/test_phase6_prover_fix.py::test_mock_prover_available_in_tests PASSED [ 33%]
+tests/test_phase6_prover_fix.py::test_mock_prover_in_exports PASSED      [ 50%]
+tests/test_phase6_prover_fix.py::test_production_exports_updated PASSED  [ 66%]
+tests/test_phase6_prover_fix.py::test_sympy_prover_no_fallback PASSED    [ 83%]
+tests/test_phase6_prover_fix.py::test_sympy_prover_functional PASSED     [100%]
+
+============================== 6 passed in 0.44s ==============================
+
+Metrics for tests/test_phase6_prover_fix.py:
+{
+  "test_path": "tests/test_phase6_prover_fix.py",
+  "timestamp": "2025-12-07T08:37:18.947562",
+  "duration_seconds": 0.7921562194824219,
+  "memory_start_mb": 33.75,
+  "memory_end_mb": 102.1484375,
+  "memory_delta_mb": 68.3984375,
+  "cpu_percent": 100.6,
+  "return_code": 0
+}
+Running tests in tests/test_phase5_phase6_integration.py...
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\dev\Mathematic agent based solver
+configfile: pyproject.toml
+plugins: anyio-4.12.0, cov-7.0.0
+collecting ... collected 17 items
+
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_creation_for_discovery_query FAILED [  5%]
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_escalation_marking FAILED [ 11%]
+tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_groebner_basis_trace FAILED [ 17%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_distillation_readiness_check PASSED [ 23%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_distillation_with_discovery_traces PASSED [ 29%]
+tests/test_phase5_phase6_integration.py::TestDistillationIntegration::test_training_example_format PASSED [ 35%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_escalation_recording PASSED [ 41%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_evolution_trigger PASSED [ 47%]
+tests/test_phase5_phase6_integration.py::TestEvolutionaryFlywheel::test_learning_insights PASSED [ 52%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_conjecture_from_trace_pattern PASSED [ 58%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_deep_search_with_trace_hints PASSED [ 64%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_algorithm_discovery_from_escalation PASSED [ 70%]
+tests/test_phase5_phase6_integration.py::TestPhase6ComponentIntegration::test_knowledge_integration_flow PASSED [ 76%]
+tests/test_phase5_phase6_integration.py::TestComplexityGatekeeperRouting::test_discovery_query_routing PASSED [ 82%]
+tests/test_phase5_phase6_integration.py::TestComplexityGatekeeperRouting::test_simple_query_stays_student PASSED [ 88%]
+tests/test_phase5_phase6_integration.py::TestEndToEndFlow::test_full_discovery_cycle PASSED [ 94%]
+tests/test_phase5_phase6_integration.py::TestEndToEndFlow::test_escalation_feedback_loop PASSED [100%]
+
+================================== FAILURES ===================================
+_______ TestThoughtTraceHandoff.test_trace_creation_for_discovery_query _______
+tests\test_phase5_phase6_integration.py:23: in test_trace_creation_for_discovery_query
+    harvester.finalize_trace(
+E   TypeError: ThoughtTraceHarvester.finalize_trace() got an unexpected keyword argument 'status'
+---------------------------- Captured stdout call -----------------------------
+  [+] Initializing Thought Trace Harvester (Provenance Logger)
+      Loaded 0 verified traces from storage
+      Gold Standard Filter: ACTIVE
+      [OK] Thought Trace Harvester ready
+____________ TestThoughtTraceHandoff.test_trace_escalation_marking ____________
+tests\test_phase5_phase6_integration.py:41: in test_trace_escalation_marking
+    harvester.finalize_trace(
+E   TypeError: ThoughtTraceHarvester.finalize_trace() got an unexpected keyword argument 'status'
+---------------------------- Captured stdout call -----------------------------
+  [+] Initializing Thought Trace Harvester (Provenance Logger)
+      Loaded 0 verified traces from storage
+      Gold Standard Filter: ACTIVE
+      [OK] Thought Trace Harvester ready
+______________ TestThoughtTraceHandoff.test_groebner_basis_trace ______________
+tests\test_phase5_phase6_integration.py:58: in test_groebner_basis_trace
+    harvester.record_symbolic_step(
+E   TypeError: ThoughtTraceHarvester.record_symbolic_step() got an unexpected keyword argument 'agent_id'
+---------------------------- Captured stdout call -----------------------------
+  [+] Initializing Thought Trace Harvester (Provenance Logger)
+      Loaded 0 verified traces from storage
+      Gold Standard Filter: ACTIVE
+      [OK] Thought Trace Harvester ready
+=========================== short test summary info ===========================
+FAILED tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_creation_for_discovery_query - TypeError: ThoughtTraceHarvester.finalize_trace() got an unexpected keyword argument 'status'
+FAILED tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_trace_escalation_marking - TypeError: ThoughtTraceHarvester.finalize_trace() got an unexpected keyword argument 'status'
+FAILED tests/test_phase5_phase6_integration.py::TestThoughtTraceHandoff::test_groebner_basis_trace - TypeError: ThoughtTraceHarvester.record_symbolic_step() got an unexpected keyword argument 'agent_id'
+======================== 3 failed, 14 passed in 0.21s =========================
+
+Metrics for tests/test_phase5_phase6_integration.py:
+{
+  "test_path": "tests/test_phase5_phase6_integration.py",
+  "timestamp": "2025-12-07T08:37:19.379675",
+  "duration_seconds": 0.4312560558319092,
+  "memory_start_mb": 102.1484375,
+  "memory_end_mb": 107.0078125,
+  "memory_delta_mb": 4.859375,
+  "cpu_percent": 97.8,
+  "return_code": 1
+}
+Running tests in tests/unit/test_spectral_partitioner.py...
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.0.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\dev\Mathematic agent based solver
+configfile: pyproject.toml
+plugins: anyio-4.12.0, cov-7.0.0
+collecting ... collected 17 items
+
+tests/unit/test_spectral_partitioner.py::TestStateGraph::test_empty_graph PASSED [  5%]
+tests/unit/test_spectral_partitioner.py::TestStateGraph::test_add_state PASSED [ 11%]
+tests/unit/test_spectral_partitioner.py::TestStateGraph::test_add_edge PASSED [ 17%]
+tests/unit/test_spectral_partitioner.py::TestStateGraph::test_adjacency_matrix PASSED [ 23%]
+tests/unit/test_spectral_partitioner.py::TestStateGraph::test_build_from_states PASSED [ 29%]
+tests/unit/test_spectral_partitioner.py::TestDiffusionMap::test_small_graph PASSED [ 35%]
+tests/unit/test_spectral_partitioner.py::TestDiffusionMap::test_chain_graph PASSED [ 41%]
+tests/unit/test_spectral_partitioner.py::TestDiffusionMap::test_spectral_gap PASSED [ 47%]
+tests/unit/test_spectral_partitioner.py::TestDiffusionMap::test_fiedler_vector PASSED [ 52%]
+tests/unit/test_spectral_partitioner.py::TestSpectralPartitioner::test_empty_states PASSED [ 58%]
+tests/unit/test_spectral_partitioner.py::TestSpectralPartitioner::test_single_state PASSED [ 64%]
+tests/unit/test_spectral_partitioner.py::TestSpectralPartitioner::test_partition_covers_all_states PASSED [ 70%]
+tests/unit/test_spectral_partitioner.py::TestSpectralPartitioner::test_partition_strategies PASSED [ 76%]
+tests/unit/test_spectral_partitioner.py::TestSpectralPartitioner::test_worker_assignment_methods PASSED [ 82%]
+tests/unit/test_spectral_partitioner.py::TestConvenienceFunction::test_convenience_function PASSED [ 88%]
+tests/unit/test_spectral_partitioner.py::TestNumericalStability::test_identical_values PASSED [ 94%]
+tests/unit/test_spectral_partitioner.py::TestNumericalStability::test_disconnected_components PASSED [100%]
+
+============================= 17 passed in 0.04s ==============================
+
+Metrics for tests/unit/test_spectral_partitioner.py:
+{
+  "test_path": "tests/unit/test_spectral_partitioner.py",
+  "timestamp": "2025-12-07T08:37:19.640505",
+  "duration_seconds": 0.26007533073425293,
+  "memory_start_mb": 107.0078125,
+  "memory_end_mb": 108.0703125,
+  "memory_delta_mb": 1.0625,
+  "cpu_percent": 96.1,
+  "return_code": 0
+}

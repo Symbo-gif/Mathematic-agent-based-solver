@@ -443,11 +443,18 @@ def _check_symmetry_integral(expr_str: str, var: str, a_norm, b_norm) -> Optiona
             # Test points for parity check
             test_points = [0.5, 1.0, 1.5, 2.0, math.pi/4]
             is_odd = True
+            successful_checks = 0  # Track if we had any successful evaluations
 
             for x_val in test_points:
                 try:
                     f_x = _evaluate_at_numeric(ast, var, x_val)
                     f_neg_x = _evaluate_at_numeric(ast, var, -x_val)
+
+                    # Skip if result is not a real number (could be symbolic)
+                    if not isinstance(f_x, (int, float)) or not isinstance(f_neg_x, (int, float)):
+                        continue
+
+                    successful_checks += 1
 
                     # For odd function: f(-x) + f(x) = 0
                     if abs(f_x + f_neg_x) > 1e-10 * (abs(f_x) + abs(f_neg_x) + 1):
@@ -457,7 +464,8 @@ def _check_symmetry_integral(expr_str: str, var: str, a_norm, b_norm) -> Optiona
                     # If evaluation fails, skip this point
                     continue
 
-            if is_odd:
+            # Only conclude odd if we had at least 2 successful evaluations
+            if is_odd and successful_checks >= 2:
                 return "0 (odd function over symmetric bounds)"
 
     except Exception:

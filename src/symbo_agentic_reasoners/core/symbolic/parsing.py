@@ -19,7 +19,10 @@ from .expr_types import Expr
 from .numeric_types import Integer, Float
 from .symbol import Symbol
 from .operations import Add, Mul, Pow
-from .functions import Sin, Cos, Tan, Exp, Log, Sqrt, Abs, Sign, GenericFunction
+from .functions import (
+    Sin, Cos, Tan, Exp, Log, Sqrt, Abs, Sign, GenericFunction,
+    Factorial, Gamma, Gcd, Lcm, Floor, Ceil, Mod, Fraction
+)
 
 logger = logging.getLogger('symbo_agentic_reasoners.symbolic.parsing')
 
@@ -64,6 +67,8 @@ class Lexer:
         'exp', 'log', 'ln', 'sqrt', 'cbrt',
         'abs', 'sign', 'floor', 'ceil',
         'gamma', 'factorial',
+        'gcd', 'lcm', 'mod',  # Number theory functions
+        'fraction', 'rational',  # Fraction constructors
     }
 
     def __init__(self, text: str):
@@ -182,6 +187,10 @@ class Parser:
         'sin': Sin, 'cos': Cos, 'tan': Tan,
         'exp': Exp, 'log': Log, 'ln': Log,
         'sqrt': Sqrt, 'abs': Abs, 'sign': Sign,
+        'factorial': Factorial, 'gamma': Gamma,
+        'gcd': Gcd, 'lcm': Lcm, 'mod': Mod,
+        'floor': Floor, 'ceil': Ceil,
+        'fraction': Fraction, 'rational': Fraction,
     }
 
     def __init__(self, tokens: List[Token]):

@@ -212,6 +212,13 @@ class LimitEngine:
 
         # Check for (1 + 1/x)^x → e pattern and x^(1/x) → 1
         if isinstance(expr, Pow):
+            # x^(-n) -> 0 as x -> infinity (for n > 0)
+            if isinstance(expr.base, Sym) and expr.base.name == var:
+                if isinstance(expr.exp, Num) and expr.exp.value < 0:
+                    return Num(0)  # 1/x^n -> 0 as x -> infinity
+                elif isinstance(expr.exp, Num) and expr.exp.value > 0:
+                    return Sym('oo')  # x^n -> infinity as x -> infinity
+
             result = self._try_e_definition(expr, var, positive)
             if result is not None:
                 return result
@@ -1091,6 +1098,9 @@ class LimitEngine:
                 return Add(terms)
             elif isinstance(expr, Mul):
                 factors = [self._substitute(f, var, value) for f in expr.factors]
+                # If any factor is None (e.g., division by zero), result is indeterminate
+                if None in factors:
+                    return None
                 if all(isinstance(f, Num) for f in factors):
                     result = 1
                     for f in factors:
@@ -1103,8 +1113,8 @@ class LimitEngine:
                 if isinstance(base, Num) and isinstance(exp, Num):
                     try:
                         return Num(base.value ** exp.value)
-                    except (ValueError, OverflowError):
-                        return None
+                    except (ValueError, OverflowError, ZeroDivisionError):
+                        return None  # Can't evaluate (e.g., 0^(-1) or overflow)
                 return Pow(base, exp)
             elif isinstance(expr, Neg):
                 arg = self._substitute(expr.arg, var, value)
@@ -1208,9 +1218,9 @@ def native_limit(expr_str: str, var: str, point: str, direction: str = 'both') -
         if not _check_expression_safety(expr_str):
             return False, None, "unsafe_expression"
 
-        # Normalize point notation
-        point_normalized = point.lower().strip()
-        if point_normalized in ('inf', 'infinity', '+inf', '+oo'):
+        # Normalize point notation (handle both string and numeric inputs)
+        point_normalized = str(point).lower().strip()
+        if point_normalized in ('inf', 'infinity', '+inf', '+oo', 'oo'):
             point_normalized = 'oo'
             numeric_point = float('inf')
         elif point_normalized in ('-inf', '-infinity', '-oo'):

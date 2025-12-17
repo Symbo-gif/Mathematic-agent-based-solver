@@ -1,0 +1,44 @@
+{
+    "_comment": "Add this profile to your Windows Terminal settings.json under 'profiles.list'",
+    "_comment2": "Add the color scheme from symbo_math_terminal_scheme.json to 'schemes' array",
+
+    "profile": {
+        "name": "Claude Code Symbo Math",
+        "commandline": "cmd.exe /k \"cd /d c:\\dev\\Mathematic agent based solver && claude-code-launcher\\launch_claude_symbo.bat\"",
+        "startingDirectory": "c:\\dev\\Mathematic agent based solver",
+        "colorScheme": "Symbo Math",
+        "icon": "c:\\dev\\Mathematic agent based solver\\claude-code-launcher\\symbo_math_icon.ico",
+        "font": {
+            "face": "Cascadia Code",
+            "size": 11
+        },
+        "cursorShape": "filledBox",
+        "padding": "12",
+        "tabTitle": "Symbo Math",
+        "suppressApplicationTitle": true
+    },
+
+    "colorScheme": {
+        "name": "Symbo Math",
+        "background": "#0D1117",
+        "foreground": "#E6EDF3",
+        "cursorColor": "#DAA520",
+        "selectionBackground": "#264F78",
+        "black": "#0D1117",
+        "red": "#FF7B72",
+        "green": "#2ECC71",
+        "yellow": "#DAA520",
+        "blue": "#008B8B",
+        "purple": "#A371F7",
+        "cyan": "#40E0D0",
+        "white": "#E6EDF3",
+        "brightBlack": "#21262D",
+        "brightRed": "#FFA198",
+        "brightGreen": "#56D364",
+        "brightYellow": "#FFD700",
+        "brightBlue": "#00CED1",
+        "brightPurple": "#D2A8FF",
+        "brightCyan": "#79F2E6",
+        "brightWhite": "#FFFFFF"
+    }
+}

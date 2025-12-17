@@ -21,17 +21,22 @@ Comprehensive tests for the Pilot Solver agent:
 - SymPy execution wrapper
 - Blackboard integration
 - Service registration
+
+NOTE: These tests are SKIPPED because the pilot_solver module has been
+archived as part of the SymPy-free restructuring. The solvers/ directory
+was moved to _archived_originals/restructured_out/.
 """
 
 import pytest
-import sympy as sp
-from sympy import Symbol, symbols, sin, cos, exp, sqrt
+
+# Skip all tests in this module - pilot_solver has been archived
+pytestmark = pytest.mark.skip(reason="pilot_solver module has been archived - solvers/ moved to _archived_originals")
+
+# Keep imports below for reference but they won't be executed
+# import sympy as sp
+# from sympy import Symbol, symbols, sin, cos, exp, sqrt
 from unittest.mock import Mock, patch, MagicMock
 
-# NOTE: solvers/ directory has been archived
-# This test file references deprecated module pilot_solver.py
-# The module has been archived and is no longer in active use
-# Consider removing or updating this test file
 from symbo_agentic_reasoners.core.blackboard import (
     Blackboard,
     BlackboardEntry,
@@ -41,6 +46,15 @@ from symbo_agentic_reasoners.core.blackboard import (
 from symbo_agentic_reasoners.infrastructure.directory_facilitator import (
     DirectoryFacilitator,
 )
+
+
+# Mock PilotSolverAgent class for test collection (module is skipped)
+class PilotSolverAgent:
+    """Mock class to prevent collection errors - actual module is archived."""
+    def __init__(self, agent_id='pilot_solver_001', blackboard=None, df=None):
+        self.agent_id = agent_id
+        self.blackboard = blackboard
+        self.df = df
 
 
 # =============================================================================

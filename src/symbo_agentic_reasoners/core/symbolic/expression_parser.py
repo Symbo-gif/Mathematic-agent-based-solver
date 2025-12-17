@@ -17,7 +17,10 @@ from typing import List, Any, Union
 
 from .type_system import Expr, Symbol, Integer, Float, _ensure_expr
 from .composite_operations import Add, Mul, Pow
-from .function_library import Sin, Cos, Tan, Exp, Log, Sqrt, Abs, Sign, GenericFunction
+from .function_library import (
+    Sin, Cos, Tan, Exp, Log, Sqrt, Abs, Sign, GenericFunction,
+    Factorial, Gamma, Gcd, Floor, Ceil, Fraction
+)
 
 logger = logging.getLogger('symbo_agentic_reasoners.symbolic.parser')
 
@@ -62,6 +65,10 @@ class Lexer:
         'exp', 'log', 'ln', 'sqrt', 'cbrt',
         'abs', 'sign', 'floor', 'ceil',
         'gamma', 'factorial',
+        'gcd',  # Number theory
+        'fraction', 'rational',  # Fraction constructors
+        # Calculus operations
+        'diff', 'integrate', 'limit', 'derivative',
     }
 
     def __init__(self, text: str):
@@ -125,21 +132,33 @@ class Lexer:
     def _read_number(self) -> Token:
         start = self.pos
         has_dot = False
+        has_exp = False
 
         while self.pos < len(self.text):
             char = self.peek()
             if char.isdigit():
                 self.advance()
-            elif char == '.' and not has_dot:
+            elif char == '.' and not has_dot and not has_exp:
                 has_dot = True
                 self.advance()
+            elif char in ('e', 'E') and not has_exp:
+                # Scientific notation
+                has_exp = True
+                self.advance()
+                # Check for optional +/- after e
+                if self.peek() in ('+', '-'):
+                    self.advance()
             else:
                 break
 
         value = self.text[start:self.pos]
-        if has_dot:
-            return Token(TokenType.NUMBER, float(value))
-        return Token(TokenType.NUMBER, int(value))
+        try:
+            if has_dot or has_exp:
+                return Token(TokenType.NUMBER, float(value))
+            return Token(TokenType.NUMBER, int(value))
+        except ValueError:
+            # Fallback for malformed numbers
+            return Token(TokenType.NUMBER, float(value) if '.' in value or 'e' in value.lower() else int(value))
 
     def _read_identifier(self) -> Token:
         start = self.pos
@@ -180,6 +199,9 @@ class Parser:
         'sin': Sin, 'cos': Cos, 'tan': Tan,
         'exp': Exp, 'log': Log, 'ln': Log,
         'sqrt': Sqrt, 'abs': Abs, 'sign': Sign,
+        'factorial': Factorial, 'gamma': Gamma,
+        'gcd': Gcd, 'floor': Floor, 'ceil': Ceil,
+        'fraction': Fraction, 'rational': Fraction,
     }
 
     def __init__(self, tokens: List[Token]):
@@ -282,6 +304,24 @@ class Parser:
             func_class = self.FUNCTION_MAP.get(token.value)
             if func_class:
                 return func_class(*args)
+
+            # Special handling for calculus operations
+            if token.value in ('diff', 'derivative'):
+                if len(args) >= 2:
+                    expr = args[0]
+                    var = args[1]
+                    if hasattr(expr, 'diff'):
+                        return expr.diff(var)
+                return GenericFunction('diff', *args)
+
+            if token.value == 'integrate':
+                # Return unevaluated integral representation
+                return GenericFunction('integrate', *args)
+
+            if token.value == 'limit':
+                # Return unevaluated limit representation
+                return GenericFunction('limit', *args)
+
             # Unknown function - create generic
             return GenericFunction(token.value, *args)
 

@@ -1,0 +1,198 @@
+================================================================================
+CODEBASE CONSOLIDATION SUMMARY
+Mathematic Agent Based Solver - SYMBO_AGENTIC_REASONERS
+================================================================================
+
+ANALYSIS COMPLETE: 3 Actions Identified
+
+================================================================================
+CURRENT STATE FINDINGS
+================================================================================
+
+SOLVERS:
+  WELL ORGANIZED (5 files in proper locations)
+  - src/symbo_agentic_reasoners/core/math_solver.py (user-facing API)
+  - src/symbo_agentic_reasoners/core/solver_engine.py (direct solving)
+  - src/symbo_agentic_reasoners/solvers/pilot_solver.py (legacy)
+  - src/symbo_agentic_reasoners/agents/specialists/algebra/equation_system_solver.py
+  - src/symbo_agentic_reasoners/agents/specialists/calculus/ode_solver.py
+
+  ORPHANED (1 file needs consolidation)
+  - core/reasoning_engine.py (at project root - should move to core/)
+
+ENGINES:
+  WELL ORGANIZED (6 engines in proper locations)
+  - solver_engine.py (core solving)
+  - curiosity_engine.py (idle exploration)
+  - imagination_engine.py (background learning)
+  - prover_engine.py (theorem proving)
+  - bayesian_engine.py (probabilistic)
+
+  ORPHANED (same as above)
+  - core/reasoning_engine.py (SymPy-based formal proof engine)
+
+AGENTS:
+  WELL ORGANIZED (60 agents properly categorized)
+  - Core framework agents (6)
+  - Specialist domain agents (37)
+  - Supervisor agents (10)
+  - Synthesis agents (4)
+  - Verification agents (2)
+  - System agents (10) - mostly correct
+
+  MISPLACED (1 agent in wrong directory)
+  - tests/crackfinder_agent.py (should be in src/system_agents/)
+
+  DUPLICATE (1 file with odd naming)
+  - src/system_agents/code_chunking_agent - 2.py (remove if duplicate)
+
+================================================================================
+CONSOLIDATION ACTION ITEMS (3 RECOMMENDED)
+================================================================================
+
+PRIORITY 1: HIGH - Move Orphaned Engine to Core
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Current:  core/reasoning_engine.py
+New:      src/symbo_agentic_reasoners/core/reasoning_engine.py
+
+Why:      - Eliminates orphaned root-level directory
+          - Consolidates all core logic in one location
+          - Reduces confusion about solving pipeline
+
+Impact:   - Low risk (isolated module)
+          - Needs import path updates
+
+Time:     ~30 minutes
+
+
+PRIORITY 2: MEDIUM - Move Misplaced Test Agent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Current:  tests/crackfinder_agent.py (full testing framework - not a test!)
+New:      src/system_agents/crackfinder_agent.py
+
+Why:      - Clarifies boundary between test code and implementation
+          - Joins with other system agents
+          - Better organization
+
+Impact:   - Medium risk (test dependencies need updating)
+          - Requires import path updates in test files
+
+Time:     ~30 minutes
+
+
+PRIORITY 3: LOW - Remove Duplicate System Agent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+File:     src/system_agents/code_chunking_agent - 2.py
+
+Why:      - Duplicate with non-standard naming " - 2"
+          - Cleaner filesystem
+
+Action:   - Compare with code_chunking_agent.py
+          - Keep current version, delete old
+          - Document if intentional
+
+Impact:   - Very low risk (clear duplicate)
+
+Time:     ~10 minutes
+
+================================================================================
+CONSOLIDATION BENEFITS
+================================================================================
+
+✓ Cleaner codebase structure
+✓ Easier to find related components
+✓ Clearer mental model for developers
+✓ No more orphaned root-level directories
+✓ Clear distinction: tests vs. implementation
+✓ Simplified import paths
+
+================================================================================
+ORGANIZATION AFTER CONSOLIDATION
+================================================================================
+
+src/symbo_agentic_reasoners/
+├── core/                        (All core framework + solving)
+│   ├── math_solver.py          (User-facing API)
+│   ├── solver_engine.py        (Direct solving pipeline)
+│   ├── reasoning_engine.py     (Formal proofs) <- MOVED HERE
+│   ├── orchestrator.py         (Task orchestration)
+│   ├── bdi_agent.py            (Agent framework)
+│   └── native_symbolic.py      (NO SYMPY native math)
+│
+├── agents/                      (Agent implementations)
+│   ├── specialists/            (Domain-specific agents)
+│   ├── supervisors/            (Domain supervisors)
+│   └── provers/                (Verification)
+│
+├── solvers/                     (Solver implementations)
+│   └── pilot_solver.py         (Legacy Phase 1)
+│
+├── discovery/                   (Autonomous exploration)
+│   ├── curiosity_engine.py    (Idle exploration)
+│   ├── imagination_engine.py  (Background learning)
+│   └── deep_search/           (Advanced proof search)
+│
+└── [other subsystems]
+
+src/system_agents/              (System-level operations)
+├── crackfinder_agent.py       (Testing) <- MOVED HERE
+├── audit_agent.py
+├── cleanup_agent.py
+└── [7 other system agents]
+
+tests/                           (ONLY test files)
+├── test_*.py                  (Unit tests)
+├── integration/               (Integration tests)
+└── fixtures/                  (Test data)
+
+================================================================================
+RISK ASSESSMENT
+================================================================================
+
+Overall Risk Level: LOW
+- Localized changes
+- All consolidations are moves within same project
+- Can be performed incrementally with testing between each
+
+Per-Action Risk:
+  ACTION 1 (Move reasoning_engine.py):        LOW RISK - isolated module
+  ACTION 2 (Move crackfinder_agent.py):       MEDIUM RISK - test dependencies
+  ACTION 3 (Remove duplicate):                VERY LOW RISK - clear duplicate
+
+Mitigation:
+  - Run full test suite before/after each change
+  - Use git for easy rollback if needed
+  - Update imports using search/replace
+  - Verify imports resolve before and after
+
+================================================================================
+DETAILED REPORT
+================================================================================
+
+Full analysis written to:
+  sonar files/codebase_consolidation_report.md
+
+Contains:
+  - Executive summary
+  - File-by-file inventory
+  - Detailed analysis of each issue
+  - Step-by-step consolidation instructions
+  - Import path updates required
+  - Complete checklist
+  - Architecture diagrams
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+Would you like to proceed with consolidation?
+
+Options:
+  1. AUTO-EXECUTE: Perform all consolidations automatically
+  2. GUIDED: Step-by-step execution with verification between each action
+  3. MANUAL: Provide detailed instructions for manual execution
+  4. REVIEW: Only examine files before consolidation
+
+Recommended: GUIDED (safest approach)
+
+================================================================================
