@@ -128,23 +128,27 @@ SPECIALISTS = [
     ('FiniteAutomataAgent', 'discrete_math', 'discrete_math.finite_automata_agent', 'math.discrete.automata',
      'DFA for (01)*', 'NFA to DFA conversion'),
 
-    # Complex Analysis (4)
+    # Complex Analysis (5)
     ('AnalyticFunctionsSpecialist', 'complex_analysis', 'complex_analysis.analytic_functions_specialist', 'math.complex.analytic',
-     'is f(z)=z^2 analytic?', 'find singularities of f(z)=1/(z^2-1)'),
+     'is f(z)=z^2 analytic?', 'Hadamard factorization and order/type'),
     ('ResidueCalculusSpecialist', 'complex_analysis', 'complex_analysis.residue_calculus_specialist', 'math.complex.residue',
      'residue of 1/z at z=0', 'contour integral using residue theorem'),
     ('ConformalMappingSpecialist', 'complex_analysis', 'complex_analysis.conformal_mapping_specialist', 'math.complex.conformal',
      'Mobius transformation w=1/z', 'Schwarz-Christoffel mapping'),
     ('ContourIntegrationSpecialist', 'complex_analysis', 'complex_analysis.contour_integration_specialist', 'math.complex.contour',
      'integrate f(z) around unit circle', 'evaluate real integral using contour'),
+    ('EllipticFunctionsSpecialist', 'complex_analysis', 'complex_analysis.elliptic_functions_specialist', 'math.complex.elliptic',
+     'Weierstrass p-function', 'elliptic integral of first kind'),
 
-    # Real Analysis (3)
+    # Real Analysis (4)
     ('MeasureTheorySpecialist', 'real_analysis', 'real_analysis.measure_theory_specialist', 'math.real.measure',
-     'Lebesgue measure of [0,1]', 'measure of Cantor set'),
+     'Lebesgue measure of [0,1]', 'dominated convergence theorem'),
     ('MetricSpaceSpecialist', 'real_analysis', 'real_analysis.metric_space_specialist', 'math.real.metric',
      'is R with d(x,y)=|x-y| complete?', 'Lipschitz continuity'),
     ('SequencesSeriesSpecialist', 'real_analysis', 'real_analysis.sequences_series_specialist', 'math.real.sequences',
-     'does 1/n converge?', 'ratio test for sum(1/n^2)'),
+     'does 1/n converge?', 'Stone-Weierstrass approximation'),
+    ('FunctionSpacesSpecialist', 'real_analysis', 'real_analysis.function_spaces_specialist', 'math.real.function_spaces',
+     'compute L2 norm', 'verify Hölder inequality'),
 
     # Numerical (7)
     ('NumericalMethodsSpecialist', 'numerical', 'numerical.numerical_methods_specialist', 'math.numerical.methods',
@@ -186,13 +190,17 @@ SPECIALISTS = [
     ('ChannelCapacitySpecialist', 'information_theory', 'information_theory.channel_capacity_specialist', 'math.info.channel',
      'BSC capacity', 'AWGN channel capacity'),
 
-    # Category Theory (3)
+    # Category Theory (5)
     ('MorphismSpecialist', 'category_theory', 'category_theory.morphism_specialist', 'math.category.morphism',
      'compose morphisms f and g', 'verify morphism properties'),
     ('FunctorSpecialist', 'category_theory', 'category_theory.functor_specialist', 'math.category.functor',
-     'define functor F: C → D', 'natural transformation'),
+     'define functor F: C → D', 'Yoneda lemma application'),
     ('UniversalPropertiesSpecialist', 'category_theory', 'category_theory.universal_properties_specialist', 'math.category.universal',
      'product in category', 'coproduct and limits'),
+    ('AdjunctionSpecialist', 'category_theory', 'category_theory.adjunction_specialist', 'math.category.adjunction',
+     'Free ⊣ Forgetful adjunction', 'verify triangle identities'),
+    ('MonoidalSpecialist', 'category_theory', 'category_theory.monoidal_specialist', 'math.category.monoidal',
+     'tensor product ⊗ in category', 'verify pentagon axiom'),
 
     # Functional Analysis (3)
     ('BanachSpaceSpecialist', 'functional_analysis', 'functional_analysis.banach_space_specialist', 'math.functional.banach',

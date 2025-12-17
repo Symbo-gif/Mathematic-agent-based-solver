@@ -109,6 +109,191 @@ class FunctorSpecialist(BDIAgent):
 
         logger.info(f"[{agent_id}] Functor Specialist initialized")
 
+    # ==================== YONEDA LEMMA ====================
+
+    def yoneda_embedding(
+        self,
+        category_name: str,
+        object_name: str
+    ) -> Dict[str, Any]:
+        """
+        Apply Yoneda embedding: C → [C^op, Set]
+
+        Maps object A to functor Hom(-, A): C^op → Set
+
+        Yoneda embedding is:
+        - Full: reflects isomorphisms
+        - Faithful: reflects equality
+        - Embedding: injective on objects
+
+        Args:
+            category_name: Category C
+            object_name: Object A in C
+
+        Returns:
+            Dict with Yoneda embedding information
+        """
+        try:
+            # Create representable functor Hom(-, A)
+            hom_functor = f'Hom(-, {object_name})'
+
+            return {
+                'success': True,
+                'object': object_name,
+                'embedded_as': hom_functor,
+                'target_category': f'[{category_name}^op, Set]',
+                'properties': ['full', 'faithful', 'embedding'],
+                'method': 'yoneda_embedding',
+                'note': f'Maps {object_name} to Hom(-, {object_name}) functor',
+                'theorem': 'Yoneda embedding is full and faithful'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'yoneda_embedding'
+            }
+
+    def yoneda_lemma(
+        self,
+        object_name: str,
+        functor_name: str,
+        category_name: str
+    ) -> Dict[str, Any]:
+        """
+        Apply Yoneda lemma: Nat(Hom(A,-), F) ≅ F(A)
+
+        For any functor F: C → Set and object A in C:
+        Natural transformations from Hom(A,-) to F correspond bijectively
+        to elements of F(A).
+
+        The bijection: η ↦ η_A(id_A)
+
+        Args:
+            object_name: Object A
+            functor_name: Functor F
+            category_name: Category C
+
+        Returns:
+            Dict with Yoneda correspondence
+        """
+        try:
+            hom_functor = f'Hom({object_name}, -)'
+
+            return {
+                'success': True,
+                'bijection': f'Nat({hom_functor}, {functor_name}) ≅ {functor_name}({object_name})',
+                'direction_forward': f'η ↦ η_{object_name}(id_{object_name})',
+                'direction_backward': f'x ∈ F(A) ↦ natural transformation',
+                'method': 'yoneda_lemma',
+                'naturality': 'Bijection is natural in both A and F',
+                'note': 'Natural transformations from representable functor correspond to elements',
+                'corollary': 'Objects A, B are isomorphic iff Hom(A,-) ≅ Hom(B,-)'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'yoneda_lemma'
+            }
+
+    def representable_functor_test(
+        self,
+        functor: Functor
+    ) -> Dict[str, Any]:
+        """
+        Test if functor F: C → Set is representable.
+
+        F is representable if F ≅ Hom(A, -) for some object A.
+
+        By Yoneda: F representable means there exists A and isomorphism
+        η: Hom(A, -) → F
+
+        Args:
+            functor: Functor to test
+
+        Returns:
+            Dict with representability test result
+        """
+        try:
+            # Check if functor maps to Set
+            if functor.target_category != 'Set':
+                return {
+                    'success': False,
+                    'error': 'Representable functors must map to Set',
+                    'method': 'representable_test'
+                }
+
+            # Simplified test - checks if functor has form of hom-functor
+            functor_name_lower = functor.name.lower()
+            is_representable = 'hom' in functor_name_lower
+
+            if is_representable:
+                return {
+                    'success': True,
+                    'is_representable': True,
+                    'functor': functor.name,
+                    'method': 'representable_test',
+                    'note': f'{functor.name} has hom-functor structure',
+                    'universal_element': 'Representing object exists by Yoneda'
+                }
+            else:
+                return {
+                    'success': True,
+                    'is_representable': False,
+                    'functor': functor.name,
+                    'method': 'representable_test',
+                    'note': 'Functor does not appear to be representable'
+                }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'representable_test'
+            }
+
+    def presheaf_category(
+        self,
+        category_name: str
+    ) -> Dict[str, Any]:
+        """
+        Construct presheaf category [C^op, Set].
+
+        A presheaf on C is a contravariant functor F: C^op → Set.
+        The presheaf category has:
+        - Objects: Functors C^op → Set
+        - Morphisms: Natural transformations
+
+        Args:
+            category_name: Base category C
+
+        Returns:
+            Dict with presheaf category construction
+        """
+        try:
+            presheaf_category_name = f'[{category_name}^op, Set]'
+
+            return {
+                'success': True,
+                'presheaf_category': presheaf_category_name,
+                'objects': f'Contravariant functors {category_name}^op → Set',
+                'morphisms': 'Natural transformations between presheaves',
+                'yoneda_embedding': f'y: {category_name} → {presheaf_category_name}',
+                'method': 'presheaf_category',
+                'note': f'Category {category_name} embeds into {presheaf_category_name} via Yoneda',
+                'property': 'Presheaf category is complete and cocomplete'
+            }
+
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'method': 'presheaf_category'
+            }
+
     def update_beliefs(self):
         """PERCEIVE: Monitor blackboard for functor tasks."""
         if not self.blackboard:

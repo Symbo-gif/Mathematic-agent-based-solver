@@ -12,34 +12,34 @@ Usage:
     to create comprehensive test suites for each specialist.
 
     Placeholders to replace:
-    - FunctorSpecialist: Class name (e.g., "ArithmeticSpecialist")
+    - MonoidalSpecialist: Class name (e.g., "ArithmeticSpecialist")
     - category_theory: Domain name (e.g., "algebra")
-    - category_theory.functor_specialist: Import path (e.g., "algebra.arithmetic_specialist")
-    - define functor F: C → D: Simple test problem
-    - Yoneda lemma application: Complex test problem
-    - math.category.functor: Service type (e.g., "math.algebra.arithmetic")
+    - category_theory.monoidal_specialist: Import path (e.g., "algebra.arithmetic_specialist")
+    - tensor product ⊗ in category: Simple test problem
+    - verify pentagon axiom: Complex test problem
+    - math.category.monoidal: Service type (e.g., "math.algebra.arithmetic")
 """
 
 import pytest
 from unittest.mock import Mock, MagicMock
 from symbo_agentic_reasoners.core.blackboard import create_entry, EntryType
-from symbo_agentic_reasoners.agents.specialists.category_theory.functor_specialist import FunctorSpecialist
+from symbo_agentic_reasoners.agents.specialists.category_theory.monoidal_specialist import MonoidalSpecialist
 
 
-class TestFunctorSpecialistComplete:
-    """Comprehensive tests for FunctorSpecialist."""
+class TestMonoidalSpecialistComplete:
+    """Comprehensive tests for MonoidalSpecialist."""
 
     @pytest.fixture
     def specialist(self):
         """Create specialist instance."""
-        return FunctorSpecialist(agent_id='test_specialist_001', df=None, blackboard=None)
+        return MonoidalSpecialist(agent_id='test_specialist_001', df=None, blackboard=None)
 
     @pytest.fixture
     def specialist_with_mocks(self):
         """Create specialist with mocked dependencies."""
         mock_df = Mock()
         mock_blackboard = Mock()
-        return FunctorSpecialist(
+        return MonoidalSpecialist(
             agent_id='test_specialist_001',
             df=mock_df,
             blackboard=mock_blackboard
@@ -67,7 +67,7 @@ class TestFunctorSpecialistComplete:
 
     def test_df_registration(self, mock_df, mock_blackboard):
         """Test specialist registers services with DF."""
-        specialist = FunctorSpecialist(
+        specialist = MonoidalSpecialist(
             agent_id='test_001',
             df=mock_df,
             blackboard=mock_blackboard
@@ -83,7 +83,7 @@ class TestFunctorSpecialistComplete:
         """Test specialist creates proper blackboard entries."""
         problem = create_entry(
             entry_type=EntryType.TASK,
-            content="define functor F: C → D",
+            content="tensor product ⊗ in category",
             author_agent='test_orchestrator',
             conversation_id='test_conv_001'
         )
@@ -99,7 +99,7 @@ class TestFunctorSpecialistComplete:
         """Test specialist solves simple domain problem."""
         problem = create_entry(
             entry_type=EntryType.TASK,
-            content="define functor F: C → D",
+            content="tensor product ⊗ in category",
             author_agent='test_orchestrator',
             conversation_id='test_conv_001',
             metadata={'operation': 'compute', 'variable': 'x'}
@@ -119,7 +119,7 @@ class TestFunctorSpecialistComplete:
         """Test specialist handles complex problem."""
         problem = create_entry(
             entry_type=EntryType.TASK,
-            content="Yoneda lemma application",
+            content="verify pentagon axiom",
             author_agent='test_orchestrator',
             conversation_id='test_conv_002',
             metadata={'operation': 'compute', 'variable': 'x'}
@@ -234,7 +234,7 @@ class TestFunctorSpecialistComplete:
             try:
                 problem = create_entry(
                     entry_type=EntryType.TASK,
-                    content="define functor F: C → D",
+                    content="tensor product ⊗ in category",
                     author_agent='test_orchestrator',
                     conversation_id=f'test_concurrent_{threading.get_ident()}'
                 )
@@ -256,7 +256,7 @@ class TestFunctorSpecialistComplete:
         assert len(results) + len(errors) == 5
 
     @pytest.mark.parametrize("problem_text", [
-        "define functor F: C → D",
+        "tensor product ⊗ in category",
         "simple variant 1",
         "simple variant 2",
     ])
