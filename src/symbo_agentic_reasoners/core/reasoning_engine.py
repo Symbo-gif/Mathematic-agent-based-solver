@@ -1,38 +1,44 @@
 import numpy as np
-import sympy as sp
 from typing import Dict, List, Tuple, Optional, Callable
 from abc import ABC, abstractmethod
+
+# Native symbolic imports (NO SYMPY)
+from symbo_agentic_reasoners.core.symbolic.symbol import Symbol
+from symbo_agentic_reasoners.core.symbolic.sympy_compatibility import Eq, Implies
+from symbo_agentic_reasoners.core.symbolic.expr_types import Expr
+from symbo_agentic_reasoners.core.symbolic.expression_parser import parse_expression
 
 
 class FormalProofSystem:
     def __init__(self):
         self.axioms = self._load_axioms()
         self.rules = self._load_inference_rules()
-    
-    def _load_axioms(self) -> Dict[str, sp.Expr]:
+
+    def _load_axioms(self) -> Dict[str, Expr]:
         # Peano axioms, ZFC set theory, etc.
+        # Using native Symbol and Eq classes
         return {
-            'peano_1': sp.Symbol('0') != sp.Symbol('S(n)'),
-            'peano_2': sp.Eq(sp.Symbol('S(m)'), sp.Symbol('S(n)')) >> sp.Eq(sp.Symbol('m'), sp.Symbol('n')),
+            'peano_1': Symbol('0') != Symbol('S(n)'),
+            'peano_2': Implies(Eq(Symbol('S(m)'), Symbol('S(n)')), Eq(Symbol('m'), Symbol('n')')),
             # Additional axioms...
         }
-    
+
     def _load_inference_rules(self) -> Dict[str, Callable]:
         return {
             'modus_ponens': self._modus_ponens,
             'generalization': self._generalization,
             # Additional rules...
         }
-    
-    def _modus_ponens(self, premises: List[sp.Expr]) -> Optional[sp.Expr]:
+
+    def _modus_ponens(self, premises: List[Expr]) -> Optional[Expr]:
         # Implementation with formal verification
         for p in premises:
-            if isinstance(p, sp.Implies):
+            if isinstance(p, Implies):
                 if p.args[0] in premises:
                     return p.args[1]
         return None
-    
-    def verify_proof(self, theorem: sp.Expr, proof_steps: List[Tuple[str, sp.Expr, List[int]]]) -> bool:
+
+    def verify_proof(self, theorem: Expr, proof_steps: List[Tuple[str, Expr, List[int]]]) -> bool:
         """Verify a formal proof using specified inference rules"""
         working_set = []
         
@@ -80,21 +86,21 @@ class MathematicalReasoner:
             'verification_status': 'FORMALLY_VERIFIED'
         }
     
-    def _parse_problem(self, problem: str) -> sp.Expr:
-        # Advanced parsing with error correction
+    def _parse_problem(self, problem: str) -> Expr:
+        # Advanced parsing with error correction using native parser
         try:
-            return sp.sympify(problem)
-        except sp.SympifyError:
+            return parse_expression(problem)
+        except (ValueError, SyntaxError) as e:
             # Apply error correction heuristics
             corrected = self._correct_syntax_errors(problem)
-            return sp.sympify(corrected)
-    
-    def _generate_solution_paths(self, expr: sp.Expr) -> List[List[Tuple[str, sp.Expr, List[int]]]]:
+            return parse_expression(corrected)
+
+    def _generate_solution_paths(self, expr: Expr) -> List[List[Tuple[str, Expr, List[int]]]]:
         # Implementation of HyperTree Proof Search (HTPS)
         # as described in survey paper section 4.3.2
         return self._htps_algorithm(expr)
-    
-    def _htps_algorithm(self, target: sp.Expr) -> List[List[Tuple[str, sp.Expr, List[int]]]]:
+
+    def _htps_algorithm(self, target: Expr) -> List[List[Tuple[str, Expr, List[int]]]]:
         # HyperTree Proof Search implementation
         # Incorporates prior successful proofs for efficiency
         pass

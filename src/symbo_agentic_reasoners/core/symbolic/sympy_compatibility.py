@@ -31,6 +31,7 @@ class Eq(Expr):
     def __init__(self, lhs, rhs=None):
         self.lhs = _ensure_expr(lhs) if lhs is not None else Integer(0)
         self.rhs = _ensure_expr(rhs) if rhs is not None else Integer(0)
+        self.args = (self.lhs, self.rhs)
 
     def __repr__(self):
         return f"Eq({self.lhs}, {self.rhs})"
@@ -70,6 +71,48 @@ class Eq(Expr):
 
     def to_latex(self):
         return f"{self.lhs.to_latex()} = {self.rhs.to_latex()}"
+
+
+class Implies(Expr):
+    """Logical implication class representing A → B (replaces sympy.Implies)."""
+
+    def __init__(self, antecedent, consequent):
+        self.antecedent = _ensure_expr(antecedent)
+        self.consequent = _ensure_expr(consequent)
+        self.args = (self.antecedent, self.consequent)
+
+    def __repr__(self):
+        return f"Implies({self.antecedent}, {self.consequent})"
+
+    def __str__(self):
+        return f"{self.antecedent} → {self.consequent}"
+
+    def __eq__(self, other):
+        if isinstance(other, Implies):
+            return self.antecedent == other.antecedent and self.consequent == other.consequent
+        return False
+
+    def __hash__(self):
+        return hash((type(self).__name__, hash(self.antecedent), hash(self.consequent)))
+
+    @property
+    def free_symbols(self) -> Set[Symbol]:
+        return self.antecedent.free_symbols | self.consequent.free_symbols
+
+    def subs(self, *args, **kwargs):
+        if len(args) == 1 and isinstance(args[0], dict):
+            substitutions = args[0]
+        elif len(args) == 2:
+            substitutions = {args[0]: args[1]}
+        else:
+            substitutions = kwargs
+        return Implies(
+            self.antecedent.subs(substitutions),
+            self.consequent.subs(substitutions)
+        )
+
+    def to_latex(self):
+        return f"{self.antecedent.to_latex()} \\Rightarrow {self.consequent.to_latex()}"
 
 
 def preorder_traversal(expr):
@@ -165,6 +208,7 @@ def sqrt(x):
 __all__ = [
     # Compatibility classes
     'Eq',
+    'Implies',
     'SympifyError',
     'core',
 

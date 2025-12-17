@@ -1,1 +1,2 @@
 {"timestamp": "2025-12-17T01:09:17.807150", "event_type": "warning_threshold", "level": "INFO", "context": {"vram_utilization": 0.319, "ram_utilization": 0.55, "cpu_utilization": 1.0, "old_level": "NORMAL", "new_level": "WARNING", "active_cognitive_agent": null, "queue_length": 0}}
+{"timestamp": "2025-12-17T06:16:27.599866", "event_type": "warning_threshold", "level": "INFO", "context": {"vram_utilization": 0.36, "ram_utilization": 0.611, "cpu_utilization": 1.0, "old_level": "NORMAL", "new_level": "WARNING", "active_cognitive_agent": null, "queue_length": 0}}
