@@ -30,7 +30,8 @@
       "Bash(move \"c:\\dev\\Mathematic agent based solver\\tests\\run_brutal_algebra_tests.py\" \"c:\\dev\\Mathematic agent based solver\\scripts\\run_brutal_algebra_tests.py\")",
       "Bash(timeout 120 python:*)",
       "Bash(sort:*)",
-      "Bash(for d in */)"
+      "Bash(for d in */)",
+      "Bash(mkdir:*)"
     ]
   }
 }

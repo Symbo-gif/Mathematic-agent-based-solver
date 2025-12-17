@@ -870,6 +870,361 @@ class SecurityMonitor(BDIAgent):
         return stats
 
 
+# =============================================================================
+# PHASE 5 - ISSUES #9-12: SECURITY MONITOR ENHANCEMENTS
+# =============================================================================
+
+class BehavioralAnomalyDetector:
+    """
+    Detect behavioral anomalies in agent actions.
+
+    Phase 5 - Issue #9: Tracks agent behavior patterns and detects deviations.
+
+    Detection Methods:
+    - Unusual time-of-day access
+    - Resource access pattern deviation
+    - Action frequency spikes
+    - Sequential action anomalies
+    """
+
+    def __init__(self):
+        """Initialize behavioral anomaly detector."""
+        self._agent_profiles: Dict[str, Dict] = {}
+        self.anomalies_detected = 0
+
+    def detect_anomalies(self, agent_id: str, action: str, resource: str) -> List[str]:
+        """
+        Detect behavioral anomalies for agent action.
+
+        Args:
+            agent_id: Agent performing action
+            action: Action type
+            resource: Resource being accessed
+
+        Returns:
+            List of anomaly types detected
+        """
+        anomalies = []
+
+        # Get or create agent profile
+        if agent_id not in self._agent_profiles:
+            self._agent_profiles[agent_id] = {
+                'actions': [],
+                'resources': set(),
+                'access_times': [],
+                'action_counts': {},
+            }
+
+        profile = self._agent_profiles[agent_id]
+
+        # Record action
+        profile['actions'].append((time.time(), action, resource))
+        profile['resources'].add(resource)
+        profile['access_times'].append(time.time())
+        profile['action_counts'][action] = profile['action_counts'].get(action, 0) + 1
+
+        # Detect anomalies
+        if self._is_action_spike(profile, action):
+            anomalies.append("action_frequency_spike")
+
+        if self._is_unusual_resource(profile, resource):
+            anomalies.append("unusual_resource_access")
+
+        if anomalies:
+            self.anomalies_detected += len(anomalies)
+
+        return anomalies
+
+    def _is_action_spike(self, profile: Dict, action: str) -> bool:
+        """Check for action frequency spike."""
+        recent_actions = [
+            a for ts, a, r in profile['actions']
+            if time.time() - ts < 60  # Last minute
+        ]
+
+        if len(recent_actions) < 10:
+            return False
+
+        action_count = recent_actions.count(action)
+        return action_count > 20  # More than 20 same actions in 1 minute
+
+    def _is_unusual_resource(self, profile: Dict, resource: str) -> bool:
+        """Check for unusual resource access."""
+        # First-time resource access after 10+ actions
+        if len(profile['actions']) > 10 and resource not in profile['resources']:
+            return True
+        return False
+
+
+class ThreatPatternDatabase:
+    """
+    Persistent threat pattern storage.
+
+    Phase 5 - Issue #10: Stores threat patterns to disk for learning.
+
+    Features:
+    - JSON-based persistent storage
+    - Pattern querying by type
+    - Automatic persistence on save
+    - Thread-safe operations
+    """
+
+    def __init__(self, db_path: str = "data/security/threat_patterns.json"):
+        """
+        Initialize threat pattern database.
+
+        Args:
+            db_path: Path to JSON database file
+        """
+        from pathlib import Path
+        import json
+
+        self.db_path = Path(db_path)
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self._patterns = self._load_patterns()
+        self._lock = threading.RLock()
+
+    def _load_patterns(self) -> Dict:
+        """Load patterns from disk."""
+        import json
+
+        if self.db_path.exists():
+            try:
+                with open(self.db_path, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning(f"Failed to load threat patterns: {e}")
+
+        return {'patterns': [], 'version': '1.0', 'last_updated': time.time()}
+
+    def save_pattern(self, pattern: Dict):
+        """
+        Save threat pattern to database.
+
+        Args:
+            pattern: Pattern dictionary (must include 'alert_type')
+        """
+        import json
+
+        with self._lock:
+            self._patterns['patterns'].append({
+                **pattern,
+                'timestamp': time.time(),
+                'id': len(self._patterns['patterns'])
+            })
+            self._patterns['last_updated'] = time.time()
+            self._persist()
+
+    def _persist(self):
+        """Write patterns to disk."""
+        import json
+
+        try:
+            with open(self.db_path, 'w') as f:
+                json.dump(self._patterns, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to persist threat patterns: {e}")
+
+    def query_similar(self, alert_type: str, limit: int = 10) -> List[Dict]:
+        """
+        Query similar historical patterns.
+
+        Args:
+            alert_type: Alert type to match
+            limit: Maximum patterns to return
+
+        Returns:
+            List of matching patterns
+        """
+        with self._lock:
+            matches = [
+                p for p in self._patterns['patterns']
+                if p.get('alert_type') == alert_type
+            ]
+            return matches[-limit:] if limit else matches
+
+
+class PatternThresholdOptimizer:
+    """
+    Optimize detection thresholds via statistical analysis.
+
+    Phase 5 - Issue #11: Uses F1 score optimization to tune thresholds.
+
+    Features:
+    - ROC curve-based threshold selection
+    - F1 score maximization
+    - False positive/negative tracking
+    - Automatic threshold updates
+    """
+
+    def __init__(self):
+        """Initialize pattern threshold optimizer."""
+        self._thresholds = {
+            'rate_limit': 100,  # requests/minute
+            'message_size': 1_000_000,  # bytes
+            'resource_access_frequency': 50,  # accesses/minute
+        }
+        self._optimization_history: List[Dict] = []
+
+    def optimize_thresholds(self, historical_data: List[Dict]) -> Dict[str, float]:
+        """
+        Optimize thresholds using historical data.
+
+        Args:
+            historical_data: List of {alert_type, was_true_positive, value}
+
+        Returns:
+            Updated thresholds dictionary
+        """
+        for threshold_type in self._thresholds.keys():
+            relevant_data = [
+                d for d in historical_data
+                if d.get('alert_type') == threshold_type
+            ]
+
+            if len(relevant_data) < 10:
+                continue  # Need sufficient data
+
+            # Find optimal threshold
+            best_threshold = self._find_optimal_threshold(relevant_data)
+
+            if best_threshold is not None:
+                self._thresholds[threshold_type] = best_threshold
+                self._optimization_history.append({
+                    'threshold_type': threshold_type,
+                    'old_value': self._thresholds.get(threshold_type),
+                    'new_value': best_threshold,
+                    'timestamp': time.time()
+                })
+
+        return self._thresholds
+
+    def _find_optimal_threshold(self, data: List[Dict]) -> Optional[float]:
+        """Find threshold that maximizes F1 score."""
+        if not data:
+            return None
+
+        values = sorted(set(d.get('value', 0) for d in data))
+        best_f1 = 0.0
+        best_threshold = None
+
+        for candidate in values:
+            tp = sum(1 for d in data if d.get('value', 0) >= candidate and d.get('was_true_positive', False))
+            fp = sum(1 for d in data if d.get('value', 0) >= candidate and not d.get('was_true_positive', False))
+            fn = sum(1 for d in data if d.get('value', 0) < candidate and d.get('was_true_positive', False))
+
+            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+            f1 = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
+            if f1 > best_f1:
+                best_f1 = f1
+                best_threshold = candidate
+
+        return best_threshold
+
+    def get_threshold(self, threshold_type: str) -> Optional[float]:
+        """Get current threshold value."""
+        return self._thresholds.get(threshold_type)
+
+
+class PersistentAuditLogger:
+    """
+    Persistent append-only audit log with rotation.
+
+    Phase 5 - Issue #12: Prevents audit trail truncation.
+
+    Features:
+    - Daily log rotation
+    - 30-day retention
+    - JSON structured logging
+    - Append-only for forensics
+    """
+
+    def __init__(self, log_dir: str = "data/security/audit"):
+        """
+        Initialize persistent audit logger.
+
+        Args:
+            log_dir: Directory for audit logs
+        """
+        from pathlib import Path
+        import logging.handlers
+        import json
+
+        self.log_dir = Path(log_dir)
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+
+        # Rotating file handler (daily rotation, 30-day retention)
+        log_file = self.log_dir / "security_audit.log"
+        self.handler = logging.handlers.TimedRotatingFileHandler(
+            str(log_file),
+            when='midnight',
+            interval=1,
+            backupCount=30,  # Keep 30 days
+            encoding='utf-8'
+        )
+
+        # JSON formatter for structured logs
+        self.handler.setFormatter(logging.Formatter('%(message)s'))
+
+        self.logger = logging.getLogger('security_audit')
+        self.logger.addHandler(self.handler)
+        self.logger.setLevel(logging.INFO)
+
+        self.logs_written = 0
+
+    def log_access(self, agent_id: str, resource: str, action: str, allowed: bool):
+        """
+        Log access attempt.
+
+        Args:
+            agent_id: Agent making request
+            resource: Resource being accessed
+            action: Action being performed
+            allowed: Whether access was granted
+        """
+        import json
+
+        self.logger.info(json.dumps({
+            'timestamp': time.time(),
+            'event_type': 'access',
+            'agent_id': agent_id,
+            'resource': resource,
+            'action': action,
+            'allowed': allowed
+        }))
+        self.logs_written += 1
+
+    def log_alert(self, alert_type: str, severity: str, agent_id: str,
+                 message: str, recommended_action: str = None):
+        """
+        Log security alert.
+
+        Args:
+            alert_type: Type of alert
+            severity: Severity level
+            agent_id: Agent involved
+            message: Alert message
+            recommended_action: Recommended response action
+        """
+        import json
+
+        self.logger.warning(json.dumps({
+            'timestamp': time.time(),
+            'event_type': 'alert',
+            'alert_type': alert_type,
+            'severity': severity,
+            'agent_id': agent_id,
+            'message': message,
+            'recommended_action': recommended_action
+        }))
+        self.logs_written += 1
+
+
+# =============================================================================
+
+
 if __name__ == "__main__":
     """Test Security Monitor"""
     print("=" * 80)

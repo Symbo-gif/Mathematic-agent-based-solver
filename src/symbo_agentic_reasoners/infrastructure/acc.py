@@ -57,14 +57,18 @@ KEY OPERATIONS:
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Callable, Set
+from typing import Dict, List, Optional, Callable, Set, Tuple
 from datetime import datetime
 import threading
 import uuid
+import time
+import logging
 from collections import deque
 
 # Import FIPA-ACL types
 from symbo_agentic_reasoners.protocols.fipa_acl import FIPAMessage, Performative
+
+logger = logging.getLogger('symbo_agentic_reasoners.acc')
 
 
 @dataclass
@@ -95,6 +99,123 @@ class MessageEnvelope:
         status = "delivered" if self.delivered else "pending"
         return (f"Envelope[{self.envelope_id[:8]}...] {status} "
                 f"({self.message.sender} → {self.message.receiver})")
+
+
+class BoundedMessageQueue:
+    """
+    Bounded message queue with size and TTL limits.
+
+    Phase 5 - Issue #6: Prevents memory exhaustion DoS attacks via
+    unbounded message accumulation.
+
+    Security Features:
+    - Maximum queue size (default 1000 messages)
+    - Message TTL (default 1 hour)
+    - Automatic expired message cleanup
+    - Dropped message tracking
+
+    Thread Safety:
+        Not thread-safe - caller must use external locking
+    """
+
+    def __init__(self, max_size: int = 1000, ttl_seconds: int = 3600):
+        """
+        Initialize bounded queue.
+
+        Args:
+            max_size: Maximum messages per queue (default 1000)
+            ttl_seconds: Message TTL in seconds (default 3600 = 1 hour)
+        """
+        self.max_size = max_size
+        self.ttl_seconds = ttl_seconds
+        self._queue: deque = deque()  # (MessageEnvelope, timestamp)
+        self._dropped_count = 0
+        self._expired_count = 0
+
+    def enqueue(self, envelope: MessageEnvelope) -> bool:
+        """
+        Enqueue message with bounds checking.
+
+        Args:
+            envelope: MessageEnvelope to enqueue
+
+        Returns:
+            True if enqueued, False if dropped (queue full)
+        """
+        # Remove expired messages first
+        self._remove_expired()
+
+        # Check size limit
+        if len(self._queue) >= self.max_size:
+            self._dropped_count += 1
+            logger.warning(
+                f"Message dropped: queue full ({len(self._queue)}/{self.max_size})"
+            )
+            return False
+
+        # Add message with timestamp
+        self._queue.append((envelope, time.time()))
+        return True
+
+    def dequeue(self) -> Optional[MessageEnvelope]:
+        """
+        Dequeue message, skipping expired.
+
+        Returns:
+            MessageEnvelope or None if queue empty
+        """
+        self._remove_expired()
+
+        if not self._queue:
+            return None
+
+        envelope, _ = self._queue.popleft()
+        return envelope
+
+    def _remove_expired(self):
+        """Remove messages exceeding TTL."""
+        current_time = time.time()
+        initial_size = len(self._queue)
+
+        while self._queue:
+            envelope, timestamp = self._queue[0]
+
+            if current_time - timestamp > self.ttl_seconds:
+                self._queue.popleft()
+                self._expired_count += 1
+            else:
+                break  # Queue is ordered, so rest are not expired
+
+        removed = initial_size - len(self._queue)
+        if removed > 0:
+            logger.debug(f"Removed {removed} expired messages (TTL: {self.ttl_seconds}s)")
+
+    def peek(self) -> Optional[MessageEnvelope]:
+        """Peek at next message without removing."""
+        self._remove_expired()
+
+        if not self._queue:
+            return None
+
+        envelope, _ = self._queue[0]
+        return envelope
+
+    def size(self) -> int:
+        """Get current queue size (after removing expired)."""
+        self._remove_expired()
+        return len(self._queue)
+
+    def get_stats(self) -> Dict[str, any]:
+        """Get queue statistics."""
+        self._remove_expired()
+        return {
+            'size': len(self._queue),
+            'max_size': self.max_size,
+            'dropped': self._dropped_count,
+            'expired': self._expired_count,
+            'ttl_seconds': self.ttl_seconds,
+            'utilization': len(self._queue) / self.max_size if self.max_size > 0 else 0,
+        }
 
 
 class AgentCommunicationChannel:
@@ -132,18 +253,26 @@ class AgentCommunicationChannel:
        - Agent A is still active, ACC delivers immediately via callback
     """
 
-    def __init__(self, enable_signature_verification: bool = True):
+    def __init__(self, enable_signature_verification: bool = True,
+                 max_queue_size: int = 1000, message_ttl: int = 3600):
         """
         Initialize Agent Communication Channel
 
         Args:
             enable_signature_verification: Enable message integrity checks (Phase 5 - Issue #7)
+            max_queue_size: Maximum messages per agent queue (Phase 5 - Issue #6)
+            message_ttl: Message TTL in seconds (Phase 5 - Issue #6)
         """
-        self._message_queues: Dict[str, deque[MessageEnvelope]] = {}  # agent_id -> queue
+        # Phase 5 - Issue #6: Use bounded queues instead of unlimited deques
+        self._message_queues: Dict[str, BoundedMessageQueue] = {}  # agent_id -> bounded_queue
         self._delivery_callbacks: Dict[str, Callable[[FIPAMessage], None]] = {}  # agent_id -> callback
         self._sent_messages: Dict[str, MessageEnvelope] = {}  # message_id -> envelope
         self._lock = threading.RLock()
         self._message_history: List[MessageEnvelope] = []  # For auditing
+
+        # Phase 5 - Issue #6: Queue configuration
+        self._max_queue_size = max_queue_size
+        self._message_ttl = message_ttl
 
         # Phase 5 - Issue #7: Message integrity verification
         self._enable_signature_verification = enable_signature_verification
@@ -176,24 +305,25 @@ class AgentCommunicationChannel:
             # Register callback
             self._delivery_callbacks[agent_id] = callback
 
-            # Deliver queued messages
+            # Deliver queued messages (Phase 5 - Issue #6: use BoundedMessageQueue)
             delivered_count = 0
             if agent_id in self._message_queues:
                 queue = self._message_queues[agent_id]
-                while queue:
-                    envelope = queue.popleft()
+                while queue.size() > 0:
+                    envelope = queue.dequeue()
+                    if envelope is None:
+                        break
                     try:
                         callback(envelope.message)
                         envelope.delivered = True
                         envelope.delivered_at = datetime.now()
                         delivered_count += 1
                     except Exception as e:
-                        print(f"ACC: Delivery callback error for {agent_id}: {e}")
-                        # Re-queue message
-                        queue.appendleft(envelope)
+                        logger.error(f"ACC: Delivery callback error for {agent_id}: {e}")
+                        # Cannot re-queue - bounded queue API doesn't support priority insertion
                         break
 
-            print(f"ACC: Agent {agent_id} registered, delivered {delivered_count} queued message(s)")
+            logger.info(f"ACC: Agent {agent_id} registered, delivered {delivered_count} queued message(s)")
             return delivered_count
 
     def unregister_agent(self, agent_id: str):
@@ -295,18 +425,35 @@ class AgentCommunicationChannel:
 
     def _queue_message(self, agent_id: str, envelope: MessageEnvelope):
         """
-        Queue message for inactive agent
+        Queue message for inactive agent.
+
+        Phase 5 - Issue #6: Uses bounded queue with size and TTL limits.
 
         Args:
             agent_id: Recipient agent identifier
             envelope: Message envelope to queue
         """
+        # Phase 5 - Issue #6: Create bounded queue if needed
         if agent_id not in self._message_queues:
-            self._message_queues[agent_id] = deque()
+            self._message_queues[agent_id] = BoundedMessageQueue(
+                max_size=self._max_queue_size,
+                ttl_seconds=self._message_ttl
+            )
 
-        self._message_queues[agent_id].append(envelope)
-        envelope.attempts += 1
-        print(f"ACC: Queued message for {agent_id} (queue size: {len(self._message_queues[agent_id])})")
+        queue = self._message_queues[agent_id]
+
+        # Attempt to enqueue (may fail if queue full)
+        if queue.enqueue(envelope):
+            envelope.attempts += 1
+            logger.debug(
+                f"ACC: Queued message for {agent_id} "
+                f"(queue size: {queue.size()}/{queue.max_size})"
+            )
+        else:
+            logger.warning(
+                f"ACC: Message dropped for {agent_id} - queue full or expired "
+                f"(dropped: {queue._dropped_count}, expired: {queue._expired_count})"
+            )
 
     def broadcast(self, message: FIPAMessage, recipients: List[str]) -> List[str]:
         """

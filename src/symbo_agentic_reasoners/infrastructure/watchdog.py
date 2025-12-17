@@ -728,6 +728,153 @@ def run_with_timeout_fallback(
         raise
 
 
+# =============================================================================
+# PHASE 5 - ISSUE #8: RESOURCE EXHAUSTION DETECTION
+# =============================================================================
+
+class ResourceUsageTracker:
+    """
+    Track resource usage patterns for exhaustion detection.
+
+    Phase 5 - Issue #8: Detects sustained high CPU, memory leaks,
+    and task accumulation patterns that indicate resource attacks.
+
+    Security Features:
+    - Sustained high CPU detection (>90% for 5+ minutes)
+    - Memory growth trend analysis (leak detection)
+    - Task accumulation detection (possible deadlock)
+    - Configurable time window (default 5 minutes)
+    """
+
+    def __init__(self, window_seconds: int = 300):
+        """
+        Initialize resource usage tracker.
+
+        Args:
+            window_seconds: Observation window in seconds (default 300 = 5 minutes)
+        """
+        self.window_seconds = window_seconds
+        self._cpu_samples: List[Tuple[float, float]] = []  # (timestamp, usage)
+        self._memory_samples: List[Tuple[float, int]] = []  # (timestamp, bytes)
+        self._task_samples: List[Tuple[float, int]] = []  # (timestamp, count)
+
+    def record_cpu(self, usage_percent: float):
+        """Record CPU usage sample."""
+        self._cpu_samples.append((time.time(), usage_percent))
+        self._cleanup_old_samples()
+
+    def record_memory(self, usage_bytes: int):
+        """Record memory usage sample."""
+        self._memory_samples.append((time.time(), usage_bytes))
+        self._cleanup_old_samples()
+
+    def record_task_count(self, count: int):
+        """Record active task count."""
+        self._task_samples.append((time.time(), count))
+        self._cleanup_old_samples()
+
+    def detect_exhaustion(self) -> Optional[str]:
+        """
+        Detect resource exhaustion patterns.
+
+        Returns:
+            Alert message if exhaustion detected, None otherwise
+        """
+        # Check sustained high CPU (>90% for 5+ minutes)
+        if self._check_sustained_high_cpu():
+            return "Sustained high CPU usage detected (>90% for 5+ min)"
+
+        # Check memory growth trend
+        if self._check_memory_growth():
+            return "Rapid memory growth detected (possible leak)"
+
+        # Check task accumulation
+        if self._check_task_accumulation():
+            return "Task accumulation detected (possible deadlock)"
+
+        return None
+
+    def _check_sustained_high_cpu(self) -> bool:
+        """Check for sustained high CPU usage."""
+        recent_samples = [
+            usage for ts, usage in self._cpu_samples
+            if time.time() - ts < 300  # Last 5 minutes
+        ]
+
+        if len(recent_samples) < 10:
+            return False
+
+        avg_cpu = sum(recent_samples) / len(recent_samples)
+        return avg_cpu > 90.0
+
+    def _check_memory_growth(self) -> bool:
+        """Check for rapid memory growth (doubling)."""
+        if len(self._memory_samples) < 10:
+            return False
+
+        current_time = time.time()
+
+        # Compare memory from 4 minutes ago vs last minute
+        old_samples = [mem for ts, mem in self._memory_samples if current_time - ts > 240]
+        new_samples = [mem for ts, mem in self._memory_samples if current_time - ts < 60]
+
+        if not old_samples or not new_samples:
+            return False
+
+        old_avg = sum(old_samples) / len(old_samples)
+        new_avg = sum(new_samples) / len(new_samples)
+
+        # Alert if memory doubled
+        return new_avg > (old_avg * 2)
+
+    def _check_task_accumulation(self) -> bool:
+        """Check for task accumulation (possible deadlock)."""
+        if len(self._task_samples) < 10:
+            return False
+
+        current_time = time.time()
+
+        # Get tasks from last 5 minutes
+        recent_tasks = [count for ts, count in self._task_samples if current_time - ts < 300]
+
+        if not recent_tasks:
+            return False
+
+        # Check if task count consistently increasing
+        if len(recent_tasks) >= 10:
+            # Check if last 5 samples > first 5 samples
+            first_half = recent_tasks[:len(recent_tasks)//2]
+            second_half = recent_tasks[len(recent_tasks)//2:]
+
+            avg_first = sum(first_half) / len(first_half)
+            avg_second = sum(second_half) / len(second_half)
+
+            # Alert if tasks increased by 50%+
+            return avg_second > (avg_first * 1.5)
+
+        return False
+
+    def _cleanup_old_samples(self):
+        """Remove samples outside time window."""
+        cutoff = time.time() - self.window_seconds
+        self._cpu_samples = [(ts, val) for ts, val in self._cpu_samples if ts > cutoff]
+        self._memory_samples = [(ts, val) for ts, val in self._memory_samples if ts > cutoff]
+        self._task_samples = [(ts, val) for ts, val in self._task_samples if ts > cutoff]
+
+    def get_stats(self) -> Dict[str, Any]:
+        """Get tracker statistics."""
+        self._cleanup_old_samples()
+        return {
+            'cpu_samples': len(self._cpu_samples),
+            'memory_samples': len(self._memory_samples),
+            'task_samples': len(self._task_samples),
+            'window_seconds': self.window_seconds,
+        }
+
+
+# =============================================================================
+
+
 # Global watchdog instance getter
 def get_watchdog() -> Watchdog:
     """Get the global Watchdog instance"""
