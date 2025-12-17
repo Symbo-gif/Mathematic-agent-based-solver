@@ -81,6 +81,116 @@ SPECIALISTS = [
      'velocity from position x = t^2', 'acceleration of projectile'),
     ('DynamicsSpecialist', 'physics', 'physics.mechanics.dynamics_specialist', 'math.physics.dynamics',
      'F = ma with F=10, m=2', 'net force on object with multiple forces'),
+
+    # Discrete Math (6)
+    ('CombinatoricsAgent', 'discrete_math', 'discrete_math.combinatorics_agent', 'math.discrete.combinatorics',
+     '5!', 'C(10, 3) - combinations'),
+    ('GraphTheoryAgent', 'discrete_math', 'discrete_math.graph_theory_agent', 'math.discrete.graphs',
+     'shortest path in graph', 'minimum spanning tree'),
+    ('SetTheoryAgent', 'discrete_math', 'discrete_math.set_theory_agent', 'math.discrete.sets',
+     'union of {1,2,3} and {2,3,4}', 'power set of {a,b,c}'),
+    ('RecurrenceRelationAgent', 'discrete_math', 'discrete_math.recurrence_agent', 'math.discrete.recurrence',
+     'solve a_n = a_{n-1} + 1', 'solve Fibonacci recurrence'),
+    ('BooleanAlgebraAgent', 'discrete_math', 'discrete_math.boolean_algebra_agent', 'math.discrete.boolean',
+     'simplify A AND (A OR B)', 'Quine-McCluskey minimization'),
+    ('FiniteAutomataAgent', 'discrete_math', 'discrete_math.finite_automata_agent', 'math.discrete.automata',
+     'DFA for (01)*', 'NFA to DFA conversion'),
+
+    # Complex Analysis (4)
+    ('AnalyticFunctionsSpecialist', 'complex_analysis', 'complex_analysis.analytic_functions_specialist', 'math.complex.analytic',
+     'is f(z)=z^2 analytic?', 'find singularities of f(z)=1/(z^2-1)'),
+    ('ResidueCalculusSpecialist', 'complex_analysis', 'complex_analysis.residue_calculus_specialist', 'math.complex.residue',
+     'residue of 1/z at z=0', 'contour integral using residue theorem'),
+    ('ConformalMappingSpecialist', 'complex_analysis', 'complex_analysis.conformal_mapping_specialist', 'math.complex.conformal',
+     'Mobius transformation w=1/z', 'Schwarz-Christoffel mapping'),
+    ('ContourIntegrationSpecialist', 'complex_analysis', 'complex_analysis.contour_integration_specialist', 'math.complex.contour',
+     'integrate f(z) around unit circle', 'evaluate real integral using contour'),
+
+    # Real Analysis (3)
+    ('MeasureTheorySpecialist', 'real_analysis', 'real_analysis.measure_theory_specialist', 'math.real.measure',
+     'Lebesgue measure of [0,1]', 'measure of Cantor set'),
+    ('MetricSpaceSpecialist', 'real_analysis', 'real_analysis.metric_space_specialist', 'math.real.metric',
+     'is R with d(x,y)=|x-y| complete?', 'Lipschitz continuity'),
+    ('SequencesSeriesSpecialist', 'real_analysis', 'real_analysis.sequences_series_specialist', 'math.real.sequences',
+     'does 1/n converge?', 'ratio test for sum(1/n^2)'),
+
+    # Numerical (7)
+    ('NumericalMethodsSpecialist', 'numerical', 'numerical.numerical_methods_specialist', 'math.numerical.methods',
+     'Newton-Raphson for x^2-2=0', 'numerical integration of sin(x)'),
+    ('OptimizationSpecialist', 'numerical', 'numerical.optimization_specialist', 'math.numerical.optimization',
+     'minimize f(x)=x^2-4x+3', 'BFGS optimization'),
+    ('SplineSpecialist', 'numerical', 'numerical.spline_specialist', 'math.numerical.spline',
+     'cubic spline through 3 points', 'Hermite interpolation'),
+    ('LinearSystemsSpecialist', 'numerical', 'numerical.linear_systems_specialist', 'math.numerical.linear',
+     'solve Ax=b with Jacobi', 'GMRES iterative solver'),
+    ('PDESpecialist', 'numerical', 'numerical.pde_specialist', 'math.numerical.pde',
+     'heat equation 1D', 'Laplace equation 2D'),
+    ('AdvancedQuadratureSpecialist', 'numerical', 'numerical.advanced_quadrature_specialist', 'math.numerical.quadrature',
+     'Gauss-Legendre quadrature', 'adaptive Simpson integration'),
+    ('NumericalComputationUtility', 'numerical', 'numerical.numerical_utility', 'math.numerical.utility',
+     'evaluate expression numerically', 'floating point error analysis'),
+
+    # Cryptography (3)
+    ('ModularArithmeticSpecialist', 'cryptography', 'cryptography.modular_arithmetic_specialist', 'math.crypto.modular',
+     '7 mod 3', 'modular exponentiation 2^100 mod 13'),
+    ('AsymmetricCryptoSpecialist', 'cryptography', 'cryptography.asymmetric_crypto_specialist', 'math.crypto.asymmetric',
+     'RSA key generation', 'Diffie-Hellman key exchange'),
+    ('HashSpecialist', 'cryptography', 'cryptography.hash_specialist', 'math.crypto.hash',
+     'DJB2 hash of string', 'Merkle tree construction'),
+
+    # Optimization (3)
+    ('LinearProgrammingSpecialist', 'optimization', 'optimization.linear_programming_specialist', 'math.optimization.linear',
+     'simplex method', 'two-phase simplex with constraints'),
+    ('ConvexOptimizationSpecialist', 'optimization', 'optimization.convex_optimization_specialist', 'math.optimization.convex',
+     'gradient descent', 'Newton method for convex function'),
+    ('CombinatorialOptimizationSpecialist', 'optimization', 'optimization.combinatorial_specialist', 'math.optimization.combinatorial',
+     'knapsack problem', 'traveling salesman heuristic'),
+
+    # Information Theory (3)
+    ('EntropySpecialist', 'information_theory', 'information_theory.entropy_specialist', 'math.info.entropy',
+     'Shannon entropy of [0.5, 0.5]', 'KL divergence between distributions'),
+    ('CodingTheorySpecialist', 'information_theory', 'information_theory.coding_theory_specialist', 'math.info.coding',
+     'Huffman encoding', 'Hamming code construction'),
+    ('ChannelCapacitySpecialist', 'information_theory', 'information_theory.channel_capacity_specialist', 'math.info.channel',
+     'BSC capacity', 'AWGN channel capacity'),
+
+    # Category Theory (3)
+    ('MorphismSpecialist', 'category_theory', 'category_theory.morphism_specialist', 'math.category.morphism',
+     'compose morphisms f and g', 'verify morphism properties'),
+    ('FunctorSpecialist', 'category_theory', 'category_theory.functor_specialist', 'math.category.functor',
+     'define functor F: C → D', 'natural transformation'),
+    ('UniversalPropertiesSpecialist', 'category_theory', 'category_theory.universal_properties_specialist', 'math.category.universal',
+     'product in category', 'coproduct and limits'),
+
+    # Functional Analysis (3)
+    ('BanachSpaceSpecialist', 'functional_analysis', 'functional_analysis.banach_space_specialist', 'math.functional.banach',
+     'verify norm axioms', 'dual space of l^p'),
+    ('HilbertSpaceSpecialist', 'functional_analysis', 'functional_analysis.hilbert_space_specialist', 'math.functional.hilbert',
+     'inner product <u,v>', 'Gram-Schmidt orthogonalization'),
+    ('OperatorTheorySpecialist', 'functional_analysis', 'functional_analysis.operator_theory_specialist', 'math.functional.operator',
+     'spectrum of operator', 'resolvent of T'),
+
+    # Additional Physics (10)
+    ('EnergySpecialist', 'physics', 'physics.mechanics.energy_specialist', 'math.physics.energy',
+     'kinetic energy KE=0.5*m*v^2', 'conservation of energy'),
+    ('ElectrostaticsSpecialist', 'physics', 'physics.em.electrostatics_specialist', 'math.physics.electrostatics',
+     'Coulomb force F=kq1q2/r^2', 'electric field of point charge'),
+    ('MagnetismSpecialist', 'physics', 'physics.em.magnetism_specialist', 'math.physics.magnetism',
+     'Lorentz force F=qvB', 'magnetic field of current loop'),
+    ('CircuitsSpecialist', 'physics', 'physics.em.circuits_specialist', 'math.physics.circuits',
+     'Ohm law V=IR', 'RLC circuit analysis'),
+    ('HeatTransferSpecialist', 'physics', 'physics.thermo.heat_transfer_specialist', 'math.physics.heat',
+     'Q = mcΔT', 'heat conduction Fourier law'),
+    ('GasLawsSpecialist', 'physics', 'physics.thermo.gas_laws_specialist', 'math.physics.gas',
+     'ideal gas PV=nRT', 'van der Waals equation'),
+    ('WavefunctionSpecialist', 'physics', 'physics.quantum.wavefunction_specialist', 'math.physics.wavefunction',
+     'normalize wavefunction', 'expectation value <x>'),
+    ('OperatorsSpecialist', 'physics', 'physics.quantum.operators_specialist', 'math.physics.operators',
+     'momentum operator', 'commutator [X,P]'),
+    ('QuantumSystemsSpecialist', 'physics', 'physics.quantum.quantum_systems_specialist', 'math.physics.quantum',
+     'particle in box', 'harmonic oscillator eigenvalues'),
+    ('WaveOpticsSpecialist', 'physics', 'physics.waves.wave_optics_specialist', 'math.physics.waves',
+     'double slit interference', 'diffraction grating'),
 ]
 
 
