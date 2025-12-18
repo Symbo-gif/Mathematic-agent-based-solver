@@ -272,6 +272,21 @@ class DiscreteMathSupervisor(BDIAgent):
                 'reason': 'Detected set theory keywords'
             }
 
+        # === SPECTRAL GRAPH THEORY (BEFORE general graph theory) ===
+        spectral_graph_keywords = [
+            'spectral graph', 'laplacian matrix', 'graph laplacian',
+            'eigenvalue graph', 'adjacency spectrum', 'laplacian spectrum',
+            'algebraic connectivity', 'fiedler', 'cheeger',
+            'spectral clustering', 'expander graph', 'expansion',
+            'graph eigenvalue', 'spectral gap', 'spectral radius graph'
+        ]
+        if any(kw in raw_input for kw in spectral_graph_keywords):
+            return {
+                'target': 'Spectral Graph Theory Specialist',
+                'service_type': 'math.discrete.graphs.spectral',
+                'reason': 'Detected spectral graph theory keywords (eigenvalues/Laplacian/etc)'
+            }
+
         # === GRAPH THEORY ===
         graph_keywords = [
             'graph', 'vertex', 'vertices', 'edge', 'node',

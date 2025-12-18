@@ -85,6 +85,14 @@ SUPERVISORS = [
 
     ('CategoryTheorySupervisor', 'category_theory_supervisor', 'category_theory',
      'compose morphisms f and g', 'prove Yoneda lemma for specific category'),
+
+    # Phase 1 - New Supervisors (3)
+    ('StochasticProcessesSupervisor', 'stochastic_processes_supervisor', 'stochastic_processes',
+     'Compute E[W(1)^2] for Wiener process', 'Solve SDE with Euler-Maruyama method'),
+    ('ModelTheorySupervisor', 'model_theory_supervisor', 'model_theory',
+     'Apply compactness theorem', 'Quantifier elimination for ACF'),
+    ('ProofTheorySupervisor', 'proof_theory_supervisor', 'proof_theory',
+     'Cut elimination for sequent', 'Type check lambda expression'),
 ]
 
 

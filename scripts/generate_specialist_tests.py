@@ -231,6 +231,72 @@ SPECIALISTS = [
      'particle in box', 'harmonic oscillator eigenvalues'),
     ('WaveOpticsSpecialist', 'physics', 'physics.waves.wave_optics_specialist', 'math.physics.waves',
      'double slit interference', 'diffraction grating'),
+
+    # Phase 1 - Stochastic Processes (5)
+    ('BrownianMotionSpecialist', 'stochastic', 'stochastic.brownian_motion', 'math.stochastic.brownian',
+     'Compute E[W(1)^2] for standard Wiener process', 'First passage time for BM with drift mu=0.5'),
+    ('SDESolverSpecialist', 'stochastic', 'stochastic.sde_solver', 'math.stochastic.sde',
+     'Solve dX = 0.1*X dt + 0.2*X dW with Euler-Maruyama', 'GBM with mu=0.05, sigma=0.2 using exact solution'),
+    ('LevyProcessSpecialist', 'stochastic', 'stochastic.levy_processes', 'math.stochastic.levy',
+     'Generate compound Poisson with rate 2.0', 'Levy process with jumps N(0,1)'),
+    ('MartingaleTheorySpecialist', 'stochastic', 'stochastic.martingale_theory', 'math.stochastic.martingale',
+     'Verify Brownian motion is a martingale', 'Compute stopping time to barrier 1.5'),
+    ('StochasticCalculusSpecialist', 'stochastic', 'stochastic.stochastic_calculus', 'math.stochastic.calculus',
+     'Apply Ito lemma to f(x)=x^2', 'Girsanov theorem with drift change 0.1'),
+
+    # Phase 1 - Analytic Number Theory (4)
+    ('ZetaFunctionSpecialist', 'analytic_number_theory', 'algebra.number_theory.analytic.zeta_functions',
+     'math.algebra.numbertheory.analytic.zeta', 'Compute zeta(2)', 'Evaluate zeta(3) numerically'),
+    ('PrimeDistributionSpecialist', 'analytic_number_theory', 'algebra.number_theory.analytic.prime_distribution',
+     'math.algebra.numbertheory.analytic.primes', 'Count primes up to 100', 'Prime number theorem approximation for x=10000'),
+    ('ArithmeticFunctionsSpecialist', 'analytic_number_theory', 'algebra.number_theory.analytic.arithmetic_functions',
+     'math.algebra.numbertheory.analytic.functions', 'Compute phi(12)', 'Mobius function mu(30)'),
+    ('AnalyticContinuationSpecialist', 'analytic_number_theory', 'algebra.number_theory.analytic.analytic_continuation',
+     'math.algebra.numbertheory.analytic.continuation', 'Functional equation for zeta', 'Analytic continuation to s=0.5'),
+
+    # Phase 1 - Algebraic Number Theory (4)
+    ('NumberFieldsSpecialist', 'algebraic_number_theory', 'algebra.number_theory.algebraic.number_fields',
+     'math.algebra.numbertheory.algebraic.fields', 'Quadratic field Q(sqrt(-1))', 'Discriminant of number field Q(sqrt(-5))'),
+    ('IdealTheorySpecialist', 'algebraic_number_theory', 'algebra.number_theory.algebraic.ideal_theory',
+     'math.algebra.numbertheory.algebraic.ideals', 'Ideal class group of Q(sqrt(-5))', 'Unique factorization in Z[i]'),
+    ('LocalFieldsSpecialist', 'algebraic_number_theory', 'algebra.number_theory.algebraic.local_fields',
+     'math.algebra.numbertheory.algebraic.local', 'p-adic valuation v_2(16)', '2-adic expansion of 1/3'),
+    ('ClassFieldTheorySpecialist', 'algebraic_number_theory', 'algebra.number_theory.algebraic.class_field_theory',
+     'math.algebra.numbertheory.algebraic.classfield', 'Artin reciprocity law', 'Abelian extension of Q'),
+
+    # Phase 1 - Spectral Graph Theory (5)
+    ('LaplacianSpectrumSpecialist', 'spectral_graph', 'discrete_math.spectral_graphs.laplacian_spectrum',
+     'math.discrete.graphs.spectral.laplacian', 'Laplacian eigenvalues of cycle C_5', 'Fiedler value of path graph P_10'),
+    ('AdjacencySpectrumSpecialist', 'spectral_graph', 'discrete_math.spectral_graphs.adjacency_spectrum',
+     'math.discrete.graphs.spectral.adjacency', 'Adjacency spectrum of K_5', 'Spectral radius of Petersen graph'),
+    ('CheegerInequalitySpecialist', 'spectral_graph', 'discrete_math.spectral_graphs.cheeger_inequality',
+     'math.discrete.graphs.spectral.cheeger', 'Cheeger bound for Fiedler=0.5', 'Graph conductance lower bound'),
+    ('RandomWalkSpecialist', 'spectral_graph', 'discrete_math.spectral_graphs.random_walks',
+     'math.discrete.graphs.spectral.randomwalk', 'Stationary distribution on K_4', 'Mixing time for cycle graph'),
+    ('SpectralClusteringSpecialist', 'spectral_graph', 'discrete_math.spectral_graphs.spectral_clustering',
+     'math.discrete.graphs.spectral.clustering', 'Cluster graph into 2 parts', 'Normalized cut for k=3 clusters'),
+
+    # Phase 1 - Model Theory (4)
+    ('CompactnessSpecialist', 'model_theory', 'model_theory.compactness',
+     'math.modeltheory.compactness', 'Apply compactness theorem', 'Ultraproduct construction'),
+    ('CategoricitySpecialist', 'model_theory', 'model_theory.categoricity',
+     'math.modeltheory.categoricity', 'Is DLO omega-categorical?', 'Categoricity spectrum of theory'),
+    ('QuantifierEliminationSpecialist', 'model_theory', 'model_theory.quantifier_elimination',
+     'math.modeltheory.qe', 'QE for ACF', 'Eliminate quantifiers in exists x. x^2+1=0'),
+    ('OMinimalitySpecialist', 'model_theory', 'model_theory.ominimality',
+     'math.modeltheory.ominimal', 'Is R_exp o-minimal?', 'Cell decomposition in R_an'),
+
+    # Phase 1 - Proof Theory (5)
+    ('CutEliminationSpecialist', 'proof_theory', 'proof_theory.cut_elimination',
+     'math.prooftheory.cutelimination', 'Cut elimination for sequent proof', 'Gentzen Hauptsatz application'),
+    ('OrdinalAnalysisSpecialist', 'proof_theory', 'proof_theory.ordinal_analysis',
+     'math.prooftheory.ordinals', 'Proof-theoretic ordinal of PA', 'Ordinal epsilon_0 for first-order arithmetic'),
+    ('TypeTheorySpecialist', 'proof_theory', 'proof_theory.type_theory',
+     'math.prooftheory.types', 'Type check lambda x. x', 'Dependent type for vectors'),
+    ('CurryHowardSpecialist', 'proof_theory', 'proof_theory.curry_howard',
+     'math.prooftheory.curryhoward', 'Curry-Howard for A->B', 'Proof term for conjunction'),
+    ('ConstructiveMathSpecialist', 'proof_theory', 'proof_theory.constructive_math',
+     'math.prooftheory.constructive', 'Is LEM constructively valid?', 'Constructive proof of intermediate value theorem'),
 ]
 
 

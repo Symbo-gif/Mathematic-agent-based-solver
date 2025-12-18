@@ -220,6 +220,28 @@ class AlgebraSupervisor(BDIAgent):
                 'reason': 'Detected polynomial keywords (solve/roots/equation/etc)'
             }
 
+        # ANALYTIC Number Theory - zeta functions, L-functions (BEFORE general NT)
+        analytic_nt_keywords = ['zeta function', 'riemann', 'dirichlet l', 'l-function',
+                                'prime number theorem', 'prime distribution', 'analytic continuation',
+                                'euler product', 'functional equation']
+        if any(kw in raw_input for kw in analytic_nt_keywords):
+            return {
+                'target': 'Analytic Number Theory Specialist',
+                'service_type': 'math.algebra.numbertheory.analytic',
+                'reason': 'Detected analytic number theory keywords (zeta/L-function/etc)'
+            }
+
+        # ALGEBRAIC Number Theory - number fields, ideals (BEFORE general NT)
+        algebraic_nt_keywords = ['number field', 'algebraic integer', 'ideal class',
+                                 'ramification', 'local field', 'p-adic', 'class field theory',
+                                 'discriminant', 'galois group', 'frobenius', 'artin', 'hensel']
+        if any(kw in raw_input for kw in algebraic_nt_keywords):
+            return {
+                'target': 'Algebraic Number Theory Specialist',
+                'service_type': 'math.algebra.numbertheory.algebraic',
+                'reason': 'Detected algebraic number theory keywords (number field/ideal/etc)'
+            }
+
         # Number Theory keywords - integer factorization, primes, modular arithmetic
         # "factor" without variables is integer factorization
         number_theory_keywords = ['prime', 'gcd', 'lcm', 'modulo', 'mod ', 'divisible', 'congruent']

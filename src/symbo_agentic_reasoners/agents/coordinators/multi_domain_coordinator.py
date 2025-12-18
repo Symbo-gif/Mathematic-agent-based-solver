@@ -42,6 +42,7 @@ logger = logging.getLogger(__name__)
 
 class DomainType(Enum):
     """Mathematical domain types."""
+    # Original 13 domains
     ALGEBRA = 'algebra'
     CALCULUS = 'calculus'
     LINEAR_ALGEBRA = 'linear_algebra'
@@ -55,6 +56,29 @@ class DomainType(Enum):
     CATEGORY_THEORY = 'category_theory'
     PHYSICS = 'physics'
     NUMERICAL = 'numerical'
+
+    # Phase 1 - Foundation domains (15 new domains total)
+    ANALYTIC_NUMBER_THEORY = 'analytic_number_theory'
+    ALGEBRAIC_NUMBER_THEORY = 'algebraic_number_theory'
+    SPECTRAL_GRAPH = 'spectral_graph'
+    STOCHASTIC_PROCESSES = 'stochastic_processes'
+    MODEL_THEORY = 'model_theory'
+    PROOF_THEORY = 'proof_theory'
+
+    # Phase 2 - Integration domains
+    COMPUTABILITY = 'computability'
+    RIEMANNIAN_GEOMETRY = 'riemannian_geometry'
+    BAYESIAN_DECISION = 'bayesian_decision'
+    TIME_SERIES = 'time_series'
+
+    # Phase 3 - Advanced domains
+    ALGEBRAIC_TOPOLOGY = 'algebraic_topology'
+    ERGODIC_THEORY = 'ergodic_theory'
+    GEOMETRIC_MEASURE = 'geometric_measure'
+    TDA = 'topological_data_analysis'
+
+    # Phase 4 - Refinements (handled by extending existing supervisors)
+    # OPTIMIZATION_ADVANCED is handled by OptimizationSupervisor extension
 
 
 @dataclass
@@ -147,6 +171,82 @@ class MultiDomainTeamCoordinator(BDIAgent):
         DomainType.NUMERICAL: [
             'numerical', 'approximation', 'iteration', 'newton-raphson',
             'interpolation', 'floating point', 'precision', 'convergence rate'
+        ],
+
+        # Phase 1 - Foundation domains
+        DomainType.ANALYTIC_NUMBER_THEORY: [
+            'zeta function', 'riemann', 'dirichlet l', 'prime number theorem',
+            'prime distribution', 'analytic continuation', 'euler product',
+            'l-function', 'functional equation', 'mobius', 'ramanujan'
+        ],
+        DomainType.ALGEBRAIC_NUMBER_THEORY: [
+            'number field', 'algebraic integer', 'ideal class', 'ramification',
+            'local field', 'p-adic', 'class field theory', 'discriminant',
+            'galois group', 'frobenius', 'artin', 'hensel'
+        ],
+        DomainType.SPECTRAL_GRAPH: [
+            'spectral graph', 'laplacian matrix', 'eigenvalue graph',
+            'algebraic connectivity', 'cheeger', 'spectral clustering',
+            'fiedler', 'adjacency spectrum', 'graph eigenvalue', 'expander'
+        ],
+        DomainType.STOCHASTIC_PROCESSES: [
+            'brownian motion', 'stochastic differential', 'sde', 'ito',
+            'levy process', 'martingale', 'wiener process', 'diffusion',
+            'jump process', 'stochastic calculus', 'stratonovich', 'girsanov'
+        ],
+        DomainType.MODEL_THEORY: [
+            'model', 'structure', 'theory', 'satisfiable', 'compactness',
+            'categoricity', 'quantifier elimination', 'ultraproduct',
+            'o-minimal', 'definable', 'elementarily equivalent'
+        ],
+        DomainType.PROOF_THEORY: [
+            'cut elimination', 'sequent', 'natural deduction', 'gentzen',
+            'ordinal analysis', 'proof normalization', 'type theory',
+            'curry-howard', 'dependent type', 'constructive', 'intuitionistic'
+        ],
+
+        # Phase 2 - Integration domains
+        DomainType.COMPUTABILITY: [
+            'turing machine', 'recursive', 'computable', 'halting problem',
+            'turing degree', 'reducibility', 'complexity class', 'p vs np',
+            'kolmogorov complexity', 'church-turing', 'undecidable'
+        ],
+        DomainType.RIEMANNIAN_GEOMETRY: [
+            'riemannian', 'metric tensor', 'curvature', 'geodesic',
+            'christoffel', 'ricci', 'scalar curvature', 'sectional curvature',
+            'parallel transport', 'holonomy', 'exponential map', 'manifold'
+        ],
+        DomainType.BAYESIAN_DECISION: [
+            'utility', 'decision theory', 'bayes risk', 'loss function',
+            'minimax', 'admissible', 'sequential decision', 'multi-armed bandit',
+            'optimal stopping', 'decision rule', 'posterior risk'
+        ],
+        DomainType.TIME_SERIES: [
+            'time series', 'arima', 'autoregressive', 'moving average',
+            'kalman filter', 'state space', 'forecasting', 'acf', 'pacf',
+            'stationarity', 'seasonality', 'trend', 'box-jenkins'
+        ],
+
+        # Phase 3 - Advanced domains
+        DomainType.ALGEBRAIC_TOPOLOGY: [
+            'homotopy', 'homology', 'cohomology', 'fundamental group',
+            'covering space', 'van kampen', 'mayer-vietoris', 'betti number',
+            'euler characteristic', 'cup product', 'spectral sequence', 'simplicial'
+        ],
+        DomainType.ERGODIC_THEORY: [
+            'ergodic', 'invariant measure', 'mixing', 'birkhoff',
+            'ergodic theorem', 'kolmogorov-sinai', 'entropy', 'measure-preserving',
+            'poincare recurrence', 'orbit', 'flow', 'dynamical system'
+        ],
+        DomainType.GEOMETRIC_MEASURE: [
+            'hausdorff', 'rectifiable', 'current', 'varifold', 'plateau problem',
+            'minimal surface', 'geometric measure', 'caccioppoli set',
+            'perimeter', 'mean curvature flow', 'density', 'tangent measure'
+        ],
+        DomainType.TDA: [
+            'persistent homology', 'persistence diagram', 'barcode',
+            'mapper', 'vietoris-rips', 'cech complex', 'witness complex',
+            'bottleneck distance', 'topological data', 'filtration'
         ]
     }
 
@@ -217,6 +317,82 @@ class MultiDomainTeamCoordinator(BDIAgent):
             elif domain == DomainType.PHYSICS:
                 from symbo_agentic_reasoners.agents.supervisors.physics_mechanics_supervisor import PhysicsMechanicsSupervisor
                 self._supervisors[domain] = PhysicsMechanicsSupervisor(df=self.df, blackboard=self.blackboard)
+
+            # Phase 1 - NEW supervisors
+            elif domain == DomainType.STOCHASTIC_PROCESSES:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.stochastic_processes_supervisor import StochasticProcessesSupervisor
+                    self._supervisors[domain] = StochasticProcessesSupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"StochasticProcessesSupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.MODEL_THEORY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.model_theory_supervisor import ModelTheorySupervisor
+                    self._supervisors[domain] = ModelTheorySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"ModelTheorySupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.PROOF_THEORY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.proof_theory_supervisor import ProofTheorySupervisor
+                    self._supervisors[domain] = ProofTheorySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"ProofTheorySupervisor not yet implemented")
+                    return None
+
+            # Phase 1 - Extend existing supervisors (handled by routing in those supervisors)
+            # ANALYTIC_NUMBER_THEORY, ALGEBRAIC_NUMBER_THEORY -> AlgebraSupervisor
+            # SPECTRAL_GRAPH -> DiscreteMathSupervisor
+
+            # Phase 2 - NEW supervisors
+            elif domain == DomainType.COMPUTABILITY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.computability_supervisor import ComputabilitySupervisor
+                    self._supervisors[domain] = ComputabilitySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"ComputabilitySupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.RIEMANNIAN_GEOMETRY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.riemannian_geometry_supervisor import RiemannianGeometrySupervisor
+                    self._supervisors[domain] = RiemannianGeometrySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"RiemannianGeometrySupervisor not yet implemented")
+                    return None
+
+            # Phase 2 - Extend existing supervisors (handled by routing in those supervisors)
+            # BAYESIAN_DECISION, TIME_SERIES -> StatisticsSupervisor
+
+            # Phase 3 - NEW supervisors
+            elif domain == DomainType.ALGEBRAIC_TOPOLOGY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.algebraic_topology_supervisor import AlgebraicTopologySupervisor
+                    self._supervisors[domain] = AlgebraicTopologySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"AlgebraicTopologySupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.ERGODIC_THEORY:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.ergodic_theory_supervisor import ErgodicTheorySupervisor
+                    self._supervisors[domain] = ErgodicTheorySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"ErgodicTheorySupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.GEOMETRIC_MEASURE:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.geometric_measure_supervisor import GeometricMeasureTheorySupervisor
+                    self._supervisors[domain] = GeometricMeasureTheorySupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"GeometricMeasureTheorySupervisor not yet implemented")
+                    return None
+            elif domain == DomainType.TDA:
+                try:
+                    from symbo_agentic_reasoners.agents.supervisors.tda_supervisor import TopologicalDataAnalysisSupervisor
+                    self._supervisors[domain] = TopologicalDataAnalysisSupervisor(df=self.df, blackboard=self.blackboard)
+                except ImportError:
+                    logger.warning(f"TopologicalDataAnalysisSupervisor not yet implemented")
+                    return None
             else:
                 logger.warning(f"No supervisor found for domain: {domain}")
                 return None
