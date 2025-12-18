@@ -976,10 +976,10 @@
     }
   },
   "Agents/Specialists": {
-    "total": 1987,
-    "documented": 1755,
-    "coverage": 88.3241066935078,
-    "missing": 232,
+    "total": 2672,
+    "documented": 2499,
+    "coverage": 93.52544910179641,
+    "missing": 173,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1002,6 +1002,36 @@
       "algebra\\number_theory_specialist.py": {
         "total": 40,
         "documented": 40,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebraic_topology\\cohomology.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebraic_topology\\fundamental_group.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebraic_topology\\homology.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebraic_topology\\homotopy.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebraic_topology\\spectral_sequences.py": {
+        "total": 17,
+        "documented": 17,
         "coverage": 100.0,
         "missing": 0
       },
@@ -1114,34 +1144,34 @@
         "missing": 0
       },
       "computability\\complexity_theory.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "computability\\kolmogorov_complexity.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "computability\\recursion_theory.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 18,
+        "documented": 17,
+        "coverage": 94.44444444444444,
+        "missing": 1
       },
       "computability\\turing_completeness.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "computability\\turing_degrees.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 20,
+        "documented": 18,
+        "coverage": 90.0,
+        "missing": 2
       },
       "control_theory\\dynamical_systems_specialist.py": {
         "total": 15,
@@ -1221,6 +1251,30 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "ergodic\\dynamical_entropy.py": {
+        "total": 19,
+        "documented": 18,
+        "coverage": 94.73684210526315,
+        "missing": 1
+      },
+      "ergodic\\ergodic_theorems.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "ergodic\\invariant_measures.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "ergodic\\mixing.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "functional_analysis\\banach_space_specialist.py": {
         "total": 19,
         "documented": 19,
@@ -1236,6 +1290,30 @@
       "functional_analysis\\operator_theory_specialist.py": {
         "total": 19,
         "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometric_measure\\currents.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometric_measure\\hausdorff_measure.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometric_measure\\minimal_surfaces.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometric_measure\\rectifiability.py": {
+        "total": 13,
+        "documented": 13,
         "coverage": 100.0,
         "missing": 0
       },
@@ -1498,34 +1576,34 @@
         "missing": 0
       },
       "riemannian\\comparison.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "riemannian\\curvature.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
       },
       "riemannian\\geodesic.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "riemannian\\holonomy.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "riemannian\\metric.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\bayesian_engine.py": {
         "total": 4,
@@ -1593,47 +1671,71 @@
         "coverage": 27.27272727272727,
         "missing": 8
       },
+      "tda\\mapper.py": {
+        "total": 28,
+        "documented": 25,
+        "coverage": 89.28571428571429,
+        "missing": 3
+      },
+      "tda\\persistent_homology.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "tda\\simplicial_complex.py": {
+        "total": 26,
+        "documented": 26,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "tda\\topological_inference.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "statistics\\bayesian_decision\\decision_rules.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\bayesian_decision\\sequential_decision.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\bayesian_decision\\utility_theory.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
       },
       "statistics\\timeseries\\arima.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\timeseries\\kalman_filter.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 22,
+        "documented": 22,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\timeseries\\nonlinear_timeseries.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\timeseries\\spectral_analysis.py": {
-        "total": 5,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 5
+        "total": 16,
+        "documented": 16,
+        "coverage": 100.0,
+        "missing": 0
       },
       "physics\\electromagnetism\\circuits_specialist.py": {
         "total": 12,
@@ -1706,6 +1808,42 @@
         "documented": 16,
         "coverage": 100.0,
         "missing": 0
+      },
+      "optimization\\advanced\\game_theory.py": {
+        "total": 16,
+        "documented": 16,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "optimization\\advanced\\global_optimization.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "optimization\\advanced\\multiobjective.py": {
+        "total": 18,
+        "documented": 17,
+        "coverage": 94.44444444444444,
+        "missing": 1
+      },
+      "optimization\\advanced\\nonconvex.py": {
+        "total": 27,
+        "documented": 26,
+        "coverage": 96.29629629629629,
+        "missing": 1
+      },
+      "optimization\\advanced\\optimal_control.py": {
+        "total": 26,
+        "documented": 21,
+        "coverage": 80.76923076923077,
+        "missing": 5
+      },
+      "optimization\\advanced\\variational_calculus.py": {
+        "total": 33,
+        "documented": 22,
+        "coverage": 66.66666666666666,
+        "missing": 11
       },
       "discrete_math\\spectral_graphs\\adjacency_spectrum.py": {
         "total": 5,
@@ -1830,11 +1968,17 @@
     }
   },
   "Agents/Supervisors": {
-    "total": 223,
+    "total": 243,
     "documented": 203,
-    "coverage": 91.03139013452915,
-    "missing": 20,
+    "coverage": 83.53909465020575,
+    "missing": 40,
     "files": {
+      "algebraic_topology_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "algebra_supervisor.py": {
         "total": 14,
         "documented": 14,
@@ -1889,11 +2033,23 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "ergodic_theory_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "functional_analysis_supervisor.py": {
         "total": 8,
         "documented": 8,
         "coverage": 100.0,
         "missing": 0
+      },
+      "geometric_measure_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "geometry_supervisor.py": {
         "total": 10,
@@ -1984,6 +2140,12 @@
         "documented": 10,
         "coverage": 100.0,
         "missing": 0
+      },
+      "tda_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       }
     }
   },

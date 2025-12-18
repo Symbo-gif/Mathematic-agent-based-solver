@@ -38,7 +38,8 @@
       "Bash(git -C \"Mathematic agent based solver\" log --oneline)",
       "Bash(git checkout:*)",
       "Bash(chmod:*)",
-      "Bash(pytest:*)"
+      "Bash(pytest:*)",
+      "Bash(timeout 60 python -m pytest:*)"
     ]
   }
 }

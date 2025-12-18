@@ -297,6 +297,104 @@ SPECIALISTS = [
      'math.prooftheory.curryhoward', 'Curry-Howard for A->B', 'Proof term for conjunction'),
     ('ConstructiveMathSpecialist', 'proof_theory', 'proof_theory.constructive_math',
      'math.prooftheory.constructive', 'Is LEM constructively valid?', 'Constructive proof of intermediate value theorem'),
+
+    # Phase 2 - Computability Theory (5)
+    ('TuringCompletenessSpecialist', 'computability', 'computability.turing_completeness',
+     'math.computability.turing', 'Simulate simple TM', 'Verify Python is Turing-complete'),
+    ('RecursionTheorySpecialist', 'computability', 'computability.recursion_theory',
+     'math.computability.recursion_theory', 'Compute factorial via primitive recursion', 'Ackermann A(3,3)'),
+    ('TuringDegreesSpecialist', 'computability', 'computability.turing_degrees',
+     'math.computability.turing_degrees', "Compute 0' jump", "Analyze Post's problem"),
+    ('ComplexityTheorySpecialist', 'computability', 'computability.complexity_theory',
+     'math.computability.complexity_theory', 'Analyze time complexity of bubble sort', 'Classify SAT problem'),
+    ('KolmogorovComplexitySpecialist', 'computability', 'computability.kolmogorov_complexity',
+     'math.computability.kolmogorov_complexity', 'Estimate K(x) for repeated string', 'Verify randomness of string'),
+
+    # Phase 2 - Riemannian Geometry (5)
+    ('MetricTensorSpecialist', 'riemannian', 'riemannian.metric',
+     'math.riemannian.metric', 'Verify Euclidean metric signature', 'Check isometry for rotation'),
+    ('CurvatureSpecialist', 'riemannian', 'riemannian.curvature',
+     'math.riemannian.curvature', 'Compute scalar curvature of flat space', 'Riemann tensor for sphere'),
+    ('GeodesicSpecialist', 'riemannian', 'riemannian.geodesic',
+     'math.riemannian.geodesic', 'Solve geodesic on Euclidean space', 'Compute exponential map on sphere'),
+    ('ComparisonTheoremsSpecialist', 'riemannian', 'riemannian.comparison',
+     'math.riemannian.comparison', 'Apply Rauch comparison', 'Verify Myers theorem for positive Ricci'),
+    ('HolonomySpecialist', 'riemannian', 'riemannian.holonomy',
+     'math.riemannian.holonomy', 'Parallel transport along circle', 'Classify holonomy of Kahler manifold'),
+
+    # Phase 2 - Bayesian Decision Theory (3)
+    ('UtilityTheorySpecialist', 'bayesian_decision', 'statistics.bayesian_decision.utility_theory',
+     'math.statistics.bayesian_decision.utility_theory', 'Compute expected utility', 'Measure risk aversion with log utility'),
+    ('DecisionRulesSpecialist', 'bayesian_decision', 'statistics.bayesian_decision.decision_rules',
+     'math.statistics.bayesian_decision.decision_rules', 'Compute Bayes risk', 'Find minimax rule for 2x2 game'),
+    ('SequentialDecisionSpecialist', 'bayesian_decision', 'statistics.bayesian_decision.sequential_decision',
+     'math.statistics.bayesian_decision.sequential_decision', 'SPRT for normal data', 'Solve optimal stopping problem'),
+
+    # Phase 2 - Time Series Analysis (4)
+    ('ARIMASpecialist', 'timeseries', 'statistics.timeseries.arima',
+     'math.statistics.timeseries.arima', 'Fit AR(1) model', 'ARIMA(2,1,1) forecasting'),
+    ('KalmanFilterSpecialist', 'timeseries', 'statistics.timeseries.kalman_filter',
+     'math.statistics.timeseries.kalman_filter', 'Kalman filter for random walk', 'Extended Kalman filter for nonlinear system'),
+    ('SpectralAnalysisSpecialist', 'timeseries', 'statistics.timeseries.spectral_analysis',
+     'math.statistics.timeseries.spectral_analysis', 'Compute periodogram', 'Identify dominant frequencies'),
+    ('NonlinearTimeSeriesSpecialist', 'timeseries', 'statistics.timeseries.nonlinear_timeseries',
+     'math.statistics.timeseries.nonlinear_timeseries', 'Fit GARCH(1,1)', 'Detect chaos via Lyapunov exponent'),
+
+    # Phase 3 - Algebraic Topology (5)
+    ('HomotopySpecialist', 'algebraic_topology', 'algebraic_topology.homotopy',
+     'math.algebraictopology.homotopy', 'Compute pi_1(circle)', 'Apply van Kampen theorem'),
+    ('HomologySpecialist', 'algebraic_topology', 'algebraic_topology.homology',
+     'math.algebraictopology.homology', 'Compute H_1(torus)', 'Compute Euler characteristic'),
+    ('CohomologySpecialist', 'algebraic_topology', 'algebraic_topology.cohomology',
+     'math.algebraictopology.cohomology', 'Compute cup product', 'Apply Poincare duality'),
+    ('FundamentalGroupSpecialist', 'algebraic_topology', 'algebraic_topology.fundamental_group',
+     'math.algebraictopology.fundamentalgroup', 'Compute pi_1 presentation', 'Classify covering spaces'),
+    ('SpectralSequencesSpecialist', 'algebraic_topology', 'algebraic_topology.spectral_sequences',
+     'math.algebraictopology.spectralsequences', 'Compute Leray-Serre E2 page', 'Check spectral sequence convergence'),
+
+    # Phase 3 - Ergodic Theory (4)
+    ('InvariantMeasureSpecialist', 'ergodic', 'ergodic.invariant_measures',
+     'math.ergodic.invariant_measures', 'Verify invariant measure', 'Check ergodicity'),
+    ('MixingSpecialist', 'ergodic', 'ergodic.mixing',
+     'math.ergodic.mixing', 'Check strong mixing', 'Compute mixing rate'),
+    ('ErgodicTheoremSpecialist', 'ergodic', 'ergodic.ergodic_theorems',
+     'math.ergodic.ergodic_theorems', 'Apply Birkhoff theorem', 'Verify time vs space average'),
+    ('DynamicalEntropySpecialist', 'ergodic', 'ergodic.dynamical_entropy',
+     'math.ergodic.dynamical_entropy', 'Compute KS entropy', 'Apply Shannon-McMillan-Breiman'),
+
+    # Phase 3 - Geometric Measure Theory (4)
+    ('HausdorffMeasureSpecialist', 'geometric_measure', 'geometric_measure.hausdorff_measure',
+     'math.geometricmeasure.hausdorff_measure', 'Compute Hausdorff dimension', 'Estimate fractal dimension'),
+    ('RectifiabilitySpecialist', 'geometric_measure', 'geometric_measure.rectifiability',
+     'math.geometricmeasure.rectifiability', 'Check rectifiability', 'Compute tangent space'),
+    ('CurrentsSpecialist', 'geometric_measure', 'geometric_measure.currents',
+     'math.geometricmeasure.currents', 'Construct current', 'Compute boundary operator'),
+    ('MinimalSurfacesSpecialist', 'geometric_measure', 'geometric_measure.minimal_surfaces',
+     'math.geometricmeasure.minimal_surfaces', 'Solve Plateau problem', 'Verify mean curvature zero'),
+
+    # Phase 3 - Topological Data Analysis (4)
+    ('PersistentHomologySpecialist', 'tda', 'tda.persistent_homology',
+     'math.tda.persistent_homology', 'Compute persistence diagram', 'Compute bottleneck distance'),
+    ('SimplicialComplexSpecialist', 'tda', 'tda.simplicial_complex',
+     'math.tda.simplicial_complex', 'Construct VR complex', 'Compute nerve of covering'),
+    ('MapperSpecialist', 'tda', 'tda.mapper',
+     'math.tda.mapper', 'Construct Mapper graph', 'Analyze topological structure'),
+    ('TopologicalInferenceSpecialist', 'tda', 'tda.topological_inference',
+     'math.tda.topological_inference', 'Compute confidence sets', 'Bootstrap persistence diagram'),
+
+    # Phase 4 - Advanced Optimization (6)
+    ('NonconvexOptimizationSpecialist', 'optimization_advanced', 'optimization.advanced.nonconvex',
+     'math.optimization.advanced.nonconvex', 'Trust region for f(x)=x^4-3x^3+2', 'SQP with augmented Lagrangian'),
+    ('GlobalOptimizationSpecialist', 'optimization_advanced', 'optimization.advanced.global_optimization',
+     'math.optimization.advanced.global', 'Simulated annealing for Rastrigin', 'Differential evolution for multi-modal'),
+    ('VariationalCalculusSpecialist', 'optimization_advanced', 'optimization.advanced.variational_calculus',
+     'math.optimization.advanced.variational', 'Euler-Lagrange for geodesic', 'Brachistochrone with constraints'),
+    ('OptimalControlSpecialist', 'optimization_advanced', 'optimization.advanced.optimal_control',
+     'math.optimization.advanced.control', 'PMP for linear control', 'HJB for LQR problem'),
+    ('GameTheoryOptimizationSpecialist', 'optimization_advanced', 'optimization.advanced.game_theory',
+     'math.optimization.advanced.game', 'Nash equilibrium 2x2', 'Find ESS for rock-paper-scissors'),
+    ('MultiobjectiveOptimizationSpecialist', 'optimization_advanced', 'optimization.advanced.multiobjective',
+     'math.optimization.advanced.multiobjective', 'Pareto front for bi-objective', 'NSGA-II population evolution'),
 ]
 
 
