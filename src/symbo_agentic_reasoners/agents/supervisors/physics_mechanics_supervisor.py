@@ -44,6 +44,25 @@ class PhysicsMechanicsSupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Physics Mechanics Supervisor.
+
+        Sets up routing infrastructure for mechanics tasks. Routes to
+        Kinematics, Dynamics, and Energy specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'mechanics_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = PhysicsMechanicsSupervisor()
+            >>> result = supervisor.process({"problem": "Calculate trajectory"})
+
+        Notes:
+            - Tracks routing statistics
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard

@@ -49,6 +49,21 @@ class DiffGeometrySupervisor(BDIAgent):
         directory_facilitator: Optional[DirectoryFacilitator] = None,
         specialists: Optional[Dict[str, Any]] = None
     ):
+        """Initialize Differential Geometry & Topology Supervisor.
+
+        Sets up routing infrastructure for differential geometry and topology
+        problems. Uses lazy initialization for specialists.
+
+        Args:
+            agent_id: Unique identifier (auto-generated if None)
+            blackboard: Shared memory for agent communication
+            directory_facilitator: Service registry for finding specialists
+            specialists: Pre-initialized specialist dict (optional)
+
+        Example:
+            >>> supervisor = DiffGeometrySupervisor()
+            >>> result = supervisor.handle_task({"task": "Compute Ricci curvature"})
+        """
         super().__init__(
             agent_id=agent_id or f"diff_geometry_supervisor_{uuid.uuid4().hex[:8]}",
             role="diff_geometry_supervisor"
@@ -74,6 +89,15 @@ class DiffGeometrySupervisor(BDIAgent):
         }
 
     def _ensure_initialized(self):
+        """Lazy initialization of specialists to avoid circular imports.
+
+        Creates DifferentialGeometrySpecialist and TopologySpecialist on first use.
+
+        Notes:
+            - Called automatically before routing tasks
+            - Prevents import cycles at module load time
+            - Specialists are reused across multiple tasks
+        """
         if self._initialized:
             return
 
@@ -90,6 +114,30 @@ class DiffGeometrySupervisor(BDIAgent):
         self._initialized = True
 
     def _classify_task(self, task_description: str) -> str:
+        """Classify task into specialist category using keyword matching.
+
+        Categories:
+        - geometry: Metrics, curvature, geodesics (DifferentialGeometrySpecialist)
+        - topology: Homology, fundamental groups, complexes (TopologySpecialist)
+
+        Args:
+            task_description: Natural language task description
+
+        Returns:
+            Task type string ('geometry' or 'topology')
+
+        Example:
+            >>> supervisor = DiffGeometrySupervisor()
+            >>> supervisor._classify_task("Compute Gaussian curvature")
+            'geometry'
+            >>> supervisor._classify_task("Calculate Betti numbers")
+            'topology'
+
+        Notes:
+            - Uses regex pattern matching on task keywords
+            - Defaults to 'geometry' if no patterns match
+            - Scores each category by number of keyword matches
+        """
         task_lower = task_description.lower()
         scores = {task_type: 0 for task_type in self._task_patterns}
 
@@ -109,18 +157,52 @@ class DiffGeometrySupervisor(BDIAgent):
         return "geometry"
 
     def update_beliefs(self, observation: Dict[str, Any]) -> None:
+        """Update agent beliefs with new observations.
+
+        Classifies task type if task description is provided.
+
+        Args:
+            observation: Dict containing task information and parameters
+
+        Notes:
+            - Part of BDI (Belief-Desire-Intention) architecture
+            - Automatically classifies task into specialist category
+            - Updates stored as key-value pairs in self.beliefs
+        """
         self.beliefs.update(observation)
         if "task" in observation:
             task_type = self._classify_task(observation["task"])
             self.beliefs["task_type"] = task_type
 
     def deliberate(self) -> List[str]:
+        """Generate desires (goals) based on current beliefs.
+
+        Returns:
+            List of goal strings (e.g., ['route_task'])
+
+        Notes:
+            - Part of BDI architecture
+            - Currently generates single 'route_task' goal if task present
+            - Desires are transformed into intentions by plan()
+        """
         self.desires = []
         if "task" in self.beliefs:
             self.desires.append("route_task")
         return self.desires
 
     def plan(self) -> List[Intention]:
+        """Create concrete intentions from desires.
+
+        Converts abstract goals into actionable plans with priorities.
+
+        Returns:
+            List of Intention objects sorted by priority
+
+        Notes:
+            - Part of BDI architecture
+            - Creates routing plan for each 'route_task' desire
+            - Higher priority (lower number) intentions execute first
+        """
         intentions = []
         for goal in self.desires:
             if goal == "route_task":
@@ -134,6 +216,19 @@ class DiffGeometrySupervisor(BDIAgent):
         return self.intentions
 
     def execute_step(self) -> Dict[str, Any]:
+        """Execute next step in current intention.
+
+        Processes the highest-priority intention and delegates to specialists.
+
+        Returns:
+            Dict with execution results including status and specialist output
+
+        Notes:
+            - Part of BDI architecture
+            - Auto-generates intentions if none exist
+            - Removes completed intentions from queue
+            - Returns error status for unknown goals
+        """
         self._ensure_initialized()
 
         if not self.intentions:
@@ -154,6 +249,27 @@ class DiffGeometrySupervisor(BDIAgent):
         return {"status": "unknown_goal", "goal": current.goal}
 
     def _route_task(self) -> Dict[str, Any]:
+        """Route task to appropriate specialist based on classification.
+
+        Delegates task execution to DifferentialGeometrySpecialist or TopologySpecialist.
+
+        Returns:
+            Dict containing routing status and specialist results
+
+        Example:
+            Result structure:
+            {
+                "status": "routed",
+                "task_type": "geometry",
+                "specialist": "DifferentialGeometrySpecialist",
+                "result": {...}  # Specialist's output
+            }
+
+        Notes:
+            - Shares beliefs with specialist via update_beliefs()
+            - Specialist executes full BDI cycle (deliberate → execute)
+            - Returns error if specialist not found
+        """
         task_type = self.beliefs.get("task_type", "geometry")
         specialist = self._specialists.get(task_type)
 
@@ -172,6 +288,32 @@ class DiffGeometrySupervisor(BDIAgent):
         }
 
     def handle_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        """Main entry point for task processing.
+
+        Orchestrates full BDI cycle: beliefs → desires → intentions → execution.
+
+        Args:
+            task: Dict with 'task' or 'description' key plus parameters
+
+        Returns:
+            Dict with routing results and specialist output
+
+        Example:
+            >>> supervisor = DiffGeometrySupervisor()
+            >>> result = supervisor.handle_task({
+            ...     "task": "Compute sectional curvature of sphere",
+            ...     "radius": 1.0
+            ... })
+            >>> result["status"]
+            'routed'
+            >>> result["task_type"]
+            'geometry'
+
+        Notes:
+            - Convenience method combining update_beliefs, deliberate, plan, execute
+            - Accepts flexible task dict format
+            - Automatically routes to correct specialist
+        """
         task_desc = task.get("description") or task.get("task", "")
         self.update_beliefs({"task": task_desc, **task})
         self.deliberate()

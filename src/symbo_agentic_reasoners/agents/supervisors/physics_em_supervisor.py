@@ -45,6 +45,25 @@ class PhysicsEMSupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Physics Electromagnetism Supervisor.
+
+        Sets up routing infrastructure for EM tasks. Routes to
+        Electrostatics, Magnetism, and Circuits specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'em_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = PhysicsEMSupervisor()
+            >>> result = supervisor.process({"problem": "Calculate electric field"})
+
+        Notes:
+            - Tracks routing statistics
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard

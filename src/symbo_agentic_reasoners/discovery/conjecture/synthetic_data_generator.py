@@ -54,41 +54,177 @@ class Eq(Expr):
     """Equality expression for conjectures - native implementation."""
 
     def __init__(self, lhs: Expr, rhs: Expr):
+        """Initialize equality expression lhs = rhs.
+
+        Constructs an equality relation between two expressions, ensuring
+        both sides are converted to Expr objects if needed.
+
+        Args:
+            lhs: Left-hand side expression
+            rhs: Right-hand side expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> eq = Eq(x**2, 4)
+            >>> str(eq)
+            'x**2 = 4'
+        """
         self.lhs = lhs if isinstance(lhs, Expr) else Integer(lhs) if isinstance(lhs, int) else parse_expr(str(lhs))
         self.rhs = rhs if isinstance(rhs, Expr) else Integer(rhs) if isinstance(rhs, int) else parse_expr(str(rhs))
         self._hash_cache = hash(('Eq', hash(self.lhs), hash(self.rhs)))
 
     def __repr__(self) -> str:
+        """Return canonical string representation.
+
+        Returns:
+            String in form 'Eq(lhs, rhs)' for debugging
+
+        Example:
+            >>> x = Symbol('x')
+            >>> repr(Eq(x, 2))
+            "Eq(Symbol('x'), Integer(2))"
+        """
         return f"Eq({self.lhs!r}, {self.rhs!r})"
 
     def __str__(self) -> str:
+        """Return human-readable string representation.
+
+        Returns:
+            String in form 'lhs = rhs'
+
+        Example:
+            >>> x = Symbol('x')
+            >>> str(Eq(x**2, 4))
+            'x**2 = 4'
+        """
         return f"{self.lhs} = {self.rhs}"
 
     def __eq__(self, other: object) -> bool:
+        """Check structural equality of two Eq objects.
+
+        Args:
+            other: Object to compare with
+
+        Returns:
+            True if both sides match structurally, False otherwise
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Eq(x, 2) == Eq(x, 2)
+            True
+            >>> Eq(x, 2) == Eq(x, 3)
+            False
+        """
         if isinstance(other, Eq):
             return self.lhs == other.lhs and self.rhs == other.rhs
         return False
 
     def __hash__(self) -> int:
+        """Compute hash value for set/dict operations.
+
+        Returns:
+            Cached hash value based on 'Eq' tag and both sides
+
+        Example:
+            >>> x = Symbol('x')
+            >>> eq_set = {Eq(x, 2), Eq(x, 2)}
+            >>> len(eq_set)
+            1
+        """
         return self._hash_cache
 
     @property
     def free_symbols(self):
+        """Get all free symbols in the equality.
+
+        Returns:
+            Set of Symbol objects in both sides
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> eq = Eq(x + y, x**2)
+            >>> eq.free_symbols
+            {x, y}
+        """
         return self.lhs.free_symbols | self.rhs.free_symbols if hasattr(self.lhs, 'free_symbols') else set()
 
     def subs(self, substitutions):
+        """Substitute symbols in both sides of the equality.
+
+        Args:
+            substitutions: Dict mapping symbols to replacement values
+
+        Returns:
+            New Eq with substitutions applied to both sides
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> eq = Eq(x + y, 5)
+            >>> eq.subs({x: 2})
+            Eq(2 + y, 5)
+        """
         return Eq(self.lhs.subs(substitutions), self.rhs.subs(substitutions))
 
     def diff(self, var):
+        """Differentiate both sides of the equality with respect to var.
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            New Eq with differentiated sides
+
+        Example:
+            >>> x = Symbol('x')
+            >>> eq = Eq(x**2, 2*x)
+            >>> eq.diff(x)
+            Eq(2*x, 2)
+        """
         return Eq(self.lhs.diff(var), self.rhs.diff(var))
 
     def simplify(self):
+        """Simplify both sides of the equality.
+
+        Returns:
+            New Eq with simplified sides
+
+        Example:
+            >>> x = Symbol('x')
+            >>> eq = Eq(x + x, 2*x - x + x)
+            >>> eq.simplify()
+            Eq(2*x, 2*x)
+        """
         return Eq(simplify(self.lhs), simplify(self.rhs))
 
     def evalf(self, precision=15):
+        """Numerically evaluate both sides to floating-point.
+
+        Args:
+            precision: Number of decimal digits (default: 15)
+
+        Returns:
+            New Eq with numerically evaluated sides
+
+        Example:
+            >>> from symbo_agentic_reasoners.core.native_symbolic import pi
+            >>> eq = Eq(pi, 22/7)
+            >>> eq.evalf()
+            Eq(3.141592653589793, 3.142857142857143)
+        """
         return Eq(self.lhs.evalf(precision), self.rhs.evalf(precision))
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+        Returns:
+            LaTeX string for mathematical typesetting
+
+        Example:
+            >>> x = Symbol('x')
+            >>> eq = Eq(x**2, 4)
+            >>> eq.to_latex()
+            'x^{2} = 4'
+        """
         return f"{self.lhs.to_latex()} = {self.rhs.to_latex()}"
 
 
@@ -96,41 +232,172 @@ class Gt(Expr):
     """Greater-than expression - native implementation."""
 
     def __init__(self, lhs: Expr, rhs: Expr):
+        """Initialize greater-than expression lhs > rhs.
+
+        Constructs an inequality relation, ensuring both sides are
+        converted to Expr objects if needed.
+
+        Args:
+            lhs: Left-hand side expression
+            rhs: Right-hand side expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> ineq = Gt(x, 0)
+            >>> str(ineq)
+            'x > 0'
+        """
         self.lhs = lhs if isinstance(lhs, Expr) else Integer(lhs) if isinstance(lhs, int) else parse_expr(str(lhs))
         self.rhs = rhs if isinstance(rhs, Expr) else Integer(rhs) if isinstance(rhs, int) else parse_expr(str(rhs))
         self._hash_cache = hash(('Gt', hash(self.lhs), hash(self.rhs)))
 
     def __repr__(self) -> str:
+        """Return canonical string representation.
+
+        Returns:
+            String in form 'Gt(lhs, rhs)' for debugging
+
+        Example:
+            >>> x = Symbol('x')
+            >>> repr(Gt(x, 0))
+            "Gt(Symbol('x'), Integer(0))"
+        """
         return f"Gt({self.lhs!r}, {self.rhs!r})"
 
     def __str__(self) -> str:
+        """Return human-readable string representation.
+
+        Returns:
+            String in form 'lhs > rhs'
+
+        Example:
+            >>> x = Symbol('x')
+            >>> str(Gt(x, 0))
+            'x > 0'
+        """
         return f"{self.lhs} > {self.rhs}"
 
     def __eq__(self, other: object) -> bool:
+        """Check structural equality of two Gt objects.
+
+        Args:
+            other: Object to compare with
+
+        Returns:
+            True if both sides match structurally, False otherwise
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Gt(x, 0) == Gt(x, 0)
+            True
+        """
         if isinstance(other, Gt):
             return self.lhs == other.lhs and self.rhs == other.rhs
         return False
 
     def __hash__(self) -> int:
+        """Compute hash value for set/dict operations.
+
+        Returns:
+            Cached hash value based on 'Gt' tag and both sides
+
+        Example:
+            >>> x = Symbol('x')
+            >>> ineq_set = {Gt(x, 0), Gt(x, 0)}
+            >>> len(ineq_set)
+            1
+        """
         return self._hash_cache
 
     @property
     def free_symbols(self):
+        """Get all free symbols in the inequality.
+
+        Returns:
+            Set of Symbol objects in both sides
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> Gt(x + y, 0).free_symbols
+            {x, y}
+        """
         return self.lhs.free_symbols | self.rhs.free_symbols if hasattr(self.lhs, 'free_symbols') else set()
 
     def subs(self, substitutions):
+        """Substitute symbols in both sides of the inequality.
+
+        Args:
+            substitutions: Dict mapping symbols to replacement values
+
+        Returns:
+            New Gt with substitutions applied
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> ineq = Gt(x + y, 5)
+            >>> ineq.subs({x: 2})
+            Gt(2 + y, 5)
+        """
         return Gt(self.lhs.subs(substitutions), self.rhs.subs(substitutions))
 
     def diff(self, var):
+        """Differentiate inequality (returns 0 as inequalities don't differentiate).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Gt(x, 0).diff(x)
+            0
+        """
         return Integer(0)
 
     def simplify(self):
+        """Simplify inequality (returns self as simplification preserves structure).
+
+        Returns:
+            Self (inequalities don't simplify structurally)
+
+        Example:
+            >>> x = Symbol('x')
+            >>> ineq = Gt(x, 0)
+            >>> ineq.simplify() is ineq
+            True
+        """
         return self
 
     def evalf(self, precision=15):
+        """Evaluate inequality (returns self as inequalities are symbolic).
+
+        Args:
+            precision: Number of decimal digits (ignored)
+
+        Returns:
+            Self
+
+        Example:
+            >>> x = Symbol('x')
+            >>> ineq = Gt(x, 0)
+            >>> ineq.evalf() is ineq
+            True
+        """
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+        Returns:
+            LaTeX string for mathematical typesetting
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Gt(x, 0).to_latex()
+            'x > 0'
+        """
         return f"{self.lhs.to_latex()} > {self.rhs.to_latex()}"
 
 
@@ -138,41 +405,172 @@ class Ge(Expr):
     """Greater-than-or-equal expression - native implementation."""
 
     def __init__(self, lhs: Expr, rhs: Expr):
+        """Initialize greater-or-equal expression lhs >= rhs.
+
+        Constructs an inequality relation, ensuring both sides are
+        converted to Expr objects if needed.
+
+        Args:
+            lhs: Left-hand side expression
+            rhs: Right-hand side expression
+
+        Example:
+            >>> n = Symbol('n', integer=True)
+            >>> ineq = Ge(n, 1)
+            >>> str(ineq)
+            'n >= 1'
+        """
         self.lhs = lhs if isinstance(lhs, Expr) else Integer(lhs) if isinstance(lhs, int) else parse_expr(str(lhs))
         self.rhs = rhs if isinstance(rhs, Expr) else Integer(rhs) if isinstance(rhs, int) else parse_expr(str(rhs))
         self._hash_cache = hash(('Ge', hash(self.lhs), hash(self.rhs)))
 
     def __repr__(self) -> str:
+        """Return canonical string representation.
+
+        Returns:
+            String in form 'Ge(lhs, rhs)' for debugging
+
+        Example:
+            >>> n = Symbol('n', integer=True)
+            >>> repr(Ge(n, 1))
+            "Ge(Symbol('n'), Integer(1))"
+        """
         return f"Ge({self.lhs!r}, {self.rhs!r})"
 
     def __str__(self) -> str:
+        """Return human-readable string representation.
+
+        Returns:
+            String in form 'lhs >= rhs'
+
+        Example:
+            >>> n = Symbol('n', integer=True)
+            >>> str(Ge(n, 1))
+            'n >= 1'
+        """
         return f"{self.lhs} >= {self.rhs}"
 
     def __eq__(self, other: object) -> bool:
+        """Check structural equality of two Ge objects.
+
+        Args:
+            other: Object to compare with
+
+        Returns:
+            True if both sides match structurally, False otherwise
+
+        Example:
+            >>> n = Symbol('n', integer=True)
+            >>> Ge(n, 1) == Ge(n, 1)
+            True
+        """
         if isinstance(other, Ge):
             return self.lhs == other.lhs and self.rhs == other.rhs
         return False
 
     def __hash__(self) -> int:
+        """Compute hash value for set/dict operations.
+
+        Returns:
+            Cached hash value based on 'Ge' tag and both sides
+
+        Example:
+            >>> n = Symbol('n', integer=True)
+            >>> ineq_set = {Ge(n, 1), Ge(n, 1)}
+            >>> len(ineq_set)
+            1
+        """
         return self._hash_cache
 
     @property
     def free_symbols(self):
+        """Get all free symbols in the inequality.
+
+        Returns:
+            Set of Symbol objects in both sides
+
+        Example:
+            >>> n, k = symbols('n k', integer=True)
+            >>> Ge(n, k).free_symbols
+            {n, k}
+        """
         return self.lhs.free_symbols | self.rhs.free_symbols if hasattr(self.lhs, 'free_symbols') else set()
 
     def subs(self, substitutions):
+        """Substitute symbols in both sides of the inequality.
+
+        Args:
+            substitutions: Dict mapping symbols to replacement values
+
+        Returns:
+            New Ge with substitutions applied
+
+        Example:
+            >>> n, k = symbols('n k', integer=True)
+            >>> ineq = Ge(n, k)
+            >>> ineq.subs({k: 0})
+            Ge(n, 0)
+        """
         return Ge(self.lhs.subs(substitutions), self.rhs.subs(substitutions))
 
     def diff(self, var):
+        """Differentiate inequality (returns 0 as inequalities don't differentiate).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> n = Symbol('n')
+            >>> Ge(n, 0).diff(n)
+            0
+        """
         return Integer(0)
 
     def simplify(self):
+        """Simplify inequality (returns self as simplification preserves structure).
+
+        Returns:
+            Self (inequalities don't simplify structurally)
+
+        Example:
+            >>> n = Symbol('n')
+            >>> ineq = Ge(n, 0)
+            >>> ineq.simplify() is ineq
+            True
+        """
         return self
 
     def evalf(self, precision=15):
+        """Evaluate inequality (returns self as inequalities are symbolic).
+
+        Args:
+            precision: Number of decimal digits (ignored)
+
+        Returns:
+            Self
+
+        Example:
+            >>> n = Symbol('n')
+            >>> ineq = Ge(n, 0)
+            >>> ineq.evalf() is ineq
+            True
+        """
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+        Returns:
+            LaTeX string for mathematical typesetting
+
+        Example:
+            >>> n = Symbol('n')
+            >>> Ge(n, 0).to_latex()
+            'n \\geq 0'
+        """
         return f"{self.lhs.to_latex()} \\geq {self.rhs.to_latex()}"
 
 
@@ -180,41 +578,172 @@ class Ne(Expr):
     """Not-equal expression - native implementation."""
 
     def __init__(self, lhs: Expr, rhs: Expr):
+        """Initialize not-equal expression lhs != rhs.
+
+        Constructs a not-equal relation, ensuring both sides are
+        converted to Expr objects if needed.
+
+        Args:
+            lhs: Left-hand side expression
+            rhs: Right-hand side expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> neq = Ne(x, 0)
+            >>> str(neq)
+            'x != 0'
+        """
         self.lhs = lhs if isinstance(lhs, Expr) else Integer(lhs) if isinstance(lhs, int) else parse_expr(str(lhs))
         self.rhs = rhs if isinstance(rhs, Expr) else Integer(rhs) if isinstance(rhs, int) else parse_expr(str(rhs))
         self._hash_cache = hash(('Ne', hash(self.lhs), hash(self.rhs)))
 
     def __repr__(self) -> str:
+        """Return canonical string representation.
+
+        Returns:
+            String in form 'Ne(lhs, rhs)' for debugging
+
+        Example:
+            >>> x = Symbol('x')
+            >>> repr(Ne(x, 0))
+            "Ne(Symbol('x'), Integer(0))"
+        """
         return f"Ne({self.lhs!r}, {self.rhs!r})"
 
     def __str__(self) -> str:
+        """Return human-readable string representation.
+
+        Returns:
+            String in form 'lhs != rhs'
+
+        Example:
+            >>> x = Symbol('x')
+            >>> str(Ne(x, 0))
+            'x != 0'
+        """
         return f"{self.lhs} != {self.rhs}"
 
     def __eq__(self, other: object) -> bool:
+        """Check structural equality of two Ne objects.
+
+        Args:
+            other: Object to compare with
+
+        Returns:
+            True if both sides match structurally, False otherwise
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Ne(x, 0) == Ne(x, 0)
+            True
+        """
         if isinstance(other, Ne):
             return self.lhs == other.lhs and self.rhs == other.rhs
         return False
 
     def __hash__(self) -> int:
+        """Compute hash value for set/dict operations.
+
+        Returns:
+            Cached hash value based on 'Ne' tag and both sides
+
+        Example:
+            >>> x = Symbol('x')
+            >>> neq_set = {Ne(x, 0), Ne(x, 0)}
+            >>> len(neq_set)
+            1
+        """
         return self._hash_cache
 
     @property
     def free_symbols(self):
+        """Get all free symbols in the not-equal expression.
+
+        Returns:
+            Set of Symbol objects in both sides
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> Ne(x, y).free_symbols
+            {x, y}
+        """
         return self.lhs.free_symbols | self.rhs.free_symbols if hasattr(self.lhs, 'free_symbols') else set()
 
     def subs(self, substitutions):
+        """Substitute symbols in both sides of the not-equal expression.
+
+        Args:
+            substitutions: Dict mapping symbols to replacement values
+
+        Returns:
+            New Ne with substitutions applied
+
+        Example:
+            >>> x, y = symbols('x y')
+            >>> neq = Ne(x, y)
+            >>> neq.subs({y: 0})
+            Ne(x, 0)
+        """
         return Ne(self.lhs.subs(substitutions), self.rhs.subs(substitutions))
 
     def diff(self, var):
+        """Differentiate not-equal expression (returns 0 as constraints don't differentiate).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Ne(x, 0).diff(x)
+            0
+        """
         return Integer(0)
 
     def simplify(self):
+        """Simplify not-equal expression (returns self as simplification preserves structure).
+
+        Returns:
+            Self (not-equal expressions don't simplify structurally)
+
+        Example:
+            >>> x = Symbol('x')
+            >>> neq = Ne(x, 0)
+            >>> neq.simplify() is neq
+            True
+        """
         return self
 
     def evalf(self, precision=15):
+        """Evaluate not-equal expression (returns self as constraints are symbolic).
+
+        Args:
+            precision: Number of decimal digits (ignored)
+
+        Returns:
+            Self
+
+        Example:
+            >>> x = Symbol('x')
+            >>> neq = Ne(x, 0)
+            >>> neq.evalf() is neq
+            True
+        """
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+        Returns:
+            LaTeX string for mathematical typesetting
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Ne(x, 0).to_latex()
+            'x \\neq 0'
+        """
         return f"{self.lhs.to_latex()} \\neq {self.rhs.to_latex()}"
 
 # Initialize module logger
@@ -415,7 +944,20 @@ class SyntheticDataGenerator:
         return theorems
 
     def _generate_single(self) -> Optional[SyntheticTheorem]:
-        """Generate a single synthetic theorem from a random domain"""
+        """Generate a single synthetic theorem from a random domain.
+
+        Randomly selects a mathematical domain and generates a theorem
+        using domain-specific templates. Handles errors gracefully.
+
+        Returns:
+            SyntheticTheorem object or None if generation fails
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> theorem = gen._generate_single()
+            >>> theorem.domain in ['algebra', 'geometry', 'number_theory']
+            True
+        """
         try:
             domain = random.choice(list(TheoremDomain))
             return self._generate_for_domain(domain.value)
@@ -431,7 +973,24 @@ class SyntheticDataGenerator:
             return None
 
     def _generate_for_domain(self, domain: str) -> Optional[SyntheticTheorem]:
-        """Generate a theorem for a specific domain"""
+        """Generate a theorem for a specific mathematical domain.
+
+        Routes to domain-specific generators and handles deduplication.
+        Updates statistics for successful generations.
+
+        Args:
+            domain: Mathematical domain (algebra, geometry, number_theory,
+                   analysis, combinatorics, linear_algebra)
+
+        Returns:
+            SyntheticTheorem object or None if generation fails or duplicates
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> theorem = gen._generate_for_domain('algebra')
+            >>> theorem.domain
+            'algebra'
+        """
         generators = {
             'algebra': self._generate_algebra_theorem,
             'geometry': self._generate_geometry_theorem,
@@ -469,7 +1028,22 @@ class SyntheticDataGenerator:
             return None
 
     def _generate_algebra_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate algebraic identity or relation"""
+        """Generate algebraic identity or relation.
+
+        Creates theorems from templates including polynomial identities,
+        equation solutions, factorizations, and expansions.
+
+        Returns:
+            SyntheticTheorem with algebraic content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_algebra_theorem()
+            >>> thm.domain
+            'algebra'
+            >>> 'expand' in thm.derivation_steps or 'factor' in thm.derivation_steps
+            True
+        """
         x, y, z, a, b, c = symbols('x y z a b c')
 
         template = random.choice(['polynomial_identity', 'equation_solution', 'factorization', 'expansion'])
@@ -526,7 +1100,23 @@ class SyntheticDataGenerator:
         )
 
     def _generate_geometry_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate geometric relation"""
+        """Generate geometric relation.
+
+        Creates theorems from geometric templates including Pythagorean theorem,
+        law of cosines/sines, area formulas, angle sum, and trig identities.
+
+        Returns:
+            SyntheticTheorem with geometric content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_geometry_theorem()
+            >>> thm.domain
+            'geometry'
+            >>> any(step in ['pythagorean_theorem', 'law_of_cosines', 'trig_identity']
+            ...     for step in thm.derivation_steps)
+            True
+        """
         a, b, c, theta = symbols('a b c theta', positive=True, real=True)
 
         template = random.choice(['pythagorean', 'law_of_cosines', 'law_of_sines',
@@ -584,7 +1174,24 @@ class SyntheticDataGenerator:
         )
 
     def _generate_number_theory_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate number-theoretic relation"""
+        """Generate number-theoretic relation.
+
+        Creates theorems from number theory templates including divisibility,
+        modular arithmetic (Fermat's little theorem), sum formulas,
+        GCD properties, and prime properties.
+
+        Returns:
+            SyntheticTheorem with number-theoretic content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_number_theory_theorem()
+            >>> thm.domain
+            'number_theory'
+            >>> any(step in ['euclidean_algorithm', 'fermats_little_theorem']
+            ...     for step in thm.derivation_steps)
+            True
+        """
         n, m, p, k = symbols('n m p k', integer=True, positive=True)
 
         template = random.choice(['divisibility', 'modular_arithmetic', 'sum_formula',
@@ -638,7 +1245,24 @@ class SyntheticDataGenerator:
         )
 
     def _generate_analysis_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate calculus/analysis theorem"""
+        """Generate calculus/analysis theorem.
+
+        Creates theorems from calculus templates including derivatives,
+        integrals, series expansions, limits, and the fundamental theorem
+        of calculus.
+
+        Returns:
+            SyntheticTheorem with analysis content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_analysis_theorem()
+            >>> thm.domain
+            'analysis'
+            >>> any(step in ['differentiation_rule', 'integration_rule', 'taylor_series']
+            ...     for step in thm.derivation_steps)
+            True
+        """
         x, a, n, t = symbols('x a n t')
 
         template = random.choice(['derivative', 'integral', 'series', 'limit',
@@ -706,7 +1330,24 @@ class SyntheticDataGenerator:
         )
 
     def _generate_combinatorics_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate combinatorics theorem"""
+        """Generate combinatorics theorem.
+
+        Creates theorems from combinatorics templates including binomial
+        coefficients, permutations, Pascal's identity, Vandermonde's identity,
+        and hockey-stick identity.
+
+        Returns:
+            SyntheticTheorem with combinatorics content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_combinatorics_theorem()
+            >>> thm.domain
+            'combinatorics'
+            >>> any(step in ['pascals_identity', 'vandermondes_identity']
+            ...     for step in thm.derivation_steps)
+            True
+        """
         n, k, r = symbols('n k r', integer=True, nonnegative=True)
 
         template = random.choice(['binomial_coefficient', 'permutation', 'pascal_identity',
@@ -750,7 +1391,24 @@ class SyntheticDataGenerator:
         )
 
     def _generate_linear_algebra_theorem(self) -> Optional[SyntheticTheorem]:
-        """Generate linear algebra theorem"""
+        """Generate linear algebra theorem.
+
+        Creates theorems from linear algebra templates including determinant
+        properties, eigenvalue definitions, matrix operations, rank-nullity
+        theorem, and trace properties.
+
+        Returns:
+            SyntheticTheorem with linear algebra content
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> thm = gen._generate_linear_algebra_theorem()
+            >>> thm.domain
+            'linear_algebra'
+            >>> any(step in ['determinant_multiplicative_property', 'eigenvalue_definition']
+            ...     for step in thm.derivation_steps)
+            True
+        """
         template = random.choice(['determinant', 'eigenvalue', 'matrix_property',
                                   'rank_nullity', 'trace_property'])
 
@@ -864,7 +1522,25 @@ class SyntheticDataGenerator:
             return None
 
     def _get_domain_symbols(self, domain: str) -> tuple:
-        """Get appropriate symbols for a mathematical domain."""
+        """Get appropriate symbols for a mathematical domain.
+
+        Returns domain-specific symbol sets for natural-looking expressions.
+
+        Args:
+            domain: Mathematical domain name
+
+        Returns:
+            Tuple of Symbol objects appropriate for the domain
+
+        Example:
+            >>> gen = SyntheticDataGenerator()
+            >>> symbols = gen._get_domain_symbols('algebra')
+            >>> 'x' in [str(s) for s in symbols]
+            True
+            >>> symbols = gen._get_domain_symbols('geometry')
+            >>> 'theta' in [str(s) for s in symbols]
+            True
+        """
         domain_symbols = {
             'algebra': self.algebra_symbols,
             'geometry': self.geometry_symbols,
@@ -876,14 +1552,31 @@ class SyntheticDataGenerator:
         return domain_symbols.get(domain, self.algebra_symbols)
 
     def _generate_grammar_expr(self, symbols, depth: int, current_depth: int = 0):
-        """
-        Generate expression using production rules.
+        """Generate expression using context-free grammar production rules.
+
+        Builds expression trees recursively using weighted random choices
+        among production rules. This enables synthesis beyond fixed templates.
 
         Grammar:
             expr -> term | expr op term
             term -> factor | term * factor | term / factor
             factor -> atom | unary(factor) | (expr)
             atom -> symbol | constant
+
+        Args:
+            symbols: Tuple of Symbol objects to use
+            depth: Maximum depth of expression tree
+            current_depth: Current recursion depth (internal use)
+
+        Returns:
+            Randomly generated Expr object
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> x, y = symbols('x y')
+            >>> expr = gen._generate_grammar_expr((x, y), depth=2)
+            >>> isinstance(expr, Expr)
+            True
         """
         if current_depth >= depth:
             # Base case: return an atom
@@ -931,7 +1624,24 @@ class SyntheticDataGenerator:
             return self._generate_atom(symbols)
 
     def _generate_atom(self, syms) -> Expr:
-        """Generate an atomic expression (symbol or constant)."""
+        """Generate an atomic expression (symbol or constant).
+
+        Terminal production rule for grammar-based generation.
+        Returns a symbol with 70% probability, small integer otherwise.
+
+        Args:
+            syms: Tuple of Symbol objects to choose from
+
+        Returns:
+            Symbol or Integer (1-5)
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> x, y = symbols('x y')
+            >>> atom = gen._generate_atom((x, y))
+            >>> isinstance(atom, (Symbol, Integer))
+            True
+        """
         if random.random() < 0.7 and len(syms) > 0:
             # Return a symbol
             return random.choice(list(syms))
@@ -940,11 +1650,27 @@ class SyntheticDataGenerator:
             return Integer(random.randint(1, 5))
 
     def _apply_random_transformation(self, expr) -> tuple:
-        """
-        Apply a random algebraic transformation to generate a related expression.
+        """Apply a random algebraic transformation to generate related expression.
+
+        Tries transformations (expand, simplify) until one produces
+        a different but equivalent expression.
+
+        Args:
+            expr: Expression to transform
 
         Returns:
-            (transformation_name, transformed_expression)
+            Tuple of (transformation_name, transformed_expression)
+            Returns (None, None) if no valid transformation found
+
+        Example:
+            >>> gen = SyntheticDataGenerator(seed=42)
+            >>> x = Symbol('x')
+            >>> expr = (x + 1)**2
+            >>> name, transformed = gen._apply_random_transformation(expr)
+            >>> name
+            'expand'
+            >>> transformed
+            x**2 + 2*x + 1
         """
         transformations = [
             ('expand', lambda e: expand(e)),
@@ -972,7 +1698,26 @@ class SyntheticDataGenerator:
             return (None, None)
 
     def _verify_relationship(self, lhs, rhs, transformation: str) -> bool:
-        """Verify that the generated relationship actually holds."""
+        """Verify that the generated relationship actually holds.
+
+        Checks if lhs - rhs simplifies to zero, confirming equivalence.
+
+        Args:
+            lhs: Left-hand side expression
+            rhs: Right-hand side expression
+            transformation: Name of transformation applied (for logging)
+
+        Returns:
+            True if relationship is valid, False otherwise
+
+        Example:
+            >>> gen = SyntheticDataGenerator()
+            >>> x = Symbol('x')
+            >>> gen._verify_relationship((x+1)**2, x**2 + 2*x + 1, 'expand')
+            True
+            >>> gen._verify_relationship(x, x + 1, 'invalid')
+            False
+        """
         try:
             diff = simplify(lhs - rhs)
             return diff == 0 or (hasattr(diff, 'is_zero') and diff.is_zero)

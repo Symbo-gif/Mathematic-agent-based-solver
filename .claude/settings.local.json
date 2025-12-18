@@ -32,7 +32,11 @@
       "Bash(sort:*)",
       "Bash(for d in */)",
       "Bash(mkdir:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(cd:*)",
+      "Bash(findstr:*)",
+      "Bash(git -C \"Mathematic agent based solver\" log --oneline)",
+      "Bash(git checkout:*)"
     ]
   }
 }

@@ -10,9 +10,28 @@ class AlgebraProblemGenerator:
     """Generate abstract algebra problems for autonomous exploration."""
 
     def __init__(self):
+        """Initialize algebra problem generator with problem counter."""
         self.problem_count = 0
 
     def generate_problem(self, difficulty: int = None) -> Dict[str, Any]:
+        """Generate random abstract algebra problem.
+
+        Args:
+            difficulty: Difficulty level (1-4), random if None
+                - Level 1: Basic group/ring classification
+                - Level 2: Sylow theorems, ideals
+                - Level 3: Group actions, splitting fields
+                - Level 4: Composition series, Galois correspondence
+
+        Returns:
+            Dict with problem type, specification, and expected approach
+
+        Example:
+            >>> gen = AlgebraProblemGenerator()
+            >>> problem = gen.generate_problem(difficulty=3)
+            >>> problem['type']
+            'group_action'
+        """
         if difficulty is None:
             difficulty = random.randint(1, 4)
 
@@ -30,6 +49,14 @@ class AlgebraProblemGenerator:
         return problem
 
     def _group_theory_problem(self, difficulty: int) -> Dict[str, Any]:
+        """Generate group theory problem.
+
+        Args:
+            difficulty: Level 1-4 (subgroups → composition series)
+
+        Returns:
+            Dict with group, task, and method
+        """
         if difficulty == 1:
             n = random.choice([4, 6, 8, 10, 12])
             return {'type': 'find_subgroups', 'group': f'Z_{n}', 'task': 'Find all subgroups'}
@@ -44,6 +71,14 @@ class AlgebraProblemGenerator:
             return {'type': 'composition_series', 'group': 'A_5', 'task': 'Determine composition factors', 'theorem': 'Jordan-Hölder'}
 
     def _ring_theory_problem(self, difficulty: int) -> Dict[str, Any]:
+        """Generate ring theory problem.
+
+        Args:
+            difficulty: Level 1-4 (classification → prime ideals in non-UFDs)
+
+        Returns:
+            Dict with ring, classification task, and challenges
+        """
         if difficulty <= 2:
             ring = random.choice(['Z', 'Z[x]', 'Z[i]', 'Q[x]'])
             return {'type': 'ring_classification', 'ring': ring, 'classify_as': 'Euclidean/PID/UFD'}
@@ -52,6 +87,14 @@ class AlgebraProblemGenerator:
             return {'type': 'prime_ideals', 'ring': 'Z[√-5]', 'task': 'Find all prime ideals', 'challenge': 'non-UFD_ring'}
 
     def _field_theory_problem(self, difficulty: int) -> Dict[str, Any]:
+        """Generate field theory problem.
+
+        Args:
+            difficulty: Level 1-4 (minimal polynomials → splitting fields)
+
+        Returns:
+            Dict with polynomial, field extension, and task
+        """
         if difficulty <= 2:
             elements = ['√2', '√3', 'i', '∛2']
             element = random.choice(elements)
@@ -62,6 +105,14 @@ class AlgebraProblemGenerator:
             return {'type': 'splitting_field', 'polynomial': poly, 'base_field': 'Q'}
 
     def _galois_theory_problem(self, difficulty: int) -> Dict[str, Any]:
+        """Generate Galois theory problem.
+
+        Args:
+            difficulty: Level 1-4 (Galois groups → fundamental theorem correspondence)
+
+        Returns:
+            Dict with polynomial/extension, Galois group task
+        """
         if difficulty <= 3:
             poly = random.choice(['x² - 2', 'x³ - 2', 'x⁴ - 2'])
             return {'type': 'galois_group', 'polynomial': poly, 'base_field': 'Q', 'method': 'automorphism_analysis'}

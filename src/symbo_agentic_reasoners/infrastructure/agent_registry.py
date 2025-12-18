@@ -174,96 +174,117 @@ def _get_analytic_specialist() -> Type:
     return AnalyticGeometrySpecialist
 
 def _get_transformation_specialist() -> Type:
+    """Lazy import TransformationSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.geometry.transformation_specialist import TransformationSpecialist
     return TransformationSpecialist
 
 def _get_trigonometry_specialist() -> Type:
+    """Lazy import TrigonometrySpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.geometry.trigonometry_specialist import TrigonometrySpecialist
     return TrigonometrySpecialist
 
 
 # Physics - Mechanics specialists
 def _get_mechanics_supervisor() -> Type:
+    """Lazy import PhysicsMechanicsSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.physics_mechanics_supervisor import PhysicsMechanicsSupervisor
     return PhysicsMechanicsSupervisor
 
 def _get_kinematics_specialist() -> Type:
+    """Lazy import KinematicsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.mechanics.kinematics_specialist import KinematicsSpecialist
     return KinematicsSpecialist
 
 def _get_dynamics_specialist() -> Type:
+    """Lazy import DynamicsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.mechanics.dynamics_specialist import DynamicsSpecialist
     return DynamicsSpecialist
 
 def _get_energy_specialist() -> Type:
+    """Lazy import EnergySpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.mechanics.energy_specialist import EnergySpecialist
     return EnergySpecialist
 
 
 # Physics - Electromagnetism specialists
 def _get_em_supervisor() -> Type:
+    """Lazy import PhysicsEMSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.physics_em_supervisor import PhysicsEMSupervisor
     return PhysicsEMSupervisor
 
 def _get_electrostatics_specialist() -> Type:
+    """Lazy import ElectrostaticsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.electromagnetism.electrostatics_specialist import ElectrostaticsSpecialist
     return ElectrostaticsSpecialist
 
 def _get_magnetism_specialist() -> Type:
+    """Lazy import MagnetismSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.electromagnetism.magnetism_specialist import MagnetismSpecialist
     return MagnetismSpecialist
 
 def _get_circuits_specialist() -> Type:
+    """Lazy import CircuitsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.electromagnetism.circuits_specialist import CircuitsSpecialist
     return CircuitsSpecialist
 
 
 # Physics - Thermodynamics specialists
 def _get_thermo_supervisor() -> Type:
+    """Lazy import PhysicsThermoSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.physics_thermo_supervisor import PhysicsThermoSupervisor
     return PhysicsThermoSupervisor
 
 def _get_heat_specialist() -> Type:
+    """Lazy import HeatTransferSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.thermodynamics.heat_specialist import HeatTransferSpecialist
     return HeatTransferSpecialist
 
 def _get_gas_laws_specialist() -> Type:
+    """Lazy import GasLawsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.thermodynamics.gas_laws_specialist import GasLawsSpecialist
     return GasLawsSpecialist
 
 
 # Physics - Quantum specialists
 def _get_quantum_supervisor() -> Type:
+    """Lazy import PhysicsQuantumSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.physics_quantum_supervisor import PhysicsQuantumSupervisor
     return PhysicsQuantumSupervisor
 
 def _get_wavefunction_specialist() -> Type:
+    """Lazy import WavefunctionSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.quantum.wavefunction_specialist import WavefunctionSpecialist
     return WavefunctionSpecialist
 
 def _get_operators_specialist() -> Type:
+    """Lazy import OperatorsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.quantum.operators_specialist import OperatorsSpecialist
     return OperatorsSpecialist
 
 def _get_systems_specialist() -> Type:
+    """Lazy import QuantumSystemsSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.physics.quantum.systems_specialist import QuantumSystemsSpecialist
     return QuantumSystemsSpecialist
 
 
 # Logic specialists
 def _get_logic_supervisor() -> Type:
+    """Lazy import LogicSupervisor class."""
     from symbo_agentic_reasoners.agents.supervisors.logic_supervisor import LogicSupervisor
     return LogicSupervisor
 
 def _get_propositional_specialist() -> Type:
+    """Lazy import PropositionalLogicSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.logic.propositional_specialist import PropositionalLogicSpecialist
     return PropositionalLogicSpecialist
 
 def _get_predicate_specialist() -> Type:
+    """Lazy import PredicateLogicSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.logic.predicate_specialist import PredicateLogicSpecialist
     return PredicateLogicSpecialist
 
 def _get_proof_specialist() -> Type:
+    """Lazy import ProofSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.logic.proof_specialist import ProofSpecialist
     return ProofSpecialist
 

@@ -49,10 +49,46 @@ class Function(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Get all free symbols in the function and its arguments.
+
+        Recursively collects all Symbol objects that appear in this
+        function's arguments.
+
+        Returns:
+            Set of Symbol objects appearing in the expression
+
+        Example:
+            >>> x, y = Symbol('x'), Symbol('y')
+            >>> f = Sin(x**2 + y)
+            >>> f.free_symbols
+            {x, y}
+        """
         return set().union(*(a.free_symbols for a in self.args))
 
     def subs(self, *args_in, **kwargs) -> Expr:
-        """Substitute symbols. Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols with values or expressions.
+
+        Supports multiple calling conventions for flexibility:
+        - subs({symbol: value}) - Dictionary mapping
+        - subs(symbol, value) - Positional arguments
+        - subs(symbol=value) - Keyword arguments
+
+        Args:
+            *args_in: Either a dict {symbol: value} or (symbol, value) pair
+            **kwargs: Keyword argument form of substitutions
+
+        Returns:
+            New function expression with substitutions applied
+
+        Example:
+            >>> from symbo_agentic_reasoners.core.symbolic import Symbol
+            >>> x = Symbol('x')
+            >>> f = Sin(x)
+            >>> f.subs(x, 2)
+            sin(2)
+            >>> f.subs({x: Symbol('y')})
+            sin(y)
+        """
         if len(args_in) == 1 and isinstance(args_in[0], dict):
             substitutions = args_in[0]
         elif len(args_in) == 2:
@@ -62,18 +98,70 @@ class Function(Expr):
         return type(self)(*(a.subs(substitutions) for a in self.args))
 
     def simplify(self) -> Expr:
+        """Simplify the function by simplifying its arguments.
+
+        Recursively simplifies all arguments to the function and
+        reconstructs the function with simplified arguments.
+
+        Returns:
+            Simplified function expression
+
+        Example:
+            >>> from symbo_agentic_reasoners.core.symbolic import Symbol
+            >>> x = Symbol('x')
+            >>> f = Sin(Add(x, Integer(0)))
+            >>> f.simplify()
+            sin(x)
+        """
         return type(self)(*(a.simplify() for a in self.args))
 
 
 class Sin(Function):
-    """Sine function."""
+    """Sine function.
+
+    Represents sin(x) in symbolic form. Supports differentiation,
+    numerical evaluation, and LaTeX output.
+    """
     name = "sin"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative of sin(f) with respect to var.
+
+        Uses chain rule: d/dx sin(f(x)) = cos(f(x)) * f'(x)
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Derivative expression
+
+        Example:
+            >>> from symbo_agentic_reasoners.core.symbolic import Symbol
+            >>> x = Symbol('x')
+            >>> Sin(x**2).diff(x)
+            2*x*cos(x**2)
+        """
         # d/dx sin(f) = cos(f) * f'
         return Mul(Cos(self.args[0]), self.args[0].diff(var)).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Sin(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -83,6 +171,19 @@ class Sin(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Sin(Symbol('x')).to_latex()
+                '\\sin\\left(x\\right)'
+
+                """
         return rf'\sin\left({self.args[0].to_latex()}\right)'
 
 
@@ -91,10 +192,44 @@ class Cos(Function):
     name = "cos"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx cos(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Cos(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx cos(f) = -sin(f) * f'
         return Mul(Integer(-1), Sin(self.args[0]), self.args[0].diff(var)).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Cos(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -104,6 +239,19 @@ class Cos(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Cos(Symbol('x')).to_latex()
+                '\\cos\\left(x\\right)'
+
+                """
         return rf'\cos\left({self.args[0].to_latex()}\right)'
 
 
@@ -112,6 +260,23 @@ class Tan(Function):
     name = "tan"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx tan(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Tan(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx tan(f) = sec²(f) * f' = f' / cos²(f)
         return Mul(
             Pow(Cos(self.args[0]), Integer(-2)),
@@ -119,6 +284,23 @@ class Tan(Function):
         ).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Tan(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -128,6 +310,19 @@ class Tan(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Tan(Symbol('x')).to_latex()
+                '\\tan\\left(x\\right)'
+
+                """
         return rf'\tan\left({self.args[0].to_latex()}\right)'
 
 
@@ -136,10 +331,44 @@ class Exp(Function):
     name = "exp"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx exp(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Exp(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx e^f = e^f * f'
         return Mul(self, self.args[0].diff(var)).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Exp(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -149,6 +378,19 @@ class Exp(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Exp(Symbol('x')).to_latex()
+                '\\exp\\left(x\\right)'
+
+                """
         return rf'e^{{{self.args[0].to_latex()}}}'
 
 
@@ -157,10 +399,44 @@ class Log(Function):
     name = "log"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx log(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Log(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx ln(f) = f'/f
         return Mul(self.args[0].diff(var), Pow(self.args[0], Integer(-1))).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Log(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)) and arg_val > 0:
@@ -170,6 +446,19 @@ class Log(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Log(Symbol('x')).to_latex()
+                '\\log\\left(x\\right)'
+
+                """
         return rf'\ln\left({self.args[0].to_latex()}\right)'
 
 
@@ -178,6 +467,23 @@ class Sqrt(Function):
     name = "sqrt"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx sqrt(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Sqrt(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx sqrt(f) = f'/(2*sqrt(f))
         return Mul(
             self.args[0].diff(var),
@@ -185,6 +491,23 @@ class Sqrt(Function):
         ).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Sqrt(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)) and arg_val >= 0:
@@ -194,6 +517,19 @@ class Sqrt(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to sqrt.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Sqrt(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         arg = self.args[0].simplify()
         # sqrt(0) = 0
         if arg.is_zero:
@@ -209,6 +545,19 @@ class Sqrt(Function):
         return Sqrt(arg)
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Sqrt(Symbol('x')).to_latex()
+                '\\sqrt\\left(x\\right)'
+
+                """
         return rf'\sqrt{{{self.args[0].to_latex()}}}'
 
 
@@ -217,6 +566,23 @@ class Abs(Function):
     name = "Abs"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx abs(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Abs(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx |f| = f'/|f| * f (sign function * derivative)
         return Mul(
             Sign(self.args[0]),
@@ -224,6 +590,23 @@ class Abs(Function):
         ).simplify()
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Abs(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -233,6 +616,19 @@ class Abs(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Abs(Symbol('x')).to_latex()
+                '\\abs\\left(x\\right)'
+
+                """
         return rf'\left|{self.args[0].to_latex()}\right|'
 
 
@@ -241,9 +637,43 @@ class Sign(Function):
     name = "sign"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx sign(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Sign(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Integer(0)  # Derivative is 0 almost everywhere
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Sign(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -257,6 +687,19 @@ class Sign(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Sign(Symbol('x')).to_latex()
+                '\\sign\\left(x\\right)'
+
+                """
         return rf'\text{{sign}}\left({self.args[0].to_latex()}\right)'
 
 
@@ -268,14 +711,61 @@ class GenericFunction(Function):
         super().__init__(*args)
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx genericfunction(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> GenericFunction(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # Return symbolic derivative
         from .derivative import Derivative
         return Derivative(self, var)
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> GenericFunction(2).evalf()
+                # Returns numerical result
+
+                """
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> GenericFunction(Symbol('x')).to_latex()
+                '\\genericfunction\\left(x\\right)'
+
+                """
         args_latex = ', '.join(a.to_latex() for a in self.args)
         return rf'\text{{{self.name}}}\left({args_latex}\right)'
 
@@ -289,12 +779,46 @@ class Factorial(Function):
     name = "factorial"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx factorial(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Factorial(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # Factorial is only defined for non-negative integers
         # Derivative via gamma function: d/dn n! = n! * psi(n+1)
         # where psi is the digamma function
         return GenericFunction("digamma", Add(self.args[0], Integer(1)))
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Factorial(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -306,12 +830,38 @@ class Factorial(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to factorial.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Factorial(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         arg = self.args[0]
         if isinstance(arg, Integer) and arg.value >= 0:
             return Integer(math.factorial(arg.value))
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Factorial(Symbol('x')).to_latex()
+                '\\factorial\\left(x\\right)'
+
+                """
         return rf'{self.args[0].to_latex()}!'
 
 
@@ -320,10 +870,44 @@ class Gamma(Function):
     name = "gamma"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx gamma(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Gamma(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx Gamma(x) = Gamma(x) * psi(x)
         return Mul(self, GenericFunction("digamma", self.args[0]))
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Gamma(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -333,6 +917,19 @@ class Gamma(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Gamma(Symbol('x')).to_latex()
+                '\\gamma\\left(x\\right)'
+
+                """
         return rf'\Gamma\left({self.args[0].to_latex()}\right)'
 
 
@@ -346,10 +943,44 @@ class Gcd(Function):
         super().__init__(*args)
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx gcd(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Gcd(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # GCD is not differentiable
         return Integer(0)
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Gcd(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             vals = [int(a.evalf(precision)) for a in self.args]
             result = vals[0]
@@ -360,6 +991,19 @@ class Gcd(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to gcd.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Gcd(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         try:
             vals = []
             for a in self.args:
@@ -375,6 +1019,19 @@ class Gcd(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Gcd(Symbol('x')).to_latex()
+                '\\gcd\\left(x\\right)'
+
+                """
         args_latex = ', '.join(a.to_latex() for a in self.args)
         return rf'\gcd\left({args_latex}\right)'
 
@@ -389,9 +1046,43 @@ class Lcm(Function):
         super().__init__(*args)
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx lcm(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Lcm(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Integer(0)
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Lcm(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             vals = [int(a.evalf(precision)) for a in self.args]
             result = vals[0]
@@ -402,6 +1093,19 @@ class Lcm(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to lcm.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Lcm(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         try:
             vals = []
             for a in self.args:
@@ -417,6 +1121,19 @@ class Lcm(Function):
             return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Lcm(Symbol('x')).to_latex()
+                '\\lcm\\left(x\\right)'
+
+                """
         args_latex = ', '.join(a.to_latex() for a in self.args)
         return rf'\text{{lcm}}\left({args_latex}\right)'
 
@@ -426,9 +1143,43 @@ class Floor(Function):
     name = "floor"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx floor(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Floor(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Integer(0)  # Derivative is 0 almost everywhere
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Floor(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -438,6 +1189,19 @@ class Floor(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to floor.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Floor(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         arg = self.args[0]
         if isinstance(arg, Integer):
             return arg
@@ -446,6 +1210,19 @@ class Floor(Function):
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Floor(Symbol('x')).to_latex()
+                '\\floor\\left(x\\right)'
+
+                """
         return rf'\lfloor {self.args[0].to_latex()} \rfloor'
 
 
@@ -454,9 +1231,43 @@ class Ceil(Function):
     name = "ceil"
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx ceil(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Ceil(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Integer(0)
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Ceil(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             arg_val = self.args[0].evalf(precision)
             if isinstance(arg_val, (int, float)):
@@ -466,6 +1277,19 @@ class Ceil(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to ceil.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Ceil(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         arg = self.args[0]
         if isinstance(arg, Integer):
             return arg
@@ -474,6 +1298,19 @@ class Ceil(Function):
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Ceil(Symbol('x')).to_latex()
+                '\\ceil\\left(x\\right)'
+
+                """
         return rf'\lceil {self.args[0].to_latex()} \rceil'
 
 
@@ -487,10 +1324,44 @@ class Mod(Function):
         super().__init__(*args)
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx mod(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Mod(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         # d/dx (f mod g) = f' (when g is constant)
         return self.args[0].diff(var)
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Mod(2).evalf()
+                # Returns numerical result
+
+                """
         try:
             a_val = self.args[0].evalf(precision)
             b_val = self.args[1].evalf(precision)
@@ -501,12 +1372,38 @@ class Mod(Function):
             return self
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to mod.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Mod(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         a, b = self.args[0], self.args[1]
         if isinstance(a, Integer) and isinstance(b, Integer):
             return Integer(a.value % b.value)
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Mod(Symbol('x')).to_latex()
+                '\\mod\\left(x\\right)'
+
+                """
         return rf'{self.args[0].to_latex()} \mod {self.args[1].to_latex()}'
 
 

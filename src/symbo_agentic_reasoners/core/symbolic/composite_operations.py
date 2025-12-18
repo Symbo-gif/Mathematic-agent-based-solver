@@ -63,10 +63,33 @@ class Add(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Get all free symbols in the sum.
+
+        Returns:
+            Union of free symbols from all addends
+
+        Example:
+            >>> x, y = Symbol('x'), Symbol('y')
+            >>> (x + y**2 + 3).free_symbols
+            {x, y}
+        """
         return set().union(*(a.free_symbols for a in self.args))
 
     def subs(self, *args, **kwargs) -> Expr:
-        """Substitute symbols. Supports both subs({x: val}) and subs(x, val) formats."""
+        """Substitute symbols. Supports both subs({x: val}) and subs(x, val) formats.
+
+        Args:
+            *args: Dictionary or positional substitution
+            **kwargs: Keyword substitutions
+
+        Returns:
+            New Add expression with substitutions applied
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x + 1).subs(x, 2)
+            3
+        """
         if len(args) == 1 and isinstance(args[0], dict):
             substitutions = args[0]
         elif len(args) == 2:
@@ -77,9 +100,41 @@ class Add(Expr):
         return Add(*(a.subs(substitutions) if hasattr(a, 'subs') else a for a in self.args)).simplify()
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate sum using sum rule: d/dx (f + g) = f' + g'.
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Sum of derivatives
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x**2 + x + 1).diff(x)
+            2*x + 1
+        """
         return Add(*(a.diff(var) for a in self.args)).simplify()
 
     def simplify(self) -> Expr:
+        """Simplify sum by combining like terms and applying identities.
+
+        Simplification includes:
+        - Flattening nested sums: (a + (b + c)) → a + b + c
+        - Combining like terms: 2x + 3x → 5x
+        - Combining constants: 1 + 2 + 3 → 6
+        - Pythagorean identity: sin²(x) + cos²(x) → 1
+        - Distribution: -1 * (a + b) → -a - b
+
+        Returns:
+            Simplified expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x + x + 1 + 2).simplify()
+            2*x + 3
+            >>> (Sin(x)**2 + Cos(x)**2).simplify()
+            1
+        """
         # Flatten nested Adds and distribute negatives over Adds
         flat_args = []
         for arg in self.args:
@@ -231,12 +286,38 @@ class Add(Expr):
         return Integer(int(total))
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the sum.
+
+        Evaluates all addends and returns their sum if all are numeric.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            Numerical sum if all terms numeric, else symbolic
+
+        Example:
+            >>> (Integer(1) + Integer(2) + Integer(3)).evalf()
+            6.0
+        """
         try:
             return sum(a.evalf(precision) for a in self.args)
         except (TypeError, ValueError):
             return self
 
     def to_latex(self) -> str:
+        """Convert sum to LaTeX representation.
+
+        Formats as: a + b - c (with proper sign handling).
+
+        Returns:
+            LaTeX string
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x + 1).to_latex()
+            'x + 1'
+        """
         if not self.args:
             return "0"
         result = self.args[0].to_latex()
@@ -303,10 +384,33 @@ class Mul(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Get all free symbols in the product.
+
+        Returns:
+            Union of free symbols from all factors
+
+        Example:
+            >>> x, y = Symbol('x'), Symbol('y')
+            >>> (x * y**2 * 3).free_symbols
+            {x, y}
+        """
         return set().union(*(a.free_symbols for a in self.args))
 
     def subs(self, *args_in, **kwargs) -> Expr:
-        """Substitute symbols. Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols. Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args_in: Dictionary or positional substitution
+            **kwargs: Keyword substitutions
+
+        Returns:
+            New Mul expression with substitutions applied
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (2*x).subs(x, 3)
+            6
+        """
         if len(args_in) == 1 and isinstance(args_in[0], dict):
             substitutions = args_in[0]
         elif len(args_in) == 2:
@@ -316,6 +420,21 @@ class Mul(Expr):
         return Mul(*(a.subs(substitutions) for a in self.args)).simplify()
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate product using product rule: (f*g)' = f'*g + f*g'.
+
+        Generalizes to n factors: (f*g*h)' = f'gh + fg'h + fgh'.
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Sum of terms from product rule
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x**2 * Sin(x)).diff(x)
+            2*x*sin(x) + x**2*cos(x)
+        """
         # Product rule: (f*g)' = f'*g + f*g'
         if len(self.args) == 0:
             return Integer(0)
@@ -330,6 +449,24 @@ class Mul(Expr):
         return Add(*terms).simplify()
 
     def simplify(self) -> Expr:
+        """Simplify product by combining like bases and constants.
+
+        Simplification includes:
+        - Combining numeric coefficients: 2*3*x → 6*x
+        - Combining powers: x*x**2 → x**3
+        - Zero product: 0*x → 0
+        - Identity: 1*x → x
+
+        Returns:
+            Simplified expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (2 * 3 * x).simplify()
+            6*x
+            >>> (x * x**2).simplify()
+            x**3
+        """
         # Flatten nested Muls and simplify arguments
         flat_args = []
         for arg in self.args:
@@ -407,6 +544,20 @@ class Mul(Expr):
         return Integer(int(total))
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the product.
+
+        Evaluates all factors and returns their product if all numeric.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            Numerical product if all terms numeric, else symbolic
+
+        Example:
+            >>> (Integer(2) * Integer(3) * Integer(4)).evalf()
+            24.0
+        """
         try:
             result = 1.0
             for a in self.args:
@@ -416,6 +567,20 @@ class Mul(Expr):
             return self
 
     def to_latex(self) -> str:
+        """Convert product to LaTeX representation.
+
+        Handles parentheses for addition and division notation.
+
+        Returns:
+            LaTeX string
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (2 * x).to_latex()
+            '2 x'
+            >>> (x * (x + 1)).to_latex()
+            'x \\\\left(x + 1\\\\right)'
+        """
         if not self.args:
             return "1"
 
@@ -505,10 +670,33 @@ class Pow(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Get all free symbols in base and exponent.
+
+        Returns:
+            Union of free symbols from base and exponent
+
+        Example:
+            >>> x, y = Symbol('x'), Symbol('y')
+            >>> (x**y).free_symbols
+            {x, y}
+        """
         return self.base.free_symbols | self.exp.free_symbols
 
     def subs(self, *args_in, **kwargs) -> Expr:
-        """Substitute symbols. Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols. Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args_in: Dictionary or positional substitution
+            **kwargs: Keyword substitutions
+
+        Returns:
+            New Pow expression with substitutions applied
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x**2).subs(x, 3)
+            9
+        """
         if len(args_in) == 1 and isinstance(args_in[0], dict):
             substitutions = args_in[0]
         elif len(args_in) == 2:
@@ -521,6 +709,26 @@ class Pow(Expr):
         ).simplify()
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate power using generalized power rule.
+
+        Applies appropriate rule based on what varies:
+        - Constant exponent: d/dx(f^n) = n*f^(n-1)*f'
+        - Constant base: d/dx(a^g) = a^g*ln(a)*g'
+        - General case: d/dx(f^g) = f^g*(g'*ln(f) + g*f'/f)
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Derivative expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x**3).diff(x)
+            3*x**2
+            >>> (x**x).diff(x)
+            x**x*(1 + log(x))
+        """
         # Lazy import to avoid circular dependency
         from .function_library import Log
 
@@ -551,6 +759,28 @@ class Pow(Expr):
         ).simplify()
 
     def simplify(self) -> Expr:
+        """Simplify power expression using algebraic rules.
+
+        Simplification includes:
+        - x**0 → 1
+        - x**1 → x
+        - 0**n → 0 (for n > 0)
+        - 1**n → 1
+        - (x^a)^b → x^(a*b)
+        - Numeric evaluation: 2**3 → 8
+
+        Returns:
+            Simplified expression
+
+        Example:
+            >>> x = Symbol('x')
+            >>> (x**1).simplify()
+            x
+            >>> (x**0).simplify()
+            1
+            >>> (Integer(2)**Integer(3)).simplify()
+            8
+        """
         base = self.base.simplify() if hasattr(self.base, 'simplify') else self.base
         exp = self.exp.simplify() if hasattr(self.exp, 'simplify') else self.exp
 
@@ -587,6 +817,22 @@ class Pow(Expr):
         return Pow(base, exp)
 
     def evalf(self, precision: int = 15) -> Union[float, complex, Expr]:
+        """Numerically evaluate power expression.
+
+        Computes base^exponent if both are numeric.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            Numerical result or symbolic if cannot evaluate
+
+        Example:
+            >>> Pow(Integer(2), Integer(3)).evalf()
+            8.0
+            >>> Pow(Float(2.5), Float(1.5)).evalf()
+            3.9528470752104744
+        """
         try:
             base_val = self.base.evalf(precision)
             exp_val = self.exp.evalf(precision)
@@ -597,6 +843,23 @@ class Pow(Expr):
             return self
 
     def to_latex(self) -> str:
+        """Convert power to LaTeX representation.
+
+        Handles special cases:
+        - x^(1/2) → \\sqrt{x}
+        - x^(-1) → \\frac{1}{x}
+        - x^n → x^{n}
+
+        Returns:
+            LaTeX string
+
+        Example:
+            >>> x = Symbol('x')
+            >>> Pow(x, Integer(2)).to_latex()
+            'x^{2}'
+            >>> Pow(x, Rational(1, 2)).to_latex()
+            '\\\\sqrt{x}'
+        """
         # Special cases
         if isinstance(self.exp, Rational) and self.exp.p == 1:
             if self.exp.q == 2:

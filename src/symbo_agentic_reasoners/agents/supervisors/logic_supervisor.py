@@ -46,6 +46,25 @@ class LogicSupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Logic Supervisor.
+
+        Sets up routing infrastructure for logic tasks. Routes to
+        Propositional, Predicate, and Proof specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'logic_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = LogicSupervisor()
+            >>> result = supervisor.process({"problem": "Prove using resolution"})
+
+        Notes:
+            - Tracks routing statistics
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard

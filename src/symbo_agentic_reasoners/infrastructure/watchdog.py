@@ -93,6 +93,13 @@ class TaskStatus(Enum):
 class TimeoutError(Exception):
     """Raised when an operation exceeds its timeout"""
     def __init__(self, task_id: str, timeout: float, elapsed: float):
+        """Initialize TimeoutError with task details.
+
+        Args:
+            task_id: Identifier of timed-out task
+            timeout: Timeout limit in seconds
+            elapsed: Actual elapsed time in seconds
+        """
         self.task_id = task_id
         self.timeout = timeout
         self.elapsed = elapsed
@@ -108,6 +115,17 @@ class InterruptibleThread(threading.Thread):
     """
 
     def __init__(self, *args, **kwargs):
+        """Initialize interruptible thread.
+
+        Args:
+            *args: Thread positional arguments
+            **kwargs: Thread keyword arguments (target, name, etc.)
+
+        Notes:
+            - Captures result or exception from target function
+            - Can be forcefully interrupted via interrupt() method
+            - Used for hard timeout enforcement
+        """
         super().__init__(*args, **kwargs)
         self._result = None
         self._exception = None
@@ -217,6 +235,11 @@ class WatchedTask:
         return self.elapsed_seconds > self.timeout_seconds
 
     def to_dict(self) -> Dict[str, Any]:
+        """Convert task tracker to dictionary for serialization.
+
+        Returns:
+            Dict with task_id, timeout, elapsed, remaining, status, agent_id, description
+        """
         return {
             "task_id": self.task_id,
             "timeout": self.timeout_seconds,
@@ -601,8 +624,17 @@ def with_timeout(timeout: float = None, operation_type: str = "default"):
             ...
     """
     def decorator(func: Callable) -> Callable:
+        """Decorator factory for timeout enforcement.
+
+        Args:
+            func: Function to wrap with timeout
+
+        Returns:
+            Wrapped function with automatic timeout tracking
+        """
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+            """Wrapped function with timeout monitoring."""
             watchdog = Watchdog()
             task_id = f"{func.__name__}_{threading.get_ident()}_{time.time()}"
 
@@ -664,6 +696,13 @@ def run_with_timeout(
     result_container = {'result': None, 'exception': None}
 
     def target():
+        """Thread target that captures result or exception.
+
+        Notes:
+            - Executes func in separate thread
+            - Stores result in result_container
+            - Captures exceptions for re-raising in main thread
+        """
         try:
             result_container['result'] = func(*args, **kwargs)
         except Exception as e:
@@ -907,6 +946,7 @@ if __name__ == "__main__":
     timeout_detected = [False]
 
     def on_timeout(task):
+        """Callback function for timeout event (test function)."""
         timeout_detected[0] = True
         print(f"  Timeout callback fired for: {task.task_id}")
 
@@ -936,6 +976,7 @@ if __name__ == "__main__":
 
     @with_timeout(5)
     def quick_operation():
+        """Test function for timeout decorator."""
         time.sleep(0.2)
         return "done"
 
@@ -947,6 +988,7 @@ if __name__ == "__main__":
     print("Test 5: run_with_timeout (success)")
 
     def compute_something(x, y):
+        """Test function for run_with_timeout (successful completion)."""
         time.sleep(0.1)
         return x + y
 
@@ -958,6 +1000,7 @@ if __name__ == "__main__":
     print("Test 6: run_with_timeout (timeout)")
 
     def slow_computation():
+        """Test function with long CPU-bound computation (timeout test)."""
         total = 0
         for i in range(10**8):  # Long running computation
             total += i
@@ -974,11 +1017,13 @@ if __name__ == "__main__":
     print("Test 7: run_with_timeout_fallback")
 
     def expensive_solve(n):
+        """Test function simulating expensive solver with timeout."""
         # Simulate expensive solver that takes too long
         time.sleep(n * 10)
         return f"expensive_result_{n}"
 
     def cheap_solve(n):
+        """Test function simulating quick fallback solver."""
         # Quick fallback
         return f"cheap_result_{n}"
 

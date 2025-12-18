@@ -336,10 +336,35 @@ class Symbol(Expr):
 
     @property
     def free_symbols(self) -> Set['Symbol']:
+        """Return set containing this symbol.
+
+        Returns:
+            Set with this symbol as the only element
+
+        Example:
+            >>> x = Symbol('x')
+            >>> x.free_symbols
+            {x}
+        """
         return {self}
 
     def subs(self, *args, **kwargs) -> Expr:
-        """Substitute symbol. Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbol. Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args: Dictionary or positional (symbol, value) pair
+            **kwargs: Keyword arguments
+
+        Returns:
+            Replacement value if this symbol is substituted, else self
+
+        Example:
+            >>> x = Symbol('x')
+            >>> x.subs(x, 5)
+            5
+            >>> x.subs({x: Symbol('y')})
+            y
+        """
         if len(args) == 1 and isinstance(args[0], dict):
             substitutions = args[0]
         elif len(args) == 2:
@@ -349,18 +374,70 @@ class Symbol(Expr):
         return substitutions.get(self, self)
 
     def diff(self, var: 'Symbol') -> Expr:
+        """Differentiate symbol with respect to variable.
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(1) if var == self, Integer(0) otherwise
+
+        Example:
+            >>> x = Symbol('x')
+            >>> x.diff(x)
+            1
+            >>> x.diff(Symbol('y'))
+            0
+        """
         return Integer(1) if self == var else Integer(0)
 
     def simplify(self) -> Expr:
+        """Simplify symbol (returns self).
+
+        Returns:
+            Self unchanged
+
+        Note:
+            Symbols cannot be simplified further.
+        """
         return self
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Evaluate to numerical value if symbol is a known constant.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            Numerical value if constant (pi, e), else self
+
+        Example:
+            >>> Symbol('pi').evalf()
+            3.141592653589793
+            >>> Symbol('x').evalf()
+            x
+        """
         # Check if this is a constant
         if MathConstant.is_constant(self.name):
             return MathConstant.get_value(self.name)
         return self
 
     def to_latex(self) -> str:
+        """Convert symbol to LaTeX representation.
+
+        Handles Greek letters and multi-character symbols.
+
+        Returns:
+            LaTeX string
+
+        Example:
+            >>> Symbol('alpha').to_latex()
+            '\\\\alpha'
+            >>> Symbol('x').to_latex()
+            'x'
+            >>> Symbol('theta_1').to_latex()
+            '\\\\text{theta_1}'
+        """
         # Greek letters and special symbols
         greek = {
             'alpha': r'\alpha', 'beta': r'\beta', 'gamma': r'\gamma',
@@ -436,54 +513,179 @@ class Integer(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Return empty set (constants have no free symbols).
+
+        Returns:
+            Empty set
+
+        Example:
+            >>> Integer(5).free_symbols
+            set()
+        """
         return set()
 
     def subs(self, *args, **kwargs) -> Expr:
-        """Substitute symbols (no-op for integers). Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols (no-op for integers). Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args: Substitution arguments (ignored)
+            **kwargs: Keyword substitutions (ignored)
+
+        Returns:
+            Self unchanged
+
+        Note:
+            Constants are not affected by substitution.
+        """
         return self
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate constant (always zero).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> Integer(5).diff(Symbol('x'))
+            0
+        """
         return Integer(0)
 
     def simplify(self) -> Expr:
+        """Simplify integer (returns self).
+
+        Returns:
+            Self unchanged
+
+        Note:
+            Integers are already in simplest form.
+        """
         return self
 
     def evalf(self, precision: int = 15) -> float:
+        """Convert integer to float.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            Float representation of the integer
+
+        Example:
+            >>> Integer(42).evalf()
+            42.0
+        """
         return float(self.value)
 
     def to_latex(self) -> str:
+        """Convert integer to LaTeX (just the number).
+
+        Returns:
+            String representation of the number
+
+        Example:
+            >>> Integer(42).to_latex()
+            '42'
+        """
         return str(self.value)
 
     @property
     def is_number(self) -> bool:
+        """Check if this is a number (always True for Integer).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_integer(self) -> bool:
+        """Check if this is an integer (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_rational(self) -> bool:
+        """Check if this is rational (always True - integers are rational).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_real(self) -> bool:
+        """Check if this is real (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_positive(self) -> bool:
+        """Check if integer is positive.
+
+        Returns:
+            True if value > 0, else False
+
+        Example:
+            >>> Integer(5).is_positive
+            True
+            >>> Integer(-3).is_positive
+            False
+        """
         return self.value > 0
 
     @property
     def is_negative(self) -> bool:
+        """Check if integer is negative.
+
+        Returns:
+            True if value < 0, else False
+
+        Example:
+            >>> Integer(-3).is_negative
+            True
+            >>> Integer(5).is_negative
+            False
+        """
         return self.value < 0
 
     @property
     def is_zero(self) -> bool:
+        """Check if integer is zero.
+
+        Returns:
+            True if value == 0, else False
+
+        Example:
+            >>> Integer(0).is_zero
+            True
+            >>> Integer(1).is_zero
+            False
+        """
         return self.value == 0
 
     @property
     def is_one(self) -> bool:
+        """Check if integer is one.
+
+        Returns:
+            True if value == 1, else False
+
+        Example:
+            >>> Integer(1).is_one
+            True
+            >>> Integer(0).is_one
+            False
+        """
         return self.value == 1
 
 
@@ -519,45 +721,148 @@ class Float(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Return empty set (floats have no free symbols).
+
+        Returns:
+            Empty set
+
+        Example:
+            >>> Float(3.14).free_symbols
+            set()
+        """
         return set()
 
     def subs(self, *args, **kwargs) -> Expr:
-        """Substitute symbols (no-op for floats). Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols (no-op for floats). Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args: Substitution arguments (ignored)
+            **kwargs: Keyword substitutions (ignored)
+
+        Returns:
+            Self unchanged
+
+        Note:
+            Constants are not affected by substitution.
+        """
         return self
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate constant (always zero).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> Float(3.14).diff(Symbol('x'))
+            0
+        """
         return Integer(0)
 
     def simplify(self) -> Expr:
+        """Simplify float (converts to Integer if whole number).
+
+        Returns:
+            Integer if value is whole number, else self
+
+        Example:
+            >>> Float(5.0).simplify()
+            5
+            >>> Float(3.14).simplify()
+            3.14
+        """
         # Check if it's actually an integer
         if self.value == int(self.value):
             return Integer(int(self.value))
         return self
 
     def evalf(self, precision: int = 15) -> float:
+        """Return the float value.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            The floating-point value
+
+        Example:
+            >>> Float(3.14159).evalf()
+            3.14159
+        """
         return self.value
 
     def to_latex(self) -> str:
+        """Convert float to LaTeX (just the number).
+
+        Returns:
+            String representation
+
+        Example:
+            >>> Float(3.14).to_latex()
+            '3.14'
+        """
         return str(self.value)
 
     @property
     def is_number(self) -> bool:
+        """Check if this is a number (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_real(self) -> bool:
+        """Check if this is real (always True for Float).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_positive(self) -> bool:
+        """Check if float is positive.
+
+        Returns:
+            True if value > 0
+
+        Example:
+            >>> Float(3.14).is_positive
+            True
+        """
         return self.value > 0
 
     @property
     def is_negative(self) -> bool:
+        """Check if float is negative.
+
+        Returns:
+            True if value < 0
+
+        Example:
+            >>> Float(-2.5).is_negative
+            True
+        """
         return self.value < 0
 
     @property
     def is_zero(self) -> bool:
+        """Check if float is approximately zero.
+
+        Returns:
+            True if |value| < 1e-15
+
+        Example:
+            >>> Float(0.0).is_zero
+            True
+            >>> Float(1e-20).is_zero
+            True
+        """
         return abs(self.value) < 1e-15
 
 
@@ -607,54 +912,180 @@ class Rational(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Return empty set (rationals have no free symbols).
+
+        Returns:
+            Empty set
+
+        Example:
+            >>> Rational(3, 4).free_symbols
+            set()
+        """
         return set()
 
     def subs(self, *args, **kwargs) -> Expr:
-        """Substitute symbols (no-op for rationals). Supports both subs({x: val}) and subs(x, val)."""
+        """Substitute symbols (no-op for rationals). Supports both subs({x: val}) and subs(x, val).
+
+        Args:
+            *args: Substitution arguments (ignored)
+            **kwargs: Keyword substitutions (ignored)
+
+        Returns:
+            Self unchanged
+
+        Note:
+            Constants are not affected by substitution.
+        """
         return self
 
     def diff(self, var: Symbol) -> Expr:
+        """Differentiate constant (always zero).
+
+        Args:
+            var: Variable to differentiate with respect to
+
+        Returns:
+            Integer(0)
+
+        Example:
+            >>> Rational(3, 4).diff(Symbol('x'))
+            0
+        """
         return Integer(0)
 
     def simplify(self) -> Expr:
+        """Simplify rational (converts to Integer if denominator is 1).
+
+        Returns:
+            Integer if q == 1, else self
+
+        Example:
+            >>> Rational(6, 3).simplify()
+            2
+            >>> Rational(3, 4).simplify()
+            3/4
+
+        Note:
+            Fraction is already reduced in __init__.
+        """
         if self.q == 1:
             return Integer(self.p)
         return self
 
     def evalf(self, precision: int = 15) -> float:
+        """Evaluate rational to floating-point.
+
+        Args:
+            precision: Decimal digits precision (default: 15)
+
+        Returns:
+            p/q as float
+
+        Example:
+            >>> Rational(3, 4).evalf()
+            0.75
+            >>> Rational(22, 7).evalf()
+            3.142857142857143
+        """
         return self.p / self.q
 
     def to_latex(self) -> str:
+        """Convert rational to LaTeX fraction.
+
+        Returns:
+            LaTeX string
+
+        Example:
+            >>> Rational(3, 4).to_latex()
+            '\\\\frac{3}{4}'
+            >>> Rational(5, 1).to_latex()
+            '5'
+        """
         if self.q == 1:
             return str(self.p)
         return rf'\frac{{{self.p}}}{{{self.q}}}'
 
     @property
     def is_number(self) -> bool:
+        """Check if this is a number (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_rational(self) -> bool:
+        """Check if this is rational (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_real(self) -> bool:
+        """Check if this is real (always True).
+
+        Returns:
+            True
+        """
         return True
 
     @property
     def is_integer(self) -> bool:
+        """Check if rational is actually an integer.
+
+        Returns:
+            True if denominator is 1
+
+        Example:
+            >>> Rational(6, 2).is_integer
+            True
+            >>> Rational(3, 4).is_integer
+            False
+        """
         return self.q == 1
 
     @property
     def is_positive(self) -> bool:
+        """Check if rational is positive.
+
+        Returns:
+            True if numerator > 0
+
+        Example:
+            >>> Rational(3, 4).is_positive
+            True
+            >>> Rational(-2, 5).is_positive
+            False
+        """
         return self.p > 0
 
     @property
     def is_negative(self) -> bool:
+        """Check if rational is negative.
+
+        Returns:
+            True if numerator < 0
+
+        Example:
+            >>> Rational(-3, 4).is_negative
+            True
+        """
         return self.p < 0
 
     @property
     def is_zero(self) -> bool:
+        """Check if rational is zero.
+
+        Returns:
+            True if numerator == 0
+
+        Example:
+            >>> Rational(0, 5).is_zero
+            True
+        """
         return self.p == 0
 
 

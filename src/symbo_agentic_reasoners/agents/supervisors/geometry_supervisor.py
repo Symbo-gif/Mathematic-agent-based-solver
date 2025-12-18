@@ -36,6 +36,25 @@ class GeometrySupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Geometry Supervisor.
+
+        Sets up routing infrastructure for geometry tasks. Routes to
+        Euclidean, Analytic, Transformation, and Trigonometry specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'geometry_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = GeometrySupervisor()
+            >>> result = supervisor.process(task_entry)
+
+        Notes:
+            - Tracks routing statistics per specialist type
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard

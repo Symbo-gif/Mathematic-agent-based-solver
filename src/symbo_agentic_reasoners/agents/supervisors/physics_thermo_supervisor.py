@@ -41,6 +41,25 @@ class PhysicsThermoSupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Physics Thermodynamics Supervisor.
+
+        Sets up routing infrastructure for thermodynamics tasks. Routes to
+        Heat Transfer and Gas Laws specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'thermo_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = PhysicsThermoSupervisor()
+            >>> result = supervisor.process({"problem": "Apply ideal gas law"})
+
+        Notes:
+            - Tracks routing statistics
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard

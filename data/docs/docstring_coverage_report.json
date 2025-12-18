@@ -1,0 +1,1976 @@
+{
+  "Core Infrastructure": {
+    "total": 29,
+    "documented": 29,
+    "coverage": 100.0,
+    "missing": 0,
+    "files": {
+      "agent_invocation.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "blackboard_integration.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "data_structures.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "decomposition.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "learning_memory.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "native_fallback.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      }
+    }
+  },
+  "BDI Framework": {
+    "total": 31,
+    "documented": 31,
+    "coverage": 100.0,
+    "missing": 0,
+    "files": {
+      "agent_communication.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "bdi_agent.py": {
+        "total": 31,
+        "documented": 31,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "blackboard.py": {
+        "total": 16,
+        "documented": 15,
+        "coverage": 93.75,
+        "missing": 1
+      },
+      "error_handler.py": {
+        "total": 4,
+        "documented": 1,
+        "coverage": 25.0,
+        "missing": 3
+      },
+      "expression_analyzer.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "fallback_coordinator.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "fallback_tracker.py": {
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "math_solver.py": {
+        "total": 10,
+        "documented": 9,
+        "coverage": 90.0,
+        "missing": 1
+      },
+      "message_bus.py": {
+        "total": 11,
+        "documented": 9,
+        "coverage": 81.81818181818183,
+        "missing": 2
+      },
+      "native_complex.py": {
+        "total": 17,
+        "documented": 16,
+        "coverage": 94.11764705882352,
+        "missing": 1
+      },
+      "number_theory_native.py": {
+        "total": 39,
+        "documented": 33,
+        "coverage": 84.61538461538461,
+        "missing": 6
+      },
+      "omdoc_schema.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestrator.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "parallel_orchestrator.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "resource_coordinator.py": {
+        "total": 42,
+        "documented": 37,
+        "coverage": 88.09523809523809,
+        "missing": 5
+      },
+      "safe_parser.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "semantic_parser.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver_engine.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "state_manager.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "system.py": {
+        "total": 28,
+        "documented": 28,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "vector_database.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\ast_types.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\calculus_supervisor.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "calculus\\calculus_utils.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "calculus\\definite_integration_specialist.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\differentiation_specialist.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\expression_parser.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\integration_specialist.py": {
+        "total": 36,
+        "documented": 36,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\series_specialist.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\validation.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\vector_calculus.py": {
+        "total": 6,
+        "documented": 4,
+        "coverage": 66.66666666666666,
+        "missing": 2
+      },
+      "input_normalization\\artifact_cleaner.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\diagnostics.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\equation_normalizer.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\exponent_handler.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\expression_splitter.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\function_handler.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\multiplication.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "input_normalization\\notation_preprocessor.py": {
+        "total": 7,
+        "documented": 4,
+        "coverage": 57.14285714285714,
+        "missing": 3
+      },
+      "input_normalization\\operator_normalizer.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\pattern_applier.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\pipeline.py": {
+        "total": 6,
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\unicode_handler.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\validator.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\vector_calculus.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "input_normalization\\whitespace_handler.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\agent_invocation.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\blackboard_integration.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\data_structures.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\decomposition.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\learning_memory.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestration\\native_fallback.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\api.py": {
+        "total": 3,
+        "documented": 3,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\cache_manager.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\result.py": {
+        "total": 1,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 1
+      },
+      "solver\\router.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\safety_checker.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\solver_core.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "solver\\specialized_solvers.py": {
+        "total": 13,
+        "documented": 12,
+        "coverage": 92.3076923076923,
+        "missing": 1
+      },
+      "symbolic\\compatibility.py": {
+        "total": 7,
+        "documented": 1,
+        "coverage": 14.285714285714285,
+        "missing": 6
+      },
+      "symbolic\\composite_operations.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\convenience_api.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\derivative.py": {
+        "total": 6,
+        "documented": 1,
+        "coverage": 16.666666666666664,
+        "missing": 5
+      },
+      "symbolic\\expression_parser.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\expr_types.py": {
+        "total": 23,
+        "documented": 20,
+        "coverage": 86.95652173913044,
+        "missing": 3
+      },
+      "symbolic\\functions.py": {
+        "total": 60,
+        "documented": 60,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\function_library.py": {
+        "total": 57,
+        "documented": 57,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\numeric_types.py": {
+        "total": 38,
+        "documented": 38,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\operations.py": {
+        "total": 25,
+        "documented": 23,
+        "coverage": 92.0,
+        "missing": 2
+      },
+      "symbolic\\parsing.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\simplification.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\simplification_engine.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\symbol.py": {
+        "total": 6,
+        "documented": 1,
+        "coverage": 16.666666666666664,
+        "missing": 5
+      },
+      "symbolic\\symbolic_supervisor.py": {
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\sympy_compatibility.py": {
+        "total": 17,
+        "documented": 8,
+        "coverage": 47.05882352941176,
+        "missing": 9
+      },
+      "symbolic\\type_system.py": {
+        "total": 67,
+        "documented": 67,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\utilities.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\utils\\constants.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbolic\\utils\\validation.py": {
+        "total": 6,
+        "documented": 4,
+        "coverage": 66.66666666666666,
+        "missing": 2
+      },
+      "calculus\\definite_integration\\exponential_integrals.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "calculus\\definite_integration\\extraction_utils.py": {
+        "total": 28,
+        "documented": 27,
+        "coverage": 96.42857142857143,
+        "missing": 1
+      },
+      "calculus\\definite_integration\\gaussian_integrals.py": {
+        "total": 16,
+        "documented": 12,
+        "coverage": 75.0,
+        "missing": 4
+      },
+      "calculus\\definite_integration\\oscillatory_integrals.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\definite_integration\\singularity_analysis.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\definite_integration\\special_integrals.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\definite_integration\\__init__.py": {
+        "total": 5,
+        "documented": 4,
+        "coverage": 80.0,
+        "missing": 1
+      },
+      "calculus\\limits\\algebra_utilities.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\limits\\asymptotic_rules.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\limits\\gaussian_2d.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "calculus\\limits\\limit_patterns.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\limits\\taylor_limits.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\limits\\__init__.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      }
+    }
+  },
+  "Symbolic Core": {
+    "total": 416,
+    "documented": 384,
+    "coverage": 92.3076923076923,
+    "missing": 32,
+    "files": {
+      "compatibility.py": {
+        "total": 7,
+        "documented": 1,
+        "coverage": 14.285714285714285,
+        "missing": 6
+      },
+      "composite_operations.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "convenience_api.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "derivative.py": {
+        "total": 6,
+        "documented": 1,
+        "coverage": 16.666666666666664,
+        "missing": 5
+      },
+      "expression_parser.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "expr_types.py": {
+        "total": 23,
+        "documented": 20,
+        "coverage": 86.95652173913044,
+        "missing": 3
+      },
+      "functions.py": {
+        "total": 60,
+        "documented": 60,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "function_library.py": {
+        "total": 57,
+        "documented": 57,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "numeric_types.py": {
+        "total": 38,
+        "documented": 38,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "operations.py": {
+        "total": 25,
+        "documented": 23,
+        "coverage": 92.0,
+        "missing": 2
+      },
+      "parsing.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "simplification.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "simplification_engine.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "symbol.py": {
+        "total": 6,
+        "documented": 1,
+        "coverage": 16.666666666666664,
+        "missing": 5
+      },
+      "symbolic_supervisor.py": {
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "sympy_compatibility.py": {
+        "total": 17,
+        "documented": 8,
+        "coverage": 47.05882352941176,
+        "missing": 9
+      },
+      "type_system.py": {
+        "total": 67,
+        "documented": 67,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "utilities.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "utils\\constants.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "utils\\validation.py": {
+        "total": 6,
+        "documented": 4,
+        "coverage": 66.66666666666666,
+        "missing": 2
+      }
+    }
+  },
+  "Calculus Engine": {
+    "total": 231,
+    "documented": 217,
+    "coverage": 93.93939393939394,
+    "missing": 14,
+    "files": {
+      "ast_types.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus_supervisor.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "calculus_utils.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "definite_integration_specialist.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "differentiation_specialist.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "expression_parser.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "integration_specialist.py": {
+        "total": 36,
+        "documented": 36,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "series_specialist.py": {
+        "total": 5,
+        "documented": 5,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "validation.py": {
+        "total": 1,
+        "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "vector_calculus.py": {
+        "total": 6,
+        "documented": 4,
+        "coverage": 66.66666666666666,
+        "missing": 2
+      },
+      "definite_integration\\exponential_integrals.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "definite_integration\\extraction_utils.py": {
+        "total": 28,
+        "documented": 27,
+        "coverage": 96.42857142857143,
+        "missing": 1
+      },
+      "definite_integration\\gaussian_integrals.py": {
+        "total": 16,
+        "documented": 12,
+        "coverage": 75.0,
+        "missing": 4
+      },
+      "definite_integration\\oscillatory_integrals.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "definite_integration\\singularity_analysis.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "definite_integration\\special_integrals.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "definite_integration\\__init__.py": {
+        "total": 5,
+        "documented": 4,
+        "coverage": 80.0,
+        "missing": 1
+      },
+      "limits\\algebra_utilities.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "limits\\asymptotic_rules.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "limits\\gaussian_2d.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "limits\\limit_patterns.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "limits\\taylor_limits.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "limits\\__init__.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      }
+    }
+  },
+  "Infrastructure": {
+    "total": 338,
+    "documented": 322,
+    "coverage": 95.26627218934911,
+    "missing": 16,
+    "files": {
+      "acc.py": {
+        "total": 22,
+        "documented": 19,
+        "coverage": 86.36363636363636,
+        "missing": 3
+      },
+      "agent_factory.py": {
+        "total": 6,
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "agent_pool.py": {
+        "total": 16,
+        "documented": 16,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "agent_registry.py": {
+        "total": 50,
+        "documented": 50,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "ams.py": {
+        "total": 30,
+        "documented": 30,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "directory_facilitator.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "hardware_detector.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "knowledge_graph.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "resource_governor.py": {
+        "total": 19,
+        "documented": 18,
+        "coverage": 94.73684210526315,
+        "missing": 1
+      },
+      "watchdog.py": {
+        "total": 47,
+        "documented": 47,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "deployment\\compute_optimizer.py": {
+        "total": 21,
+        "documented": 17,
+        "coverage": 80.95238095238095,
+        "missing": 4
+      },
+      "deployment\\gpu_scheduler.py": {
+        "total": 20,
+        "documented": 17,
+        "coverage": 85.0,
+        "missing": 3
+      },
+      "deployment\\rainbow_deployment.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "hardening\\process_isolation.py": {
+        "total": 10,
+        "documented": 8,
+        "coverage": 80.0,
+        "missing": 2
+      },
+      "hardening\\security_monitor.py": {
+        "total": 40,
+        "documented": 37,
+        "coverage": 92.5,
+        "missing": 3
+      },
+      "security\\agent_auth.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      }
+    }
+  },
+  "Agents/Specialists": {
+    "total": 1724,
+    "documented": 1533,
+    "coverage": 88.92111368909514,
+    "missing": 191,
+    "files": {
+      "algebra\\arithmetic_specialist.py": {
+        "total": 22,
+        "documented": 22,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\equation_system_solver.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\group_ring_theory.py": {
+        "total": 43,
+        "documented": 42,
+        "coverage": 97.67441860465115,
+        "missing": 1
+      },
+      "algebra\\number_theory_specialist.py": {
+        "total": 40,
+        "documented": 40,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\differentiation_specialist.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\fourier_specialist.py": {
+        "total": 33,
+        "documented": 30,
+        "coverage": 90.9090909090909,
+        "missing": 3
+      },
+      "calculus\\integration_specialist.py": {
+        "total": 26,
+        "documented": 24,
+        "coverage": 92.3076923076923,
+        "missing": 2
+      },
+      "calculus\\limit_evaluator.py": {
+        "total": 15,
+        "documented": 15,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\ode_solver.py": {
+        "total": 7,
+        "documented": 3,
+        "coverage": 42.857142857142854,
+        "missing": 4
+      },
+      "calculus\\ode_specialist.py": {
+        "total": 35,
+        "documented": 35,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\ode_systems_specialist.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\series_specialist.py": {
+        "total": 9,
+        "documented": 5,
+        "coverage": 55.55555555555556,
+        "missing": 4
+      },
+      "calculus\\special_functions_specialist.py": {
+        "total": 29,
+        "documented": 23,
+        "coverage": 79.3103448275862,
+        "missing": 6
+      },
+      "category_theory\\adjunction_specialist.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "category_theory\\functor_specialist.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "category_theory\\monoidal_specialist.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "category_theory\\morphism_specialist.py": {
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "category_theory\\universal_properties_specialist.py": {
+        "total": 23,
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "complex_analysis\\analytic_functions_specialist.py": {
+        "total": 14,
+        "documented": 12,
+        "coverage": 85.71428571428571,
+        "missing": 2
+      },
+      "complex_analysis\\conformal_mapping_specialist.py": {
+        "total": 29,
+        "documented": 21,
+        "coverage": 72.41379310344827,
+        "missing": 8
+      },
+      "complex_analysis\\contour_integration_specialist.py": {
+        "total": 29,
+        "documented": 21,
+        "coverage": 72.41379310344827,
+        "missing": 8
+      },
+      "complex_analysis\\elliptic_functions_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "complex_analysis\\residue_calculus_specialist.py": {
+        "total": 20,
+        "documented": 19,
+        "coverage": 95.0,
+        "missing": 1
+      },
+      "control_theory\\dynamical_systems_specialist.py": {
+        "total": 15,
+        "documented": 15,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "control_theory\\linear_control_specialist.py": {
+        "total": 20,
+        "documented": 19,
+        "coverage": 95.0,
+        "missing": 1
+      },
+      "cryptography\\asymmetric_crypto_specialist.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "cryptography\\hash_specialist.py": {
+        "total": 15,
+        "documented": 15,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "cryptography\\modular_arithmetic_specialist.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "diff_geometry\\differential_geometry_specialist.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "diff_geometry\\topology_specialist.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\boolean_algebra_agent.py": {
+        "total": 29,
+        "documented": 18,
+        "coverage": 62.06896551724138,
+        "missing": 11
+      },
+      "discrete_math\\combinatorics_agent.py": {
+        "total": 27,
+        "documented": 23,
+        "coverage": 85.18518518518519,
+        "missing": 4
+      },
+      "discrete_math\\finite_automata_agent.py": {
+        "total": 25,
+        "documented": 23,
+        "coverage": 92.0,
+        "missing": 2
+      },
+      "discrete_math\\graph_theory_agent.py": {
+        "total": 26,
+        "documented": 16,
+        "coverage": 61.53846153846154,
+        "missing": 10
+      },
+      "discrete_math\\recurrence_agent.py": {
+        "total": 17,
+        "documented": 16,
+        "coverage": 94.11764705882352,
+        "missing": 1
+      },
+      "discrete_math\\set_theory_agent.py": {
+        "total": 35,
+        "documented": 34,
+        "coverage": 97.14285714285714,
+        "missing": 1
+      },
+      "functional_analysis\\banach_space_specialist.py": {
+        "total": 19,
+        "documented": 18,
+        "coverage": 94.73684210526315,
+        "missing": 1
+      },
+      "functional_analysis\\hilbert_space_specialist.py": {
+        "total": 18,
+        "documented": 17,
+        "coverage": 94.44444444444444,
+        "missing": 1
+      },
+      "functional_analysis\\operator_theory_specialist.py": {
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometry\\analytic_specialist.py": {
+        "total": 22,
+        "documented": 15,
+        "coverage": 68.18181818181817,
+        "missing": 7
+      },
+      "geometry\\computational_geometry_specialist.py": {
+        "total": 30,
+        "documented": 21,
+        "coverage": 70.0,
+        "missing": 9
+      },
+      "geometry\\euclidean_specialist.py": {
+        "total": 21,
+        "documented": 18,
+        "coverage": 85.71428571428571,
+        "missing": 3
+      },
+      "geometry\\solid_geometry_specialist.py": {
+        "total": 30,
+        "documented": 18,
+        "coverage": 60.0,
+        "missing": 12
+      },
+      "geometry\\transformation_specialist.py": {
+        "total": 14,
+        "documented": 13,
+        "coverage": 92.85714285714286,
+        "missing": 1
+      },
+      "geometry\\trigonometry_specialist.py": {
+        "total": 18,
+        "documented": 17,
+        "coverage": 94.44444444444444,
+        "missing": 1
+      },
+      "information_theory\\channel_capacity_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "information_theory\\coding_theory_specialist.py": {
+        "total": 15,
+        "documented": 13,
+        "coverage": 86.66666666666667,
+        "missing": 2
+      },
+      "information_theory\\entropy_specialist.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "linear_algebra\\advanced_matrix_specialist.py": {
+        "total": 23,
+        "documented": 17,
+        "coverage": 73.91304347826086,
+        "missing": 6
+      },
+      "linear_algebra\\decomposition_specialist.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "linear_algebra\\matrix_ops_specialist.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "linear_algebra\\tensor_operations.py": {
+        "total": 19,
+        "documented": 17,
+        "coverage": 89.47368421052632,
+        "missing": 2
+      },
+      "linear_algebra\\vector_space_analyst.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "logic\\modal_logic_specialist.py": {
+        "total": 30,
+        "documented": 28,
+        "coverage": 93.33333333333333,
+        "missing": 2
+      },
+      "logic\\predicate_specialist.py": {
+        "total": 17,
+        "documented": 14,
+        "coverage": 82.35294117647058,
+        "missing": 3
+      },
+      "logic\\proof_specialist.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "logic\\propositional_specialist.py": {
+        "total": 14,
+        "documented": 13,
+        "coverage": 92.85714285714286,
+        "missing": 1
+      },
+      "logic\\sat_solver_specialist.py": {
+        "total": 19,
+        "documented": 13,
+        "coverage": 68.42105263157895,
+        "missing": 6
+      },
+      "logic\\temporal_logic_specialist.py": {
+        "total": 36,
+        "documented": 35,
+        "coverage": 97.22222222222221,
+        "missing": 1
+      },
+      "numerical\\advanced_quadrature_specialist.py": {
+        "total": 22,
+        "documented": 12,
+        "coverage": 54.54545454545454,
+        "missing": 10
+      },
+      "numerical\\linear_systems_specialist.py": {
+        "total": 20,
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "numerical\\numerical_methods_specialist.py": {
+        "total": 37,
+        "documented": 31,
+        "coverage": 83.78378378378379,
+        "missing": 6
+      },
+      "numerical\\numerical_utility.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "numerical\\optimization_specialist.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "numerical\\pde_specialist.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "numerical\\spline_specialist.py": {
+        "total": 17,
+        "documented": 14,
+        "coverage": 82.35294117647058,
+        "missing": 3
+      },
+      "optimization\\combinatorial_specialist.py": {
+        "total": 15,
+        "documented": 13,
+        "coverage": 86.66666666666667,
+        "missing": 2
+      },
+      "optimization\\convex_optimization_specialist.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "optimization\\linear_programming_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "real_analysis\\function_spaces_specialist.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "real_analysis\\measure_theory_specialist.py": {
+        "total": 20,
+        "documented": 19,
+        "coverage": 95.0,
+        "missing": 1
+      },
+      "real_analysis\\metric_space_specialist.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "real_analysis\\sequences_series_specialist.py": {
+        "total": 16,
+        "documented": 16,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "statistics\\bayesian_engine.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "statistics\\distribution_specialist.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "statistics\\frequentist_agent.py": {
+        "total": 4,
+        "documented": 3,
+        "coverage": 75.0,
+        "missing": 1
+      },
+      "statistics\\nonparametric_specialist.py": {
+        "total": 20,
+        "documented": 14,
+        "coverage": 70.0,
+        "missing": 6
+      },
+      "statistics\\regression_specialist.py": {
+        "total": 16,
+        "documented": 9,
+        "coverage": 56.25,
+        "missing": 7
+      },
+      "statistics\\stochastic_process.py": {
+        "total": 19,
+        "documented": 17,
+        "coverage": 89.47368421052632,
+        "missing": 2
+      },
+      "physics\\electromagnetism\\circuits_specialist.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "physics\\electromagnetism\\electrostatics_specialist.py": {
+        "total": 13,
+        "documented": 12,
+        "coverage": 92.3076923076923,
+        "missing": 1
+      },
+      "physics\\electromagnetism\\magnetism_specialist.py": {
+        "total": 16,
+        "documented": 15,
+        "coverage": 93.75,
+        "missing": 1
+      },
+      "physics\\mechanics\\dynamics_specialist.py": {
+        "total": 10,
+        "documented": 9,
+        "coverage": 90.0,
+        "missing": 1
+      },
+      "physics\\mechanics\\energy_specialist.py": {
+        "total": 13,
+        "documented": 12,
+        "coverage": 92.3076923076923,
+        "missing": 1
+      },
+      "physics\\mechanics\\kinematics_specialist.py": {
+        "total": 10,
+        "documented": 9,
+        "coverage": 90.0,
+        "missing": 1
+      },
+      "physics\\quantum\\operators_specialist.py": {
+        "total": 11,
+        "documented": 10,
+        "coverage": 90.9090909090909,
+        "missing": 1
+      },
+      "physics\\quantum\\systems_specialist.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "physics\\quantum\\wavefunction_specialist.py": {
+        "total": 11,
+        "documented": 10,
+        "coverage": 90.9090909090909,
+        "missing": 1
+      },
+      "physics\\thermodynamics\\gas_laws_specialist.py": {
+        "total": 12,
+        "documented": 11,
+        "coverage": 91.66666666666666,
+        "missing": 1
+      },
+      "physics\\thermodynamics\\heat_specialist.py": {
+        "total": 11,
+        "documented": 10,
+        "coverage": 90.9090909090909,
+        "missing": 1
+      },
+      "physics\\waves\\wave_optics_specialist.py": {
+        "total": 16,
+        "documented": 10,
+        "coverage": 62.5,
+        "missing": 6
+      },
+      "algebra\\polynomial\\domain_solver.py": {
+        "total": 2,
+        "documented": 2,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\polynomial\\numeric_roots.py": {
+        "total": 10,
+        "documented": 9,
+        "coverage": 90.0,
+        "missing": 1
+      },
+      "algebra\\polynomial\\polynomial_agent.py": {
+        "total": 24,
+        "documented": 24,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\polynomial\\polynomial_factors.py": {
+        "total": 4,
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\polynomial\\polynomial_gcd.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\polynomial\\polynomial_solvers.py": {
+        "total": 6,
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\polynomial\\rational_equations.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      }
+    }
+  },
+  "Agents/Supervisors": {
+    "total": 193,
+    "documented": 187,
+    "coverage": 96.89119170984456,
+    "missing": 6,
+    "files": {
+      "algebra_supervisor.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus_supervisor.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "category_theory_supervisor.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "complex_analysis_supervisor.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "control_theory_supervisor.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "cryptography_supervisor.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "diff_geometry_supervisor.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math_supervisor.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "functional_analysis_supervisor.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "geometry_supervisor.py": {
+        "total": 10,
+        "documented": 9,
+        "coverage": 90.0,
+        "missing": 1
+      },
+      "information_theory_supervisor.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "linalg_supervisor.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "logic_supervisor.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "optimization_supervisor.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics_em_supervisor.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "physics_mechanics_supervisor.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "physics_quantum_supervisor.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "physics_thermo_supervisor.py": {
+        "total": 7,
+        "documented": 6,
+        "coverage": 85.71428571428571,
+        "missing": 1
+      },
+      "real_analysis_supervisor.py": {
+        "total": 8,
+        "documented": 8,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "stats_supervisor.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      }
+    }
+  },
+  "Discovery": {
+    "total": 519,
+    "documented": 467,
+    "coverage": 89.98073217726397,
+    "missing": 52,
+    "files": {
+      "curiosity_engine.py": {
+        "total": 35,
+        "documented": 34,
+        "coverage": 97.14285714285714,
+        "missing": 1
+      },
+      "imagination_engine.py": {
+        "total": 29,
+        "documented": 28,
+        "coverage": 96.55172413793103,
+        "missing": 1
+      },
+      "phase6_system.py": {
+        "total": 6,
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algorithm\\algorithm_synthesizer.py": {
+        "total": 18,
+        "documented": 16,
+        "coverage": 88.88888888888889,
+        "missing": 2
+      },
+      "algorithm\\code_evolutionary_proposer.py": {
+        "total": 32,
+        "documented": 29,
+        "coverage": 90.625,
+        "missing": 3
+      },
+      "algorithm\\complexity_analyzer.py": {
+        "total": 18,
+        "documented": 15,
+        "coverage": 83.33333333333334,
+        "missing": 3
+      },
+      "algorithm\\heuristic_distiller.py": {
+        "total": 17,
+        "documented": 16,
+        "coverage": 94.11764705882352,
+        "missing": 1
+      },
+      "algorithm\\heuristic_transfer_engine.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algorithm\\optimization_transformer.py": {
+        "total": 19,
+        "documented": 17,
+        "coverage": 89.47368421052632,
+        "missing": 2
+      },
+      "algorithm\\problem_specification.py": {
+        "total": 5,
+        "documented": 4,
+        "coverage": 80.0,
+        "missing": 1
+      },
+      "algorithm\\sandbox_evaluator.py": {
+        "total": 14,
+        "documented": 13,
+        "coverage": 92.85714285714286,
+        "missing": 1
+      },
+      "conjecture\\boundary_explorer.py": {
+        "total": 13,
+        "documented": 11,
+        "coverage": 84.61538461538461,
+        "missing": 2
+      },
+      "conjecture\\conjecture_formalizer.py": {
+        "total": 15,
+        "documented": 15,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "conjecture\\pattern_recognizer.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "conjecture\\synthetic_data_generator.py": {
+        "total": 48,
+        "documented": 48,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "deep_search\\critic_network.py": {
+        "total": 17,
+        "documented": 15,
+        "coverage": 88.23529411764706,
+        "missing": 2
+      },
+      "deep_search\\exhaustive_enumerator.py": {
+        "total": 13,
+        "documented": 11,
+        "coverage": 84.61538461538461,
+        "missing": 2
+      },
+      "deep_search\\parallel_search_manager.py": {
+        "total": 20,
+        "documented": 16,
+        "coverage": 80.0,
+        "missing": 4
+      },
+      "deep_search\\policy_network.py": {
+        "total": 14,
+        "documented": 12,
+        "coverage": 85.71428571428571,
+        "missing": 2
+      },
+      "deep_search\\prover_engine.py": {
+        "total": 4,
+        "documented": 2,
+        "coverage": 50.0,
+        "missing": 2
+      },
+      "deep_search\\search_tree_manager.py": {
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "deep_search\\spectral_partitioner.py": {
+        "total": 26,
+        "documented": 22,
+        "coverage": 84.61538461538461,
+        "missing": 4
+      },
+      "deep_search\\types.py": {
+        "total": 3,
+        "documented": 1,
+        "coverage": 33.33333333333333,
+        "missing": 2
+      },
+      "domain_problem_generators\\algebra_problem_generator.py": {
+        "total": 6,
+        "documented": 5,
+        "coverage": 83.33333333333334,
+        "missing": 1
+      },
+      "domain_problem_generators\\category_theory_problem_generator.py": {
+        "total": 6,
+        "documented": 5,
+        "coverage": 83.33333333333334,
+        "missing": 1
+      },
+      "domain_problem_generators\\complex_analysis_problem_generator.py": {
+        "total": 5,
+        "documented": 4,
+        "coverage": 80.0,
+        "missing": 1
+      },
+      "domain_problem_generators\\logic_problem_generator.py": {
+        "total": 6,
+        "documented": 5,
+        "coverage": 83.33333333333334,
+        "missing": 1
+      },
+      "domain_problem_generators\\number_theory_problem_generator.py": {
+        "total": 6,
+        "documented": 5,
+        "coverage": 83.33333333333334,
+        "missing": 1
+      },
+      "domain_problem_generators\\ode_problem_generator.py": {
+        "total": 7,
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "domain_problem_generators\\real_analysis_problem_generator.py": {
+        "total": 5,
+        "documented": 4,
+        "coverage": 80.0,
+        "missing": 1
+      },
+      "formal\\auto_formalization_pipeline.py": {
+        "total": 18,
+        "documented": 17,
+        "coverage": 94.44444444444444,
+        "missing": 1
+      },
+      "formal\\vector_database_updater.py": {
+        "total": 27,
+        "documented": 26,
+        "coverage": 96.29629629629629,
+        "missing": 1
+      },
+      "formal\\__init__.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "undecidability\\__init__.py": {
+        "total": 9,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 9
+      }
+    }
+  },
+  "Middleware": {
+    "total": 237,
+    "documented": 231,
+    "coverage": 97.46835443037975,
+    "missing": 6,
+    "files": {
+      "conflict_resolution.py": {
+        "total": 29,
+        "documented": 29,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "failure_analysis.py": {
+        "total": 32,
+        "documented": 32,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "hypothesis_generation.py": {
+        "total": 36,
+        "documented": 36,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "knowledge_management.py": {
+        "total": 32,
+        "documented": 32,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "meta_learning.py": {
+        "total": 36,
+        "documented": 36,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "pattern_indexer.py": {
+        "total": 21,
+        "documented": 19,
+        "coverage": 90.47619047619048,
+        "missing": 2
+      },
+      "precondition_validation.py": {
+        "total": 33,
+        "documented": 33,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "theorem_library.py": {
+        "total": 18,
+        "documented": 14,
+        "coverage": 77.77777777777779,
+        "missing": 4
+      }
+    }
+  }
+}

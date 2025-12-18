@@ -290,6 +290,7 @@ class Phase0System:
             notification_received = [False]
 
             def test_callback(entry):
+                """Test callback for blackboard notifications."""
                 notification_received[0] = True
 
             self.blackboard.subscribe('health_check', ['health_check'], test_callback)
@@ -430,13 +431,30 @@ except ImportError:
 class Phase1System:
     """Stub for Phase 1 System - cognitive chassis"""
     def __init__(self, **kwargs):
+        """Initialize Phase 1 system with core infrastructure.
+
+        Args:
+            **kwargs: Optional df (DirectoryFacilitator) and blackboard (Blackboard)
+        """
         self.df = kwargs.get('df')
         self.blackboard = kwargs.get('blackboard')
         self.status = 'stopped'
-    def start(self): self.status = 'running'
-    def shutdown(self): self.status = 'stopped'
-    def health_check(self): return {'overall': self.status == 'running'}
-    def get_statistics(self): return {}
+
+    def start(self):
+        """Start Phase 1 system."""
+        self.status = 'running'
+
+    def shutdown(self):
+        """Shutdown Phase 1 system."""
+        self.status = 'stopped'
+
+    def health_check(self):
+        """Return health status of Phase 1 system."""
+        return {'overall': self.status == 'running'}
+
+    def get_statistics(self):
+        """Return statistics for Phase 1 system."""
+        return {}
 
 class Phase2System:
     """
@@ -868,12 +886,29 @@ class Phase2System:
 class Phase3System:
     """Stub for Phase 3 System - middleware"""
     def __init__(self, **kwargs):
+        """Initialize Phase 3 middleware system.
+
+        Args:
+            **kwargs: Optional phase2_system reference
+        """
         self.phase2 = kwargs.get('phase2_system')
         self.status = 'stopped'
-    def start(self): self.status = 'running'
-    def shutdown(self): self.status = 'stopped'
-    def health_check(self): return {'overall': self.status == 'running'}
-    def get_statistics(self): return {}
+
+    def start(self):
+        """Start Phase 3 system."""
+        self.status = 'running'
+
+    def shutdown(self):
+        """Shutdown Phase 3 system."""
+        self.status = 'stopped'
+
+    def health_check(self):
+        """Return health status of Phase 3 system."""
+        return {'overall': self.status == 'running'}
+
+    def get_statistics(self):
+        """Return statistics for Phase 3 system."""
+        return {}
 
 class Phase4System:
     """
@@ -885,6 +920,21 @@ class Phase4System:
     3. Meta-Learning Team - Continuous optimization
     """
     def __init__(self, **kwargs):
+        """Initialize Phase 4 self-correcting system.
+
+        Creates and manages three Phase 4 teams:
+        - Conflict Resolution Team: Evidence-based adjudication
+        - Failure Analysis Team: Autonomous error recovery
+        - Meta-Learning Team: Continuous optimization (AutoMaAS)
+
+        Args:
+            **kwargs: Optional phase3_system reference
+
+        Notes:
+            - Teams initialized immediately (not lazy)
+            - Each team operates independently
+            - Provides system-level health monitoring
+        """
         self.phase3 = kwargs.get('phase3_system')
         self.status = 'stopped'
 
@@ -898,9 +948,11 @@ class Phase4System:
         self.meta_learning_team = MetaLearningTeam()
 
     def start(self):
+        """Start Phase 4 system and all teams."""
         self.status = 'running'
 
     def shutdown(self):
+        """Shutdown Phase 4 system and all teams."""
         self.status = 'stopped'
 
     def health_check(self) -> Dict[str, Any]:
@@ -951,9 +1003,26 @@ class Phase4System:
 class Phase5System:
     """Stub for Phase 5 System - optimization"""
     def __init__(self, **kwargs):
+        """Initialize Phase 5 optimization system.
+
+        Args:
+            **kwargs: Optional phase4_system reference
+        """
         self.phase4 = kwargs.get('phase4_system')
         self.status = 'stopped'
-    def start(self): self.status = 'running'
-    def shutdown(self): self.status = 'stopped'
-    def health_check(self): return {'overall': self.status == 'running'}
-    def get_statistics(self): return {}
+
+    def start(self):
+        """Start Phase 5 system."""
+        self.status = 'running'
+
+    def shutdown(self):
+        """Shutdown Phase 5 system."""
+        self.status = 'stopped'
+
+    def health_check(self):
+        """Return health status of Phase 5 system."""
+        return {'overall': self.status == 'running'}
+
+    def get_statistics(self):
+        """Return statistics for Phase 5 system."""
+        return {}

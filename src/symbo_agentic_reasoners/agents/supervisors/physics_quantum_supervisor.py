@@ -47,6 +47,25 @@ class PhysicsQuantumSupervisor(BDIAgent):
         df: Optional[DirectoryFacilitator] = None,
         blackboard: Optional[Blackboard] = None
     ):
+        """Initialize Physics Quantum Mechanics Supervisor.
+
+        Sets up routing infrastructure for quantum mechanics tasks. Routes to
+        Wavefunction, Operators, and Systems specialists.
+
+        Args:
+            agent_id: Unique identifier (default: 'quantum_supervisor_001')
+            df: Directory Facilitator for service registration
+            blackboard: Shared memory for agent communication
+
+        Example:
+            >>> supervisor = PhysicsQuantumSupervisor()
+            >>> result = supervisor.process({"problem": "Solve hydrogen atom"})
+
+        Notes:
+            - Tracks routing statistics
+            - Auto-registers with Directory Facilitator if provided
+            - Tier 2 strategic router (no computation)
+        """
         super().__init__(agent_id)
         self.df = df
         self.blackboard = blackboard
