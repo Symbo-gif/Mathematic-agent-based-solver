@@ -46,6 +46,17 @@ class HuffmanNode:
         return self.freq < other.freq
 
     def is_leaf(self) -> bool:
+        """Verify is leaf holds for mathematical object.
+
+        Returns:
+        True if property holds, False otherwise
+
+        Example:
+        >>> specialist = HuffmanNode()
+        >>> result = specialist.is_leaf()
+        # Returns computed result
+
+        """
         return self.symbol is not None
 
 

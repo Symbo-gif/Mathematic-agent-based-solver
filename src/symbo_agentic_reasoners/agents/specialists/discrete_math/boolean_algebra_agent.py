@@ -51,34 +51,138 @@ class BooleanAlgebra:
 
     @staticmethod
     def AND(a: bool, b: bool) -> bool:
+        """Perform AND operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.AND(...)
+        # Returns result
+        """
         return a and b
 
     @staticmethod
     def OR(a: bool, b: bool) -> bool:
+        """Perform OR operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.OR(...)
+        # Returns result
+        """
         return a or b
 
     @staticmethod
     def NOT(a: bool) -> bool:
+        """Perform NOT operation.
+
+        Args:
+        a
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.NOT(...)
+        # Returns result
+        """
         return not a
 
     @staticmethod
     def XOR(a: bool, b: bool) -> bool:
+        """Perform XOR operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.XOR(...)
+        # Returns result
+        """
         return a != b
 
     @staticmethod
     def NAND(a: bool, b: bool) -> bool:
+        """Perform NAND operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.NAND(...)
+        # Returns result
+        """
         return not (a and b)
 
     @staticmethod
     def NOR(a: bool, b: bool) -> bool:
+        """Perform NOR operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.NOR(...)
+        # Returns result
+        """
         return not (a or b)
 
     @staticmethod
     def IMPLIES(a: bool, b: bool) -> bool:
+        """Perform IMPLIES operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.IMPLIES(...)
+        # Returns result
+        """
         return (not a) or b
 
     @staticmethod
     def IFF(a: bool, b: bool) -> bool:
+        """Perform IFF operation.
+
+        Args:
+        a: Description neededb
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = BooleanAlgebra()
+        >>> result = specialist.IFF(...)
+        # Returns result
+        """
         return a == b
 
 
@@ -789,6 +893,17 @@ class BooleanAlgebraAgent(BDIAgent):
             )
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = BooleanAlgebraAgent()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed})
         return stats

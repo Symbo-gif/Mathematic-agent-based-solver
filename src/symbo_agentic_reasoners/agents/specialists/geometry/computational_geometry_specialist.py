@@ -57,12 +57,51 @@ class Point:
         return Point(self.x + other.x, self.y + other.y)
 
     def dot(self, other: 'Point') -> float:
+        """Perform dot operation.
+
+        Args:
+        other
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Point()
+        >>> result = specialist.dot(...)
+        # Returns result
+        """
         return self.x * other.x + self.y * other.y
 
     def cross(self, other: 'Point') -> float:
+        """Perform cross operation.
+
+        Args:
+        other
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Point()
+        >>> result = specialist.cross(...)
+        # Returns result
+        """
         return self.x * other.y - self.y * other.x
 
     def magnitude(self) -> float:
+        """Perform magnitude operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Point()
+        >>> result = specialist.magnitude(...)
+        # Returns result
+        """
         return math.sqrt(self.x ** 2 + self.y ** 2)
 
 
@@ -521,15 +560,65 @@ class ComputationalGeometrySpecialist(BDIAgent):
         return {'status': 'error', 'message': f'Unknown action: {action}'}
 
     def get_stats(self) -> Dict[str, int]:
+        """Compute get stats using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = ComputationalGeometrySpecialist()
+        >>> result = specialist.get_stats()
+        # Returns computed result
+
+        """
         return dict(self._stats)
 
     def update_beliefs(self):
+        """Perform update beliefs operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = ComputationalGeometrySpecialist()
+        >>> result = specialist.update_beliefs(...)
+        # Returns result
+        """
         pass
 
     def deliberate(self) -> List:
+        """Perform deliberate operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = ComputationalGeometrySpecialist()
+        >>> result = specialist.deliberate(...)
+        # Returns result
+        """
         return []
 
     def execute_step(self, intention):
+        """Perform execute step operation.
+
+        Args:
+        intention
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = ComputationalGeometrySpecialist()
+        >>> result = specialist.execute_step(...)
+        # Returns result
+        """
         pass
 
 

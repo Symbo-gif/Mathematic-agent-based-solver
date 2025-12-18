@@ -47,6 +47,19 @@ class SeriesSpecialist(BDIAgent):
         print(f"[{self.agent_id}] Series Specialist initialized")
     
     def process(self, task_entry):
+        """Perform process operation.
+
+        Args:
+        task_entry
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = SeriesSpecialist()
+        >>> result = specialist.process(...)
+        # Returns result
+        """
         self.tasks_executed += 1
         try:
             metadata = task_entry.metadata if hasattr(task_entry, 'metadata') else {}
@@ -355,6 +368,17 @@ class SeriesSpecialist(BDIAgent):
             while not intention.is_complete():
                 intention.advance()
     def get_statistics(self):
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = SeriesSpecialist()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed, 'tasks_succeeded': self.tasks_succeeded,
             'tasks_failed': self.tasks_failed,

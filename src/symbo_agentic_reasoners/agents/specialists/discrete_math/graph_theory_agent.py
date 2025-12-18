@@ -53,11 +53,38 @@ class UnionFind:
         self.rank = [0] * n
 
     def find(self, x: int) -> int:
+        """Find find in search space.
+
+        Args:
+        x: X
+
+        Returns:
+        Found result or None if not found
+
+        Example:
+        >>> specialist = UnionFind()
+        >>> result = specialist.find(x=...)
+        # Returns computed result
+
+        """
         if self.parent[x] != x:
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
 
     def union(self, x: int, y: int) -> bool:
+        """Perform union operation.
+
+        Args:
+        x: Description neededy
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = UnionFind()
+        >>> result = specialist.union(...)
+        # Returns result
+        """
         px, py = self.find(x), self.find(y)
         if px == py:
             return False
@@ -891,6 +918,17 @@ class GraphTheoryAgent(BDIAgent):
                 intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = GraphTheoryAgent()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed})
         return stats

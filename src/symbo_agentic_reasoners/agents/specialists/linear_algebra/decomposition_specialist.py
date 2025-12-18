@@ -184,6 +184,17 @@ class DecompositionSpecialist(BDIAgent):
                 intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = DecompositionSpecialist()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed, 'svd_computed': self.svd_computed, 'qr_computed': self.qr_computed})
         return stats

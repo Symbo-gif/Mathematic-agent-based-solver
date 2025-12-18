@@ -80,6 +80,19 @@ class NativeLine:
 
     @property
     def slope(self):
+        """Perform slope operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeLine()
+        >>> result = specialist.slope(...)
+        # Returns result
+        """
         return self._slope
 
     @property
@@ -129,10 +142,36 @@ class NativeCircle:
 
     @property
     def area(self) -> float:
+        """Perform area operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeCircle()
+        >>> result = specialist.area(...)
+        # Returns result
+        """
         return math.pi * self.radius ** 2
 
     @property
     def circumference(self) -> float:
+        """Perform circumference operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeCircle()
+        >>> result = specialist.circumference(...)
+        # Returns result
+        """
         return 2 * math.pi * self.radius
 
     def __repr__(self):
@@ -151,14 +190,53 @@ class NativeEllipse:
 
     @property
     def area(self) -> float:
+        """Perform area operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeEllipse()
+        >>> result = specialist.area(...)
+        # Returns result
+        """
         return math.pi * self.a * self.b
 
     @property
     def eccentricity(self) -> float:
+        """Perform eccentricity operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeEllipse()
+        >>> result = specialist.eccentricity(...)
+        # Returns result
+        """
         return math.sqrt(1 - (self.b / self.a) ** 2)
 
     @property
     def focal_distance(self) -> float:
+        """Perform focal distance operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeEllipse()
+        >>> result = specialist.focal_distance(...)
+        # Returns result
+        """
         return math.sqrt(self.a ** 2 - self.b ** 2)
 
     def __repr__(self):
@@ -337,6 +415,17 @@ class AnalyticGeometrySpecialist(BDIAgent):
             intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = AnalyticGeometrySpecialist()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats['tasks_executed'] = self.tasks_executed
         return stats

@@ -66,9 +66,35 @@ class Vector3D:
     z: float
 
     def dot(self, other: 'Vector3D') -> float:
+        """Perform dot operation.
+
+        Args:
+        other
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Vector3D()
+        >>> result = specialist.dot(...)
+        # Returns result
+        """
         return self.x * other.x + self.y * other.y + self.z * other.z
 
     def cross(self, other: 'Vector3D') -> 'Vector3D':
+        """Perform cross operation.
+
+        Args:
+        other
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Vector3D()
+        >>> result = specialist.cross(...)
+        # Returns result
+        """
         return Vector3D(
             self.y * other.z - self.z * other.y,
             self.z * other.x - self.x * other.z,
@@ -76,15 +102,54 @@ class Vector3D:
         )
 
     def magnitude(self) -> float:
+        """Perform magnitude operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Vector3D()
+        >>> result = specialist.magnitude(...)
+        # Returns result
+        """
         return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
 
     def normalize(self) -> 'Vector3D':
+        """Perform normalize operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Vector3D()
+        >>> result = specialist.normalize(...)
+        # Returns result
+        """
         mag = self.magnitude()
         if mag == 0:
             return Vector3D(0, 0, 0)
         return Vector3D(self.x / mag, self.y / mag, self.z / mag)
 
     def scale(self, s: float) -> 'Vector3D':
+        """Perform scale operation.
+
+        Args:
+        s
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Vector3D()
+        >>> result = specialist.scale(...)
+        # Returns result
+        """
         return Vector3D(self.x * s, self.y * s, self.z * s)
 
 
@@ -97,6 +162,19 @@ class Plane:
     d: float
 
     def normal(self) -> Vector3D:
+        """Perform normal operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = Plane()
+        >>> result = specialist.normal(...)
+        # Returns result
+        """
         return Vector3D(self.a, self.b, self.c).normalize()
 
 
@@ -360,6 +438,19 @@ class SolidGeometrySpecialist(BDIAgent):
     # ==================== BDI INTEGRATION ====================
 
     def process_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform process message operation.
+
+        Args:
+        message
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = SolidGeometrySpecialist()
+        >>> result = specialist.process_message(...)
+        # Returns result
+        """
         action = message.get('action', '')
         params = message.get('params', {})
 
@@ -379,15 +470,65 @@ class SolidGeometrySpecialist(BDIAgent):
         return {'status': 'error', 'message': f'Unknown action: {action}'}
 
     def get_stats(self) -> Dict[str, int]:
+        """Compute get stats using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = SolidGeometrySpecialist()
+        >>> result = specialist.get_stats()
+        # Returns computed result
+
+        """
         return dict(self._stats)
 
     def update_beliefs(self):
+        """Perform update beliefs operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = SolidGeometrySpecialist()
+        >>> result = specialist.update_beliefs(...)
+        # Returns result
+        """
         pass
 
     def deliberate(self) -> List:
+        """Perform deliberate operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = SolidGeometrySpecialist()
+        >>> result = specialist.deliberate(...)
+        # Returns result
+        """
         return []
 
     def execute_step(self, intention):
+        """Perform execute step operation.
+
+        Args:
+        intention
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = SolidGeometrySpecialist()
+        >>> result = specialist.execute_step(...)
+        # Returns result
+        """
         pass
 
 

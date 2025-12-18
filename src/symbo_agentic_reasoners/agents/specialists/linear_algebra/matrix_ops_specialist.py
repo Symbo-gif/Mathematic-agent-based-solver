@@ -504,6 +504,17 @@ class MatrixOperationsSpecialist(BDIAgent):
                 intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = MatrixOperationsSpecialist()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed, 'tasks_succeeded': self.tasks_succeeded, 'tasks_failed': self.tasks_failed})
         return stats

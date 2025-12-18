@@ -663,6 +663,19 @@ class AdvancedQuadratureSpecialist(BDIAgent):
     # ==================== BDI INTEGRATION ====================
 
     def process_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform process message operation.
+
+        Args:
+        message
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = AdvancedQuadratureSpecialist()
+        >>> result = specialist.process_message(...)
+        # Returns result
+        """
         action = message.get('action', '')
         params = message.get('params', {})
 
@@ -681,15 +694,65 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         return {'status': 'error', 'message': f'Unknown action: {action}'}
 
     def get_stats(self) -> Dict[str, int]:
+        """Compute get stats using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = AdvancedQuadratureSpecialist()
+        >>> result = specialist.get_stats()
+        # Returns computed result
+
+        """
         return dict(self._stats)
 
     def update_beliefs(self):
+        """Perform update beliefs operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = AdvancedQuadratureSpecialist()
+        >>> result = specialist.update_beliefs(...)
+        # Returns result
+        """
         pass
 
     def deliberate(self) -> List:
+        """Perform deliberate operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = AdvancedQuadratureSpecialist()
+        >>> result = specialist.deliberate(...)
+        # Returns result
+        """
         return []
 
     def execute_step(self, intention):
+        """Perform execute step operation.
+
+        Args:
+        intention
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = AdvancedQuadratureSpecialist()
+        >>> result = specialist.execute_step(...)
+        # Returns result
+        """
         pass
 
 

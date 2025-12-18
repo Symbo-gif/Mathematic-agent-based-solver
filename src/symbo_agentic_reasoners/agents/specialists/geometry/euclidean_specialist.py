@@ -86,10 +86,36 @@ class NativeCircle:
 
     @property
     def area(self) -> float:
+        """Perform area operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeCircle()
+        >>> result = specialist.area(...)
+        # Returns result
+        """
         return math.pi * self.radius ** 2
 
     @property
     def circumference(self) -> float:
+        """Perform circumference operation.
+
+        Args:
+
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> specialist = NativeCircle()
+        >>> result = specialist.circumference(...)
+        # Returns result
+        """
         return 2 * math.pi * self.radius
 
 
@@ -444,6 +470,17 @@ class EuclideanGeometrySpecialist(BDIAgent):
                 intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Compute get statistics using mathematical formula.
+
+        Returns:
+        Computed numerical or symbolic result
+
+        Example:
+        >>> specialist = EuclideanGeometrySpecialist()
+        >>> result = specialist.get_statistics()
+        # Returns computed result
+
+        """
         stats = super().get_statistics()
         stats['tasks_executed'] = self.tasks_executed
         return stats

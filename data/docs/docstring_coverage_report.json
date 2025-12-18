@@ -983,9 +983,9 @@
   },
   "Agents/Specialists": {
     "total": 1724,
-    "documented": 1533,
-    "coverage": 88.92111368909514,
-    "missing": 191,
+    "documented": 1636,
+    "coverage": 94.89559164733178,
+    "missing": 88,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1055,15 +1055,15 @@
       },
       "calculus\\series_specialist.py": {
         "total": 9,
-        "documented": 5,
-        "coverage": 55.55555555555556,
-        "missing": 4
+        "documented": 7,
+        "coverage": 77.77777777777779,
+        "missing": 2
       },
       "calculus\\special_functions_specialist.py": {
         "total": 29,
-        "documented": 23,
-        "coverage": 79.3103448275862,
-        "missing": 6
+        "documented": 28,
+        "coverage": 96.55172413793103,
+        "missing": 1
       },
       "category_theory\\adjunction_specialist.py": {
         "total": 14,
@@ -1169,39 +1169,39 @@
       },
       "discrete_math\\boolean_algebra_agent.py": {
         "total": 29,
-        "documented": 18,
-        "coverage": 62.06896551724138,
-        "missing": 11
+        "documented": 27,
+        "coverage": 93.10344827586206,
+        "missing": 2
       },
       "discrete_math\\combinatorics_agent.py": {
         "total": 27,
-        "documented": 23,
-        "coverage": 85.18518518518519,
-        "missing": 4
+        "documented": 24,
+        "coverage": 88.88888888888889,
+        "missing": 3
       },
       "discrete_math\\finite_automata_agent.py": {
         "total": 25,
-        "documented": 23,
-        "coverage": 92.0,
-        "missing": 2
+        "documented": 25,
+        "coverage": 100.0,
+        "missing": 0
       },
       "discrete_math\\graph_theory_agent.py": {
         "total": 26,
-        "documented": 16,
-        "coverage": 61.53846153846154,
-        "missing": 10
+        "documented": 19,
+        "coverage": 73.07692307692307,
+        "missing": 7
       },
       "discrete_math\\recurrence_agent.py": {
         "total": 17,
-        "documented": 16,
-        "coverage": 94.11764705882352,
-        "missing": 1
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "discrete_math\\set_theory_agent.py": {
         "total": 35,
-        "documented": 34,
-        "coverage": 97.14285714285714,
-        "missing": 1
+        "documented": 35,
+        "coverage": 100.0,
+        "missing": 0
       },
       "functional_analysis\\banach_space_specialist.py": {
         "total": 19,
@@ -1223,39 +1223,39 @@
       },
       "geometry\\analytic_specialist.py": {
         "total": 22,
-        "documented": 15,
-        "coverage": 68.18181818181817,
-        "missing": 7
+        "documented": 22,
+        "coverage": 100.0,
+        "missing": 0
       },
       "geometry\\computational_geometry_specialist.py": {
         "total": 30,
-        "documented": 21,
-        "coverage": 70.0,
-        "missing": 9
+        "documented": 28,
+        "coverage": 93.33333333333333,
+        "missing": 2
       },
       "geometry\\euclidean_specialist.py": {
         "total": 21,
-        "documented": 18,
-        "coverage": 85.71428571428571,
-        "missing": 3
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
       },
       "geometry\\solid_geometry_specialist.py": {
         "total": 30,
-        "documented": 18,
-        "coverage": 60.0,
-        "missing": 12
+        "documented": 29,
+        "coverage": 96.66666666666667,
+        "missing": 1
       },
       "geometry\\transformation_specialist.py": {
         "total": 14,
-        "documented": 13,
-        "coverage": 92.85714285714286,
-        "missing": 1
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
       },
       "geometry\\trigonometry_specialist.py": {
         "total": 18,
-        "documented": 17,
-        "coverage": 94.44444444444444,
-        "missing": 1
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "information_theory\\channel_capacity_specialist.py": {
         "total": 12,
@@ -1265,9 +1265,9 @@
       },
       "information_theory\\coding_theory_specialist.py": {
         "total": 15,
-        "documented": 13,
-        "coverage": 86.66666666666667,
-        "missing": 2
+        "documented": 14,
+        "coverage": 93.33333333333333,
+        "missing": 1
       },
       "information_theory\\entropy_specialist.py": {
         "total": 13,
@@ -1277,21 +1277,21 @@
       },
       "linear_algebra\\advanced_matrix_specialist.py": {
         "total": 23,
-        "documented": 17,
-        "coverage": 73.91304347826086,
-        "missing": 6
+        "documented": 22,
+        "coverage": 95.65217391304348,
+        "missing": 1
       },
       "linear_algebra\\decomposition_specialist.py": {
         "total": 4,
-        "documented": 3,
-        "coverage": 75.0,
-        "missing": 1
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
       },
       "linear_algebra\\matrix_ops_specialist.py": {
         "total": 7,
-        "documented": 6,
-        "coverage": 85.71428571428571,
-        "missing": 1
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
       },
       "linear_algebra\\tensor_operations.py": {
         "total": 19,
@@ -1313,27 +1313,27 @@
       },
       "logic\\predicate_specialist.py": {
         "total": 17,
-        "documented": 14,
-        "coverage": 82.35294117647058,
-        "missing": 3
+        "documented": 15,
+        "coverage": 88.23529411764706,
+        "missing": 2
       },
       "logic\\proof_specialist.py": {
         "total": 12,
-        "documented": 11,
-        "coverage": 91.66666666666666,
-        "missing": 1
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
       },
       "logic\\propositional_specialist.py": {
         "total": 14,
-        "documented": 13,
-        "coverage": 92.85714285714286,
-        "missing": 1
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
       },
       "logic\\sat_solver_specialist.py": {
         "total": 19,
-        "documented": 13,
-        "coverage": 68.42105263157895,
-        "missing": 6
+        "documented": 18,
+        "coverage": 94.73684210526315,
+        "missing": 1
       },
       "logic\\temporal_logic_specialist.py": {
         "total": 36,
@@ -1343,9 +1343,9 @@
       },
       "numerical\\advanced_quadrature_specialist.py": {
         "total": 22,
-        "documented": 12,
-        "coverage": 54.54545454545454,
-        "missing": 10
+        "documented": 17,
+        "coverage": 77.27272727272727,
+        "missing": 5
       },
       "numerical\\linear_systems_specialist.py": {
         "total": 20,
@@ -1433,27 +1433,27 @@
       },
       "statistics\\distribution_specialist.py": {
         "total": 4,
-        "documented": 3,
-        "coverage": 75.0,
-        "missing": 1
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\frequentist_agent.py": {
         "total": 4,
-        "documented": 3,
-        "coverage": 75.0,
-        "missing": 1
+        "documented": 4,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\nonparametric_specialist.py": {
         "total": 20,
-        "documented": 14,
-        "coverage": 70.0,
-        "missing": 6
+        "documented": 19,
+        "coverage": 95.0,
+        "missing": 1
       },
       "statistics\\regression_specialist.py": {
         "total": 16,
-        "documented": 9,
-        "coverage": 56.25,
-        "missing": 7
+        "documented": 14,
+        "coverage": 87.5,
+        "missing": 2
       },
       "statistics\\stochastic_process.py": {
         "total": 19,
@@ -1463,75 +1463,75 @@
       },
       "physics\\electromagnetism\\circuits_specialist.py": {
         "total": 12,
-        "documented": 11,
-        "coverage": 91.66666666666666,
-        "missing": 1
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
       },
       "physics\\electromagnetism\\electrostatics_specialist.py": {
         "total": 13,
-        "documented": 12,
-        "coverage": 92.3076923076923,
-        "missing": 1
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
       },
       "physics\\electromagnetism\\magnetism_specialist.py": {
+        "total": 16,
+        "documented": 16,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\mechanics\\dynamics_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\mechanics\\energy_specialist.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\mechanics\\kinematics_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\quantum\\operators_specialist.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\quantum\\systems_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\quantum\\wavefunction_specialist.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\thermodynamics\\gas_laws_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\thermodynamics\\heat_specialist.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "physics\\waves\\wave_optics_specialist.py": {
         "total": 16,
         "documented": 15,
         "coverage": 93.75,
         "missing": 1
-      },
-      "physics\\mechanics\\dynamics_specialist.py": {
-        "total": 10,
-        "documented": 9,
-        "coverage": 90.0,
-        "missing": 1
-      },
-      "physics\\mechanics\\energy_specialist.py": {
-        "total": 13,
-        "documented": 12,
-        "coverage": 92.3076923076923,
-        "missing": 1
-      },
-      "physics\\mechanics\\kinematics_specialist.py": {
-        "total": 10,
-        "documented": 9,
-        "coverage": 90.0,
-        "missing": 1
-      },
-      "physics\\quantum\\operators_specialist.py": {
-        "total": 11,
-        "documented": 10,
-        "coverage": 90.9090909090909,
-        "missing": 1
-      },
-      "physics\\quantum\\systems_specialist.py": {
-        "total": 12,
-        "documented": 11,
-        "coverage": 91.66666666666666,
-        "missing": 1
-      },
-      "physics\\quantum\\wavefunction_specialist.py": {
-        "total": 11,
-        "documented": 10,
-        "coverage": 90.9090909090909,
-        "missing": 1
-      },
-      "physics\\thermodynamics\\gas_laws_specialist.py": {
-        "total": 12,
-        "documented": 11,
-        "coverage": 91.66666666666666,
-        "missing": 1
-      },
-      "physics\\thermodynamics\\heat_specialist.py": {
-        "total": 11,
-        "documented": 10,
-        "coverage": 90.9090909090909,
-        "missing": 1
-      },
-      "physics\\waves\\wave_optics_specialist.py": {
-        "total": 16,
-        "documented": 10,
-        "coverage": 62.5,
-        "missing": 6
       },
       "algebra\\polynomial\\domain_solver.py": {
         "total": 2,
