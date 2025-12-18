@@ -105,7 +105,16 @@ class ComparisonTheoremsSpecialist(BDIAgent):
         - compute_diameter_bound: Diameter estimates
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'apply_rauch_comparison')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'apply_rauch_comparison')
         self.recent_computations.append(operation)
 
         if len(self.recent_computations) > 100:
@@ -113,15 +122,15 @@ class ComparisonTheoremsSpecialist(BDIAgent):
 
         try:
             if operation == 'apply_rauch_comparison':
-                return self._handle_rauch(task_entry)
+                return self._handle_rauch(metadata)
             elif operation == 'apply_toponogov':
-                return self._handle_toponogov(task_entry)
+                return self._handle_toponogov(metadata)
             elif operation == 'apply_bishop_gromov':
-                return self._handle_bishop_gromov(task_entry)
+                return self._handle_bishop_gromov(metadata)
             elif operation == 'apply_myers_theorem':
-                return self._handle_myers(task_entry)
+                return self._handle_myers(metadata)
             elif operation == 'compute_diameter_bound':
-                return self._handle_diameter_bound(task_entry)
+                return self._handle_diameter_bound(metadata)
             else:
                 return {
                     'success': False,

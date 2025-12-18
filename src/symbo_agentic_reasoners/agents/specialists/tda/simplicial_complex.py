@@ -138,23 +138,32 @@ class SimplicialComplexSpecialist(BDIAgent):
             Result dictionary with computation results
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'construct_vr')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'construct_vr')
 
         try:
             if operation == 'construct_vr' or operation == 'vietoris_rips':
-                return self._handle_vietoris_rips(task_entry)
+                return self._handle_vietoris_rips(metadata)
             elif operation == 'construct_cech' or operation == 'cech':
-                return self._handle_cech(task_entry)
+                return self._handle_cech(metadata)
             elif operation == 'construct_alpha' or operation == 'alpha':
-                return self._handle_alpha(task_entry)
+                return self._handle_alpha(metadata)
             elif operation == 'boundary':
-                return self._handle_boundary(task_entry)
+                return self._handle_boundary(metadata)
             elif operation == 'face_map':
-                return self._handle_face_map(task_entry)
+                return self._handle_face_map(metadata)
             elif operation == 'verify_map':
-                return self._handle_verify_map(task_entry)
+                return self._handle_verify_map(metadata)
             elif operation == 'nerve':
-                return self._handle_nerve(task_entry)
+                return self._handle_nerve(metadata)
             else:
                 return {
                     'success': False,

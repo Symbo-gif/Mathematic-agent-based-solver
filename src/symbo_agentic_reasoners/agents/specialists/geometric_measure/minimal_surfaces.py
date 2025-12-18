@@ -103,32 +103,41 @@ class MinimalSurfacesSpecialist(BDIAgent):
         - apply_monotonicity_formula: Monotonicity formula
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'solve_plateau_problem')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'solve_plateau_problem')
 
         if operation == 'solve_plateau_problem':
             return self.solve_plateau_problem(
-                boundary_curve=task_entry.get('boundary_curve')
+                boundary_curve=metadata.get('boundary_curve')
             )
         elif operation == 'compute_area_functional':
             return self.compute_area_functional(
-                surface=task_entry.get('surface')
+                surface=metadata.get('surface')
             )
         elif operation == 'compute_first_variation':
             return self.compute_first_variation(
-                surface=task_entry.get('surface'),
-                direction=task_entry.get('direction')
+                surface=metadata.get('surface'),
+                direction=metadata.get('direction')
             )
         elif operation == 'solve_minimal_surface_equation':
             return self.solve_minimal_surface_equation(
-                boundary_conditions=task_entry.get('boundary_conditions')
+                boundary_conditions=metadata.get('boundary_conditions')
             )
         elif operation == 'verify_mean_curvature_zero':
             return self.verify_mean_curvature_zero(
-                surface=task_entry.get('surface')
+                surface=metadata.get('surface')
             )
         elif operation == 'apply_monotonicity_formula':
             return self.apply_monotonicity_formula(
-                surface=task_entry.get('surface')
+                surface=metadata.get('surface')
             )
 
         return {'error': f'Unknown operation: {operation}'}

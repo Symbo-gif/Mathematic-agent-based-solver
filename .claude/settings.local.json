@@ -39,7 +39,10 @@
       "Bash(git checkout:*)",
       "Bash(chmod:*)",
       "Bash(pytest:*)",
-      "Bash(timeout 60 python -m pytest:*)"
+      "Bash(timeout 60 python -m pytest:*)",
+      "Bash(timeout 180 python -m pytest:*)",
+      "Bash(xargs -I {} bash -c \"echo ''{}:'' && grep -c ''hasattr\\(task_entry, .metadata.\\)'' {} 2>/dev/null || echo ''0''\")",
+      "Bash(fi)"
     ]
   }
 }

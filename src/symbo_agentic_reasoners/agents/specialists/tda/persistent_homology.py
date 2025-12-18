@@ -144,23 +144,32 @@ class PersistentHomologySpecialist(BDIAgent):
             Result dictionary with computation results
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'compute_persistence')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'compute_persistence')
 
         try:
             if operation == 'construct_filtration':
-                return self._handle_construct_filtration(task_entry)
+                return self._handle_construct_filtration(metadata)
             elif operation == 'compute_persistence':
-                return self._handle_compute_persistence(task_entry)
+                return self._handle_compute_persistence(metadata)
             elif operation == 'persistence_diagram':
-                return self._handle_persistence_diagram(task_entry)
+                return self._handle_persistence_diagram(metadata)
             elif operation == 'barcode':
-                return self._handle_barcode(task_entry)
+                return self._handle_barcode(metadata)
             elif operation == 'bottleneck_distance':
-                return self._handle_bottleneck_distance(task_entry)
+                return self._handle_bottleneck_distance(metadata)
             elif operation == 'wasserstein_distance':
-                return self._handle_wasserstein_distance(task_entry)
+                return self._handle_wasserstein_distance(metadata)
             elif operation == 'betti_numbers':
-                return self._handle_betti_numbers(task_entry)
+                return self._handle_betti_numbers(metadata)
             else:
                 return {
                     'success': False,

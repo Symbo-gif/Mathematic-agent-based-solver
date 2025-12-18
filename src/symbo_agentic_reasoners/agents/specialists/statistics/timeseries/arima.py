@@ -652,8 +652,16 @@ class ARIMASpecialist(BDIAgent):
         """Process incoming task."""
         self.tasks_executed += 1
 
-        task_type = task_entry.get('task_type', 'fit_arima')
-        params = task_entry.get('params', {})
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        task_type = metadata.get('task_type', 'fit_arima')
+        params = metadata.get('params', {})
 
         handlers = {
             'fit_arima': lambda p: self.fit_arima(**p),

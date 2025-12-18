@@ -99,33 +99,42 @@ class HausdorffMeasureSpecialist(BDIAgent):
         - verify_hausdorff_properties: Verify metric outer measure
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'compute_hausdorff_dimension')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'compute_hausdorff_dimension')
 
         if operation == 'compute_hausdorff_dimension':
             return self.compute_hausdorff_dimension(
-                set_points=task_entry.get('set_points'),
-                method=task_entry.get('method', 'box_counting')
+                set_points=metadata.get('set_points'),
+                method=metadata.get('method', 'box_counting')
             )
         elif operation == 'compute_hausdorff_measure':
             return self.compute_hausdorff_measure(
-                set_points=task_entry.get('set_points'),
-                dimension=task_entry.get('dimension')
+                set_points=metadata.get('set_points'),
+                dimension=metadata.get('dimension')
             )
         elif operation == 'compute_box_counting_dimension':
             return self.compute_box_counting_dimension(
-                set_points=task_entry.get('set_points')
+                set_points=metadata.get('set_points')
             )
         elif operation == 'compute_minkowski_dimension':
             return self.compute_minkowski_dimension(
-                set_points=task_entry.get('set_points')
+                set_points=metadata.get('set_points')
             )
         elif operation == 'estimate_fractal_dimension':
             return self.estimate_fractal_dimension(
-                set_points=task_entry.get('set_points')
+                set_points=metadata.get('set_points')
             )
         elif operation == 'verify_hausdorff_properties':
             return self.verify_hausdorff_properties(
-                measure_func=task_entry.get('measure_func')
+                measure_func=metadata.get('measure_func')
             )
 
         return {'error': f'Unknown operation: {operation}'}

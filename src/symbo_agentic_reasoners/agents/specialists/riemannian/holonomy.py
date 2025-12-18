@@ -104,7 +104,16 @@ class HolonomySpecialist(BDIAgent):
         - check_reduced_holonomy: Reduced holonomy properties
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'parallel_transport')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'parallel_transport')
         self.recent_computations.append(operation)
 
         if len(self.recent_computations) > 100:
@@ -112,15 +121,15 @@ class HolonomySpecialist(BDIAgent):
 
         try:
             if operation == 'parallel_transport':
-                return self._handle_parallel_transport(task_entry)
+                return self._handle_parallel_transport(metadata)
             elif operation == 'compute_holonomy_group':
-                return self._handle_compute_holonomy(task_entry)
+                return self._handle_compute_holonomy(metadata)
             elif operation == 'classify_holonomy':
-                return self._handle_classify_holonomy(task_entry)
+                return self._handle_classify_holonomy(metadata)
             elif operation == 'verify_ambrose_singer':
-                return self._handle_ambrose_singer(task_entry)
+                return self._handle_ambrose_singer(metadata)
             elif operation == 'check_reduced_holonomy':
-                return self._handle_reduced_holonomy(task_entry)
+                return self._handle_reduced_holonomy(metadata)
             else:
                 return {
                     'success': False,

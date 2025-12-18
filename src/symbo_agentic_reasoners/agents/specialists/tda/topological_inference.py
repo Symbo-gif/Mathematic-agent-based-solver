@@ -121,21 +121,30 @@ class TopologicalInferenceSpecialist(BDIAgent):
             Result dictionary with computation results
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'confidence_sets')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'confidence_sets')
 
         try:
             if operation == 'confidence_sets':
-                return self._handle_confidence_sets(task_entry)
+                return self._handle_confidence_sets(metadata)
             elif operation == 'bootstrap':
-                return self._handle_bootstrap(task_entry)
+                return self._handle_bootstrap(metadata)
             elif operation == 'significance_test':
-                return self._handle_significance_test(task_entry)
+                return self._handle_significance_test(metadata)
             elif operation == 'feature_selection':
-                return self._handle_feature_selection(task_entry)
+                return self._handle_feature_selection(metadata)
             elif operation == 'homology_inference':
-                return self._handle_homology_inference(task_entry)
+                return self._handle_homology_inference(metadata)
             elif operation == 'stability_bounds':
-                return self._handle_stability_bounds(task_entry)
+                return self._handle_stability_bounds(metadata)
             else:
                 return {
                     'success': False,

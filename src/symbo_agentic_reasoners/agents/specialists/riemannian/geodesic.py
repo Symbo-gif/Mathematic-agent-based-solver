@@ -99,7 +99,16 @@ class GeodesicSpecialist(BDIAgent):
         - check_completeness: Geodesic completeness
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'solve_geodesic')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'solve_geodesic')
         self.recent_computations.append(operation)
 
         if len(self.recent_computations) > 100:
@@ -107,15 +116,15 @@ class GeodesicSpecialist(BDIAgent):
 
         try:
             if operation == 'solve_geodesic':
-                return self._handle_solve_geodesic(task_entry)
+                return self._handle_solve_geodesic(metadata)
             elif operation == 'exponential_map':
-                return self._handle_exponential_map(task_entry)
+                return self._handle_exponential_map(metadata)
             elif operation == 'normal_coordinates':
-                return self._handle_normal_coordinates(task_entry)
+                return self._handle_normal_coordinates(metadata)
             elif operation == 'parallel_transport':
-                return self._handle_parallel_transport(task_entry)
+                return self._handle_parallel_transport(metadata)
             elif operation == 'check_completeness':
-                return self._handle_check_completeness(task_entry)
+                return self._handle_check_completeness(metadata)
             else:
                 return {
                     'success': False,

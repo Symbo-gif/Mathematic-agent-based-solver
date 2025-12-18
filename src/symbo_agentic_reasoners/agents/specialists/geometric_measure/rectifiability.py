@@ -99,36 +99,45 @@ class RectifiabilitySpecialist(BDIAgent):
         - check_countably_rectifiable: Countable union of Lipschitz images?
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'check_rectifiability')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'check_rectifiability')
 
         if operation == 'check_rectifiability':
             return self.check_rectifiability(
-                set_points=task_entry.get('set_points'),
-                dimension=task_entry.get('dimension')
+                set_points=metadata.get('set_points'),
+                dimension=metadata.get('dimension')
             )
         elif operation == 'apply_density_theorem':
             return self.apply_density_theorem(
-                set_points=task_entry.get('set_points'),
-                measure=task_entry.get('measure')
+                set_points=metadata.get('set_points'),
+                measure=metadata.get('measure')
             )
         elif operation == 'compute_tangent_measures':
             return self.compute_tangent_measures(
-                set_points=task_entry.get('set_points'),
-                point=task_entry.get('point')
+                set_points=metadata.get('set_points'),
+                point=metadata.get('point')
             )
         elif operation == 'verify_lipschitz_image':
             return self.verify_lipschitz_image(
-                mapping=task_entry.get('mapping'),
-                domain=task_entry.get('domain')
+                mapping=metadata.get('mapping'),
+                domain=metadata.get('domain')
             )
         elif operation == 'compute_approximate_tangent_space':
             return self.compute_approximate_tangent_space(
-                set_points=task_entry.get('set_points'),
-                point=task_entry.get('point')
+                set_points=metadata.get('set_points'),
+                point=metadata.get('point')
             )
         elif operation == 'check_countably_rectifiable':
             return self.check_countably_rectifiable(
-                set_points=task_entry.get('set_points')
+                set_points=metadata.get('set_points')
             )
 
         return {'error': f'Unknown operation: {operation}'}

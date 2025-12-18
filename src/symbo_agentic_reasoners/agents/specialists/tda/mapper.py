@@ -159,19 +159,28 @@ class MapperSpecialist(BDIAgent):
             Result dictionary with computation results
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'construct_mapper')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'construct_mapper')
 
         try:
             if operation == 'construct_mapper' or operation == 'mapper':
-                return self._handle_construct_mapper(task_entry)
+                return self._handle_construct_mapper(metadata)
             elif operation == 'construct_cover':
-                return self._handle_construct_cover(task_entry)
+                return self._handle_construct_cover(metadata)
             elif operation == 'cluster_preimages':
-                return self._handle_cluster_preimages(task_entry)
+                return self._handle_cluster_preimages(metadata)
             elif operation == 'build_nerve':
-                return self._handle_build_nerve(task_entry)
+                return self._handle_build_nerve(metadata)
             elif operation == 'analyze_structure':
-                return self._handle_analyze_structure(task_entry)
+                return self._handle_analyze_structure(metadata)
             else:
                 return {
                     'success': False,

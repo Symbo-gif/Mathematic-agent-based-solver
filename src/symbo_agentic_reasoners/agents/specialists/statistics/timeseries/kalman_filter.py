@@ -649,8 +649,16 @@ class KalmanFilterSpecialist(BDIAgent):
         """Process incoming task."""
         self.tasks_executed += 1
 
-        task_type = task_entry.get('task_type', 'kalman_filter')
-        params = task_entry.get('params', {})
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        task_type = metadata.get('task_type', 'kalman_filter')
+        params = metadata.get('params', {})
 
         handlers = {
             'kalman_filter': lambda p: self.kalman_filter(**p),

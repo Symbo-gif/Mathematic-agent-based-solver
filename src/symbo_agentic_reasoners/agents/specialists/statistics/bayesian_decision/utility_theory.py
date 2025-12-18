@@ -250,7 +250,15 @@ class UtilityTheorySpecialist(BDIAgent):
             Dict with computation result
         """
         self.tasks_executed += 1
-        metadata = task_entry.get('metadata', {}) if isinstance(task_entry, dict) else {}
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry.get('metadata', task_entry)
+
         operation = metadata.get('operation', 'expected_utility')
 
         try:

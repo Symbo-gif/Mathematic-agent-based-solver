@@ -977,9 +977,9 @@
   },
   "Agents/Specialists": {
     "total": 2672,
-    "documented": 2499,
-    "coverage": 93.52544910179641,
-    "missing": 173,
+    "documented": 2525,
+    "coverage": 94.49850299401199,
+    "missing": 147,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1157,9 +1157,9 @@
       },
       "computability\\recursion_theory.py": {
         "total": 18,
-        "documented": 17,
-        "coverage": 94.44444444444444,
-        "missing": 1
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "computability\\turing_completeness.py": {
         "total": 17,
@@ -1169,9 +1169,9 @@
       },
       "computability\\turing_degrees.py": {
         "total": 20,
-        "documented": 18,
-        "coverage": 90.0,
-        "missing": 2
+        "documented": 20,
+        "coverage": 100.0,
+        "missing": 0
       },
       "control_theory\\dynamical_systems_specialist.py": {
         "total": 15,
@@ -1253,9 +1253,9 @@
       },
       "ergodic\\dynamical_entropy.py": {
         "total": 19,
-        "documented": 18,
-        "coverage": 94.73684210526315,
-        "missing": 1
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
       },
       "ergodic\\ergodic_theorems.py": {
         "total": 19,
@@ -1673,9 +1673,9 @@
       },
       "tda\\mapper.py": {
         "total": 28,
-        "documented": 25,
-        "coverage": 89.28571428571429,
-        "missing": 3
+        "documented": 28,
+        "coverage": 100.0,
+        "missing": 0
       },
       "tda\\persistent_homology.py": {
         "total": 23,
@@ -1709,9 +1709,9 @@
       },
       "statistics\\bayesian_decision\\utility_theory.py": {
         "total": 12,
-        "documented": 11,
-        "coverage": 91.66666666666666,
-        "missing": 1
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
       },
       "statistics\\timeseries\\arima.py": {
         "total": 19,
@@ -1823,27 +1823,27 @@
       },
       "optimization\\advanced\\multiobjective.py": {
         "total": 18,
-        "documented": 17,
-        "coverage": 94.44444444444444,
-        "missing": 1
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
       },
       "optimization\\advanced\\nonconvex.py": {
         "total": 27,
-        "documented": 26,
-        "coverage": 96.29629629629629,
-        "missing": 1
+        "documented": 27,
+        "coverage": 100.0,
+        "missing": 0
       },
       "optimization\\advanced\\optimal_control.py": {
         "total": 26,
-        "documented": 21,
-        "coverage": 80.76923076923077,
-        "missing": 5
+        "documented": 26,
+        "coverage": 100.0,
+        "missing": 0
       },
       "optimization\\advanced\\variational_calculus.py": {
         "total": 33,
-        "documented": 22,
-        "coverage": 66.66666666666666,
-        "missing": 11
+        "documented": 33,
+        "coverage": 100.0,
+        "missing": 0
       },
       "discrete_math\\spectral_graphs\\adjacency_spectrum.py": {
         "total": 5,

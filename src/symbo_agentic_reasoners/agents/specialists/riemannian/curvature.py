@@ -113,7 +113,16 @@ class CurvatureSpecialist(BDIAgent):
         - full_curvature_analysis: Complete analysis
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'full_curvature_analysis')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'full_curvature_analysis')
         self.recent_computations.append(operation)
 
         if len(self.recent_computations) > 100:
@@ -121,19 +130,19 @@ class CurvatureSpecialist(BDIAgent):
 
         try:
             if operation == 'compute_christoffel':
-                return self._handle_christoffel(task_entry)
+                return self._handle_christoffel(metadata)
             elif operation == 'compute_riemann':
-                return self._handle_riemann(task_entry)
+                return self._handle_riemann(metadata)
             elif operation == 'compute_ricci':
-                return self._handle_ricci(task_entry)
+                return self._handle_ricci(metadata)
             elif operation == 'compute_scalar_curvature':
-                return self._handle_scalar_curvature(task_entry)
+                return self._handle_scalar_curvature(metadata)
             elif operation == 'compute_sectional_curvature':
-                return self._handle_sectional_curvature(task_entry)
+                return self._handle_sectional_curvature(metadata)
             elif operation == 'compute_weyl':
-                return self._handle_weyl(task_entry)
+                return self._handle_weyl(metadata)
             elif operation == 'full_curvature_analysis':
-                return self._handle_full_analysis(task_entry)
+                return self._handle_full_analysis(metadata)
             else:
                 return {
                     'success': False,

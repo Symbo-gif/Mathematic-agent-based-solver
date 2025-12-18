@@ -105,32 +105,41 @@ class CurrentsSpecialist(BDIAgent):
         - apply_constancy_theorem: Apply constancy theorem
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'construct_current')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'construct_current')
 
         if operation == 'construct_current':
             return self.construct_current(
-                integration_function=task_entry.get('integration_function'),
-                dimension=task_entry.get('dimension')
+                integration_function=metadata.get('integration_function'),
+                dimension=metadata.get('dimension')
             )
         elif operation == 'compute_boundary_current':
             return self.compute_boundary_current(
-                current=task_entry.get('current')
+                current=metadata.get('current')
             )
         elif operation == 'check_normal_current':
             return self.check_normal_current(
-                current=task_entry.get('current')
+                current=metadata.get('current')
             )
         elif operation == 'verify_rectifiable_current':
             return self.verify_rectifiable_current(
-                current=task_entry.get('current')
+                current=metadata.get('current')
             )
         elif operation == 'compute_mass_norm':
             return self.compute_mass_norm(
-                current=task_entry.get('current')
+                current=metadata.get('current')
             )
         elif operation == 'apply_constancy_theorem':
             return self.apply_constancy_theorem(
-                current=task_entry.get('current')
+                current=metadata.get('current')
             )
 
         return {'error': f'Unknown operation: {operation}'}

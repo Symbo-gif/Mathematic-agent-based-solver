@@ -103,7 +103,16 @@ class MetricTensorSpecialist(BDIAgent):
         - analyze_metric: Full metric analysis
         """
         self.tasks_executed += 1
-        operation = task_entry.get('operation', 'analyze_metric')
+
+        # Handle both dict and BlackboardEntry
+        if hasattr(task_entry, 'metadata'):
+            # It's a BlackboardEntry
+            metadata = task_entry.metadata or {}
+        else:
+            # It's a dict (backwards compatibility)
+            metadata = task_entry
+
+        operation = metadata.get('operation', 'analyze_metric')
         self.recent_computations.append(operation)
 
         # Keep only recent 100 computations
@@ -112,17 +121,17 @@ class MetricTensorSpecialist(BDIAgent):
 
         try:
             if operation == 'compute_metric':
-                return self._handle_compute_metric(task_entry)
+                return self._handle_compute_metric(metadata)
             elif operation == 'verify_signature':
-                return self._handle_verify_signature(task_entry)
+                return self._handle_verify_signature(metadata)
             elif operation == 'compute_distance':
-                return self._handle_compute_distance(task_entry)
+                return self._handle_compute_distance(metadata)
             elif operation == 'check_isometry':
-                return self._handle_check_isometry(task_entry)
+                return self._handle_check_isometry(metadata)
             elif operation == 'compute_volume_element':
-                return self._handle_volume_element(task_entry)
+                return self._handle_volume_element(metadata)
             elif operation == 'analyze_metric':
-                return self._handle_analyze_metric(task_entry)
+                return self._handle_analyze_metric(metadata)
             else:
                 return {
                     'success': False,
