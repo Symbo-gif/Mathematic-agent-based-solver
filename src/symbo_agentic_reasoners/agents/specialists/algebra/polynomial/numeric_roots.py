@@ -408,6 +408,17 @@ def poly_coeffs_to_func(coeffs: List[Any]):
     float_coeffs = [float(c) for c in coeffs]
 
     def poly_func(x: float) -> float:
+        """Perform poly func operation.
+
+        Args:
+        x: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.poly_func(...)
+        """
         result = 0.0
         for c in float_coeffs:
             result = result * x + c

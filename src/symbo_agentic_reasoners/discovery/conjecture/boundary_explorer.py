@@ -84,6 +84,28 @@ class BoundaryCondition:
     domain_constraints: Dict[str, Tuple[Any, Any]] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.condition_id,
             'expression': self.expression,
@@ -102,6 +124,17 @@ class ExplorationResult:
         status: Exploration outcome
         edge_cases: Discovered edge cases
         counterexamples: Found counterexamples
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         boundary_values: Critical boundary values
     """
     condition: BoundaryCondition
@@ -113,6 +146,17 @@ class ExplorationResult:
     exploration_time_ms: int = 0
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'condition_id': self.condition.condition_id,
             'status': self.status.value,

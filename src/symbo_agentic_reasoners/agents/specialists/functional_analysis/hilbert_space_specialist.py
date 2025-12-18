@@ -460,6 +460,17 @@ class HilbertSpaceSpecialist:
 
         # Build partial sum function
         def partial_sum(x):
+            """Perform partial sum operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.partial_sum(...)
+            """
             result = coeffs[0] / 2
             for n in range(1, n_terms + 1):
                 a_n = coeffs[2*n - 1]

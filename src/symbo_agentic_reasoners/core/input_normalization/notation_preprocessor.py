@@ -153,6 +153,17 @@ def preprocess_matrix_notation(text: str) -> str:
     # First, expand diag() function to explicit diagonal matrix
     # diag(1,2,3,4) -> Matrix([[1,0,0,0],[0,2,0,0],[0,0,3,0],[0,0,0,4]])
     def expand_diag(match):
+        """Perform expand diag operation.
+
+        Args:
+        match: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.expand_diag(...)
+        """
         args_str = match.group(1)
         # Parse the arguments
         args = [a.strip() for a in args_str.split(',')]
@@ -182,7 +193,29 @@ def preprocess_matrix_notation(text: str) -> str:
         pattern = rf'\b{func}\s*\(\s*(?!Matrix)(\[\[.+\]\])\s*\)'
 
         def make_replacer(fn):
+            """Perform make replacer operation.
+
+            Args:
+            fn: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.make_replacer(...)
+            """
             def replacer(match):
+                """Perform replacer operation.
+
+                Args:
+                match: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.replacer(...)
+                """
                 matrix_content = match.group(1)
                 return f'{fn}(Matrix({matrix_content}))'
             return replacer

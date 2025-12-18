@@ -90,6 +90,28 @@ class CodeCandidate:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'candidate_id': self.candidate_id,
             'generation': self.generation,
@@ -450,6 +472,17 @@ def solve(*args):
 
         # Randomly modify numeric constants
         def tweak_number(match):
+            """Perform tweak number operation.
+
+            Args:
+            match: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.tweak_number(...)
+            """
             val = int(match.group())
             if random.random() < 0.3:
                 return str(val + random.randint(-2, 2))
@@ -545,6 +578,17 @@ def solve(*args):
     def _tweak_constants(self, code: str) -> str:
         """Tweak numeric constants in code"""
         def tweak(match):
+            """Perform tweak operation.
+
+            Args:
+            match: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.tweak(...)
+            """
             val = float(match.group())
             if val == 0:
                 return str(random.randint(0, 2))

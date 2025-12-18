@@ -84,6 +84,28 @@ class AgentInfo:
     memory_estimate_mb: float = 0.0
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'agent_id': self.agent_id,
             'agent_type': self.agent_type,
@@ -98,6 +120,17 @@ class AgentInfo:
 class HardwareMetrics:
     """Current hardware resource metrics."""
     cpu_percent: float = 0.0
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     memory_percent: float = 0.0
     memory_used_mb: float = 0.0
     memory_available_mb: float = 0.0
@@ -108,6 +141,17 @@ class HardwareMetrics:
     timestamp: datetime = field(default_factory=datetime.now)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'cpu_percent': round(self.cpu_percent, 1),
             'memory_percent': round(self.memory_percent, 1),
@@ -158,6 +202,17 @@ class ResourceLimits:
     # Hardware thresholds (0.0 to 1.0)
     cpu_warning_threshold: float = 0.80
     cpu_critical_threshold: float = 0.95
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     memory_warning_threshold: float = 0.80
     memory_critical_threshold: float = 0.95
     disk_warning_threshold: float = 0.90
@@ -171,6 +226,18 @@ class ResourceLimits:
 
 @dataclass
 class SystemState:
+    """Perform from dict operation.
+
+    Args:
+    cls: Description needed
+    data: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.from_dict(...)
+    """
     """Complete system state for persistence."""
     agents: Dict[str, Dict] = field(default_factory=dict)
     pending_problems: List[str] = field(default_factory=list)
@@ -180,6 +247,17 @@ class SystemState:
     last_checkpoint: str = ""
 
     def to_dict(self) -> Dict:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'agents': self.agents,
             'pending_problems': self.pending_problems,
@@ -191,6 +269,18 @@ class SystemState:
 
     @classmethod
     def from_dict(cls, data: Dict) -> 'SystemState':
+        """Perform from dict operation.
+
+        Args:
+        cls: Description needed
+        data: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.from_dict(...)
+        """
         return cls(**data)
 
 
@@ -632,6 +722,18 @@ class ResourceCoordinator:
     def _install_signal_handlers(self):
         """Install graceful shutdown handlers."""
         def handler(signum, frame):
+            """Perform handler operation.
+
+            Args:
+            signum: Description needed
+            frame: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.handler(...)
+            """
             print("\n\nReceived shutdown signal. Saving state...")
             self.request_shutdown()
 

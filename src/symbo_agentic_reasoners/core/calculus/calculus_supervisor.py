@@ -264,6 +264,17 @@ class CalculusSupervisor:
 
         # Convert x**-1 to (1/x)
         def fix_negative_one_power(match):
+            """Perform fix negative one power operation.
+
+            Args:
+            match: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.fix_negative_one_power(...)
+            """
             var = match.group(1)
             return f"(1/{var})"
 

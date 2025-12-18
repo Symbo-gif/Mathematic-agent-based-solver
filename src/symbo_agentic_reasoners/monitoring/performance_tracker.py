@@ -9,8 +9,42 @@ class PerformanceTracker:
         self.start_time = time.time()
         
     def record_request(self, success, response_time, error_type=None):
+        """Perform record request operation.
+
+        Args:
+        success: Description needed
+        response_time: Description needed
+        error_type: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.record_request(...)
+        """
+        """Perform record request operation.
+
+        Args:
+        success: Description needed
+        response_time: Description needed
+        error_type: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.record_request(...)
+        """
         self.metrics['request_count'] += 1
         if success:
+            """Get system health.
+
+            Returns:
+            System health value or data
+
+            Example:
+            >>> result = obj.get_system_health()
+            """
             self.metrics['success_rate'] = (
                 (self.metrics['request_count'] - 1) * self.metrics['success_rate'] + 1
             ) / self.metrics['request_count']
@@ -23,6 +57,14 @@ class PerformanceTracker:
         ) / self.metrics['request_count']
         
     def get_system_health(self):
+        """Get system health.
+
+        Returns:
+        System health value or data
+
+        Example:
+        >>> result = obj.get_system_health()
+        """
         uptime = time.time() - self.start_time
         return {
             'uptime': uptime,

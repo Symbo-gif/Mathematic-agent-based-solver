@@ -479,6 +479,17 @@ class IntegrationSpecialist(BDIAgent):
         """
         # Helper function for parsing bounds
         def parse_bound(b):
+            """Perform parse bound operation.
+
+            Args:
+            b: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.parse_bound(...)
+            """
             b_str = str(b).strip()
             # Normalize whitespace: "- oo" -> "-oo"
             b_normalized = b_str.replace(' ', '').lower()
@@ -567,6 +578,17 @@ class IntegrationSpecialist(BDIAgent):
             return None
 
         def parse_bound(b):
+            """Perform parse bound operation.
+
+            Args:
+            b: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.parse_bound(...)
+            """
             b_str = str(b).strip()
             b_normalized = b_str.replace(' ', '').lower()
             if b_normalized in ('oo', 'inf', '+oo', '+inf', 'infinity'):

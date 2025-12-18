@@ -48,6 +48,28 @@ class ErrorHandler:
             return self._escalate_error(error_record)
         
     def _is_recoverable(self, error):
+        """Perform  is recoverable operation.
+
+        Args:
+        error: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._is_recoverable(...)
+        """
+        """Perform  is recoverable operation.
+
+        Args:
+        error: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._is_recoverable(...)
+        """
         # Define which errors are recoverable
         recoverable_errors = [
             'MathDomainError',
@@ -58,6 +80,39 @@ class ErrorHandler:
         return type(error).__name__ in recoverable_errors
         
     def _attempt_recovery(self, error_record):
+        """Perform  attempt recovery operation.
+
+        Args:
+        error_record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._attempt_recovery(...)
+        """
+        """Perform  adjust context operation.
+
+        Args:
+        error_record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._adjust_context(...)
+        """
+        """Perform  attempt recovery operation.
+
+        Args:
+        error_record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._attempt_recovery(...)
+        """
         # Implement recovery strategies
         if error_record['retry_count'] < self.max_retries:
             error_record['retry_count'] += 1
@@ -69,6 +124,17 @@ class ErrorHandler:
             return {'action': 'escalate'}
             
     def _adjust_context(self, error_record):
+        """Perform  adjust context operation.
+
+        Args:
+        error_record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._adjust_context(...)
+        """
         # Adjust context based on error type
         context = error_record['context'].copy()
         

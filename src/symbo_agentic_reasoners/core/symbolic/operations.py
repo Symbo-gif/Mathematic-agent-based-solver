@@ -347,6 +347,16 @@ class Mul(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Property: free symbols.
+
+        Returns:
+        Free symbols value
+        """
+        """Property: free symbols.
+
+        Returns:
+        Free symbols value
+        """
         return set().union(*(a.free_symbols for a in self.args))
 
     def subs(self, *args_in, **kwargs) -> Expr:
@@ -628,10 +638,20 @@ class Pow(Expr):
         return False
 
     def __hash__(self) -> int:
+        """Property: free symbols.
+
+        Returns:
+        Free symbols value
+        """
         return self._hash_cache
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Property: free symbols.
+
+        Returns:
+        Free symbols value
+        """
         return self.base.free_symbols | self.exp.free_symbols
 
     def subs(self, *args_in, **kwargs) -> Expr:

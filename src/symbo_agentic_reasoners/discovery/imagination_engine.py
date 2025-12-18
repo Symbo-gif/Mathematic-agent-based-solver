@@ -105,6 +105,28 @@ class ImaginationStats:
     last_discovery: Optional[datetime] = None
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'total_explorations': self.total_explorations,
             'successful_explorations': self.successful_explorations,

@@ -113,10 +113,30 @@ class StateGraph:
 
     @property
     def num_nodes(self) -> int:
+        """Property: num nodes.
+
+        Returns:
+        Num nodes value
+        """
+        """Property: num nodes.
+
+        Returns:
+        Num nodes value
+        """
         return len(self._state_to_idx)
 
     @property
     def num_edges(self) -> int:
+        """Property: num edges.
+
+        Returns:
+        Num edges value
+        """
+        """Property: num edges.
+
+        Returns:
+        Num edges value
+        """
         return len(self._edges)
 
     def add_state(self, state_id: str) -> int:
@@ -222,15 +242,59 @@ class StateGraph:
         )
 
         # Symmetrize: A = (A + A.T) / 2
+        """Perform state id to idx operation.
+
+        Args:
+        state_id: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.state_id_to_idx(...)
+        """
+        """Perform idx to state id operation.
+
+        Args:
+        idx: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.idx_to_state_id(...)
+        """
         self._adjacency = (self._adjacency + self._adjacency.T) / 2
         self._dirty = False
 
         return self._adjacency
 
     def state_id_to_idx(self, state_id: str) -> Optional[int]:
+        """Perform state id to idx operation.
+
+        Args:
+        state_id: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.state_id_to_idx(...)
+        """
         return self._state_to_idx.get(state_id)
 
     def idx_to_state_id(self, idx: int) -> Optional[str]:
+        """Perform idx to state id operation.
+
+        Args:
+        idx: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.idx_to_state_id(...)
+        """
         return self._idx_to_state.get(idx)
 
 

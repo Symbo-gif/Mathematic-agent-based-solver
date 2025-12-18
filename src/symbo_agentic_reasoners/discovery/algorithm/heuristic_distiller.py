@@ -69,6 +69,28 @@ class DistilledHeuristic:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'heuristic_id': self.heuristic_id,
             'candidate_id': self.candidate_id,

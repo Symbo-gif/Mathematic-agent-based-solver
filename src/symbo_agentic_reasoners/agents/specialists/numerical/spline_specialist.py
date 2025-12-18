@@ -168,6 +168,17 @@ class SplineSpecialist(BDIAgent):
         x_data = x.copy()
 
         def evaluator(t: float) -> float:
+            """Perform evaluator operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.evaluator(...)
+            """
             self._stats['evaluations'] += 1
             # Find the right segment
             if t <= x_data[0]:
@@ -184,6 +195,17 @@ class SplineSpecialist(BDIAgent):
             return a + b * dx + c * dx ** 2 + d * dx ** 3
 
         def derivative_evaluator(t: float) -> float:
+            """Perform derivative evaluator operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.derivative_evaluator(...)
+            """
             # Find the right segment
             if t <= x_data[0]:
                 i = 0
@@ -367,6 +389,17 @@ class SplineSpecialist(BDIAgent):
         x_data = x.copy()
 
         def evaluator(t: float) -> float:
+            """Perform evaluator operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.evaluator(...)
+            """
             self._stats['evaluations'] += 1
             if t <= x_data[0]:
                 i = 0

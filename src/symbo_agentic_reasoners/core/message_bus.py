@@ -151,6 +151,30 @@ class MessageBus:
         return False
 
     def register_handler(self, agent_id: str, handler: Callable):
+        """Perform register handler operation.
+
+        Args:
+        agent_id: Description needed
+        handler: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.register_handler(...)
+        """
+        """Perform register handler operation.
+
+        Args:
+        agent_id: Description needed
+        handler: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.register_handler(...)
+        """
         if agent_id not in self._handlers:
             self._handlers[agent_id] = []
         self._handlers[agent_id].append(handler)
@@ -228,6 +252,14 @@ class MessageBus:
             message.status = MessageStatus.PROCESSING
 
             if message.recipient_id in self._handlers:
+                """Get message status.
+
+                Returns:
+                Message status value or data
+
+                Example:
+                >>> result = obj.get_message_status()
+                """
                 for handler in self._handlers[message.recipient_id]:
                     try:
                         handler(message)
@@ -240,6 +272,14 @@ class MessageBus:
                             self._message_queue.append(message)
 
     def get_message_status(self, message_id: str) -> Optional[MessageStatus]:
+        """Get message status.
+
+        Returns:
+        Message status value or data
+
+        Example:
+        >>> result = obj.get_message_status()
+        """
         if message_id in self._message_store:
             return self._message_store[message_id].status
         return None

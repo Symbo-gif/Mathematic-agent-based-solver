@@ -359,6 +359,17 @@ class CombinatorialOptimizationSpecialist(BDIAgent):
         tour = nn_result['tour'][:-1]  # Remove duplicate end
 
         def tour_length(t):
+            """Perform tour length operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.tour_length(...)
+            """
             return sum(distances[t[i]][t[(i+1) % n]] for i in range(n))
 
         best_distance = tour_length(tour)
@@ -431,6 +442,14 @@ class CombinatorialOptimizationSpecialist(BDIAgent):
         assignment = [-1] * n  # assignment[i] = j means row i assigned to col j
 
         def find_assignment():
+            """Find assignment.
+
+            Returns:
+            Found result or None
+
+            Example:
+            >>> result = obj.find_assignment(...)
+            """
             row_covered = [False] * n
             col_covered = [False] * n
             assignment = [-1] * n

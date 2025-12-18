@@ -103,6 +103,28 @@ class SpecialFunctionsSpecialist(BDIAgent):
         ]
 
     def _register_services(self):
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
         if self.df:
             self.df.register_service(create_service_registration(
                 agent_id=self.agent_id,

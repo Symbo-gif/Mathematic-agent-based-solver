@@ -114,6 +114,28 @@ class GPUTask:
     result: Any = field(compare=False, default=None)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'task_id': self.task_id,
             'priority': self.priority,
@@ -125,6 +147,17 @@ class GPUTask:
 
 @dataclass
 class GPUStatus:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Current GPU status"""
     available: bool
     device_count: int
@@ -135,6 +168,17 @@ class GPUStatus:
     device_name: str
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'available': self.available,
             'device_count': self.device_count,
@@ -570,6 +614,17 @@ if __name__ == "__main__":
     print("Test 2: Submit Tasks")
     
     def sample_task(**kwargs):
+        """Perform sample task operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.sample_task(...)
+        """
         return {"computed": True, **kwargs}
     
     scheduler.submit_task("task_1", sample_task, {"x": 1}, TaskPriority.HIGH)

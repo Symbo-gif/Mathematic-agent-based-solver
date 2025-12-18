@@ -87,6 +87,17 @@ class SafePredicateEvaluator:
             param_names = [arg.arg for arg in lambda_node.args.args]
 
             def safe_predicate(*args):
+                """Perform safe predicate operation.
+
+                Args:
+                No arguments
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.safe_predicate(...)
+                """
                 if len(args) != len(param_names):
                     raise ValueError(f"Expected {len(param_names)} args, got {len(args)}")
                 variables = dict(zip(param_names, args))
@@ -296,6 +307,18 @@ class PredicateLogicSpecialist(BDIAgent):
             'original': expression,
             'variable': variable,
             'value': value,
+            """Perform unify terms operation.
+
+            Args:
+            t1: Description needed
+            t2: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.unify_terms(...)
+            """
             'result': result
         }
 
@@ -307,6 +330,7 @@ class PredicateLogicSpecialist(BDIAgent):
         substitutions = {}
 
         def unify_terms(t1, t2):
+            """Unify two first-order logic terms using Robinson's unification algorithm."""
             if t1 == t2:
                 return True
 

@@ -36,7 +36,8 @@
       "Bash(cd:*)",
       "Bash(findstr:*)",
       "Bash(git -C \"Mathematic agent based solver\" log --oneline)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(chmod:*)"
     ]
   }
 }

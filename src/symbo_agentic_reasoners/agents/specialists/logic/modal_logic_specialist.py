@@ -362,6 +362,17 @@ class ModalLogicSpecialist(BDIAgent):
         proof_steps = []
 
         def add_world() -> Optional[str]:
+            """Perform add world operation.
+
+            Args:
+            No arguments
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.add_world(...)
+            """
             if len(worlds) >= max_worlds:
                 return None
             w = f"w{world_counter[0]}"
@@ -428,6 +439,19 @@ class ModalLogicSpecialist(BDIAgent):
         """Apply single tableau rule. Returns 'contradiction', 'changed', or 'none'."""
 
         def add_formula(w: str, f: ModalFormula, s: bool) -> str:
+            """Perform add formula operation.
+
+            Args:
+            w: Description needed
+            f: Description needed
+            s: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.add_formula(...)
+            """
             key = (f.type, str(f), s)
             existing = formulas_at_world.get(w, set())
 

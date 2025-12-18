@@ -91,6 +91,28 @@ class WorkloadProfile:
     last_updated: datetime = field(default_factory=datetime.now)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'agent_id': self.agent_id,
             'cpu_pct': round(self.cpu_usage_pct, 1),
@@ -103,6 +125,17 @@ class WorkloadProfile:
 
 @dataclass
 class ComputeNode:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Represents a compute node in the topology"""
     node_id: str
     cpu_cores: int
@@ -113,6 +146,28 @@ class ComputeNode:
     assigned_agents: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        >>> result = obj.to_dict(...)
+        """
         return {
             'node_id': self.node_id,
             'cpu_cores': self.cpu_cores,
@@ -128,11 +183,33 @@ class PlacementDecision:
     """Agent placement decision"""
     agent_id: str
     target_node: str
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     reason: str
     priority: int
     estimated_improvement_pct: float
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'agent_id': self.agent_id,
             'target_node': self.target_node,
@@ -150,6 +227,17 @@ class MigrationPlan:
     risk_level: str
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'plan_id': self.plan_id,
             'migration_count': len(self.migrations),

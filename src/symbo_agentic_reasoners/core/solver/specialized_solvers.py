@@ -653,6 +653,17 @@ def solve_nt_series(raw_input: str) -> SolveResult:
         # Check for prime product pattern
         if 'product' in expr.lower() and 'prime' in expr.lower():
             def zeta_ratio_factor(p):
+                """Perform zeta ratio factor operation.
+
+                Args:
+                p: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.zeta_ratio_factor(...)
+                """
                 return (1 - 1/p**2) / (1 - 1/p)**2
 
             result = prime_product(zeta_ratio_factor, limit=50000)

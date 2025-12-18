@@ -207,6 +207,17 @@ class ConformalMappingSpecialist:
 
         # Handle infinity cases
         def handle_inf(val):
+            """Perform handle inf operation.
+
+            Args:
+            val: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.handle_inf(...)
+            """
             return complex(1e15) if val == complex(float('inf')) else val
 
         z1, z2, z3 = handle_inf(z1), handle_inf(z2), handle_inf(z3)
@@ -380,9 +391,31 @@ class ConformalMappingSpecialist:
         f(z) = exp(z)
         """
         def mapping(z):
+            """Perform mapping operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.mapping(...)
+            """
             return np.exp(z)
 
         def inverse(w):
+            """Perform inverse operation.
+
+            Args:
+            w: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.inverse(...)
+            """
             return np.log(w)
 
         return ConformalMapResult(
@@ -403,9 +436,31 @@ class ConformalMappingSpecialist:
         exponent = np.pi / alpha
 
         def mapping(z):
+            """Perform mapping operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.mapping(...)
+            """
             return z ** exponent
 
         def inverse(w):
+            """Perform inverse operation.
+
+            Args:
+            w: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.inverse(...)
+            """
             return w ** (1/exponent)
 
         return ConformalMapResult(
@@ -466,6 +521,17 @@ class ConformalMappingSpecialist:
 
         # Build the Schwarz-Christoffel integrand
         def sc_integrand(z):
+            """Perform sc integrand operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.sc_integrand(...)
+            """
             prod = 1
             for k, xk in enumerate(prevertices):
                 prod *= (z - xk) ** betas[k]
@@ -473,6 +539,17 @@ class ConformalMappingSpecialist:
 
         # Numerical integration for the mapping
         def sc_mapping(z):
+            """Perform sc mapping operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.sc_mapping(...)
+            """
             # Integrate from 0 to z
             n_steps = 100
             if abs(z) < 1e-10:
@@ -498,6 +575,17 @@ class ConformalMappingSpecialist:
 
         # Raw mapping without scaling
         def sc_mapping_raw(z):
+            """Perform sc mapping raw operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.sc_mapping_raw(...)
+            """
             n_steps = 50
             if abs(z) < 1e-10:
                 return 0j

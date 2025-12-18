@@ -422,6 +422,17 @@ class NotationTranslatorAgent(BDIAgent):
                           'simplify', 'expand', 'factor', 'solve'}
 
             def add_mult_if_not_func(match):
+                """Perform add mult if not func operation.
+
+                Args:
+                match: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.add_mult_if_not_func(...)
+                """
                 prefix = match.group(1)
                 # Check if prefix ends with a known function name
                 for func in known_funcs:

@@ -81,6 +81,28 @@ class EnumerationSpace:
                 self.size_estimate *= len(dim_values)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.space_id,
             'dimensions': list(self.dimensions.keys()),
@@ -99,6 +121,17 @@ class EnumerationResult:
         items_generated: Total items generated
         items_accepted: Items passing constraints
         matches_found: Items matching target condition
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         sample: Sample of generated items
     """
     space: EnumerationSpace
@@ -110,6 +143,17 @@ class EnumerationResult:
     elapsed_time_ms: int = 0
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'space_id': self.space.space_id,
             'status': self.status.value,

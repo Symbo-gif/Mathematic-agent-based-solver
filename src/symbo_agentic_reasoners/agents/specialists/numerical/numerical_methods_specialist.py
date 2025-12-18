@@ -329,12 +329,40 @@ class NumericalMethodsSpecialist(BDIAgent):
         n_evals = [0]
 
         def simpson_rule(f, left, right):
+            """Perform simpson rule operation.
+
+            Args:
+            f: Description needed
+            left: Description needed
+            right: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.simpson_rule(...)
+            """
             mid = (left + right) / 2
             h = (right - left) / 6
             n_evals[0] += 3
             return h * (f(left) + 4 * f(mid) + f(right))
 
         def adaptive(left, right, tol, whole, depth):
+            """Perform adaptive operation.
+
+            Args:
+            left: Description needed
+            right: Description needed
+            tol: Description needed
+            whole: Description needed
+            depth: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.adaptive(...)
+            """
             mid = (left + right) / 2
             left_half = simpson_rule(func, left, mid)
             right_half = simpson_rule(func, mid, right)
@@ -405,6 +433,17 @@ class NumericalMethodsSpecialist(BDIAgent):
         else:
             # Higher order derivatives via recursion
             def first_deriv(t):
+                """Perform first deriv operation.
+
+                Args:
+                t: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.first_deriv(...)
+                """
                 return self.differentiate(func, t, h, method, 1)
             return self.differentiate(first_deriv, x, h, method, order - 1)
 
@@ -636,6 +675,17 @@ class NumericalMethodsSpecialist(BDIAgent):
         if method == 'lagrange':
             return self._lagrange_interpolation(x_points, y_points)
         elif method == 'newton':
+            """Perform evaluator operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.evaluator(...)
+            """
             return self._newton_interpolation(x_points, y_points)
         elif method == 'linear':
             return self._linear_interpolation(x_points, y_points)
@@ -647,6 +697,7 @@ class NumericalMethodsSpecialist(BDIAgent):
         n = len(x_points)
 
         def evaluator(x):
+            """Evaluate Lagrange polynomial at point x."""
             result = 0.0
             for i in range(n):
                 term = y_points[i]
@@ -669,6 +720,17 @@ class NumericalMethodsSpecialist(BDIAgent):
         # Compute divided differences
         dd = [[0.0] * n for _ in range(n)]
         for i in range(n):
+            """Perform evaluator operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.evaluator(...)
+            """
             dd[i][0] = y_points[i]
 
         for j in range(1, n):
@@ -678,6 +740,7 @@ class NumericalMethodsSpecialist(BDIAgent):
         coeffs = [dd[0][i] for i in range(n)]
 
         def evaluator(x):
+            """Evaluate Newton divided difference polynomial at point x."""
             result = coeffs[0]
             product = 1.0
             for i in range(1, n):
@@ -694,6 +757,7 @@ class NumericalMethodsSpecialist(BDIAgent):
     def _linear_interpolation(self, x_points, y_points) -> InterpolationResult:
         """Piecewise linear interpolation."""
         def evaluator(x):
+            """Evaluate piecewise linear interpolation at point x."""
             # Find interval
             for i in range(len(x_points) - 1):
                 if x_points[i] <= x <= x_points[i + 1]:

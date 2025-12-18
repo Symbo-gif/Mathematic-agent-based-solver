@@ -646,6 +646,17 @@ if __name__ == "__main__":
     received_messages = []
 
     def integration_callback(msg: FIPAMessage):
+        """Perform integration callback operation.
+
+        Args:
+        msg: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.integration_callback(...)
+        """
         received_messages.append(msg)
         print(f"  📬 Integration agent received: {msg.performative.value} from {msg.sender}")
 
@@ -684,11 +695,33 @@ if __name__ == "__main__":
     # Register additional agents
     algebra_messages = []
     def algebra_callback(msg: FIPAMessage):
+        """Perform algebra callback operation.
+
+        Args:
+        msg: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.algebra_callback(...)
+        """
         algebra_messages.append(msg)
         print(f"  📬 Algebra agent received: {msg.performative.value}")
 
     calculus_messages = []
     def calculus_callback(msg: FIPAMessage):
+        """Perform calculus callback operation.
+
+        Args:
+        msg: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.calculus_callback(...)
+        """
         calculus_messages.append(msg)
         print(f"  📬 Calculus agent received: {msg.performative.value}")
 

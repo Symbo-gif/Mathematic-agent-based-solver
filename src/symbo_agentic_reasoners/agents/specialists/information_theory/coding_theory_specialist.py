@@ -259,6 +259,18 @@ class CodingTheorySpecialist(BDIAgent):
         code_table = {}
 
         def generate_codes(node: HuffmanNode, prefix: str = ''):
+            """Perform generate codes operation.
+
+            Args:
+            node: Description needed
+            prefix: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.generate_codes(...)
+            """
             if node.is_leaf():
                 code_table[node.symbol] = prefix if prefix else '0'
             else:

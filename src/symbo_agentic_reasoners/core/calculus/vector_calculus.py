@@ -72,6 +72,17 @@ def _simplify_output(s: str) -> str:
     # FIRST: Convert x**-1 to (1/x) BEFORE other cleanup
     # This must happen first so 1* removal doesn't break **-1
     def fix_negative_one_power(match):
+        """Perform fix negative one power operation.
+
+        Args:
+        match: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.fix_negative_one_power(...)
+        """
         var = match.group(1)
         return f"(1/{var})"
 
@@ -94,6 +105,17 @@ def _simplify_output(s: str) -> str:
 
     # Clean up (1/a)* prefix to be clearer: (1/a)*atan(...) → atan(...)/a
     def fix_one_over_times(match):
+        """Perform fix one over times operation.
+
+        Args:
+        match: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.fix_one_over_times(...)
+        """
         denom = match.group(1)
         rest = match.group(2)
         return f"{rest}/{denom}"

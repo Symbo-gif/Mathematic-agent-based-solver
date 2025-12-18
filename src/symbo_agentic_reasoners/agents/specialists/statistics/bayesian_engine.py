@@ -144,6 +144,22 @@ class BayesianInferenceEngine(BDIAgent):
                 intention.advance()
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Retrieve agent statistics.
+
+        Returns:
+        dict: Agent statistics including solve count, success rate, etc.
+
+        Example:
+        >>> stats = agent.get_statistics()
+        """
+        """Retrieve agent statistics.
+
+        Returns:
+        dict: Agent statistics including solve count, success rate, etc.
+
+        Example:
+        >>> stats = agent.get_statistics()
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed, 'mcmc_runs': self.mcmc_runs})
         return stats

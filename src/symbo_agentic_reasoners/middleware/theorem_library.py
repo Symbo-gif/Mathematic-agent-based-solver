@@ -116,6 +116,28 @@ class Theorem:
     keywords: Set[str] = field(default_factory=set)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'theorem_id': self.theorem_id,
             'name': self.name,
@@ -129,6 +151,17 @@ class Theorem:
 
 @dataclass
 class ProofSketch:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """A sketch of a proof for a theorem"""
     theorem_id: str
     steps: List[str]
@@ -137,6 +170,28 @@ class ProofSketch:
     estimated_difficulty: int
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        >>> result = obj.to_dict(...)
+        """
         return {
             'theorem_id': self.theorem_id,
             'step_count': len(self.steps),
@@ -155,6 +210,17 @@ class ApplicabilityResult:
     matching_conditions: List[str]
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'theorem_id': self.theorem.theorem_id,
             'name': self.theorem.name,
@@ -683,6 +749,17 @@ class TheoremLibraryManager(BDIAgent):
         visited = set()
         
         def collect_deps(tid):
+            """Perform collect deps operation.
+
+            Args:
+            tid: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.collect_deps(...)
+            """
             if tid in visited:
                 return
             visited.add(tid)

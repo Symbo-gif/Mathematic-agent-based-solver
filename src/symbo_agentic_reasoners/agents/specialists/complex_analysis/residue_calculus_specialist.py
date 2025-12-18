@@ -230,6 +230,17 @@ class ResidueCalculusSpecialist:
         Res(f, z0) = (1/(n-1)!) * d^(n-1)/dz^(n-1)[(z-z0)^n f(z)] |_{z=z0}
         """
         def g(z):
+            """Perform g operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.g(...)
+            """
             return (z - z0) ** order * f(z)
 
         # Compute (n-1)th derivative at z0

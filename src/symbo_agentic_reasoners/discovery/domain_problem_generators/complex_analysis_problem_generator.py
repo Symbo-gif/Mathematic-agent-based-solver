@@ -82,4 +82,15 @@ class ComplexAnalysisProblemGenerator:
             return {'type': 'weierstrass_p', 'lattice': 'Λ = Z + Zi', 'task': 'Evaluate ℘(z)'}
 
 def generate_complex_analysis_problem(difficulty=None):
+    """Perform generate complex analysis problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_complex_analysis_problem(...)
+    """
     return ComplexAnalysisProblemGenerator().generate_problem(difficulty)

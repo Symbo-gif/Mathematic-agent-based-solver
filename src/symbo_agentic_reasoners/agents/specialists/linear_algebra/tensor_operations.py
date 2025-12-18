@@ -120,6 +120,28 @@ class TensorInfo:
     is_antisymmetric: bool = False
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'name': self.name,
             'rank': self.rank,
@@ -131,6 +153,17 @@ class TensorInfo:
 
 @dataclass
 class ContractionResult:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Result of tensor contraction"""
     result_tensor: Any
     contracted_indices: List[Tuple[int, int]]
@@ -138,6 +171,17 @@ class ContractionResult:
     result_rank: int
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'contracted_indices': self.contracted_indices,
             'original_rank': self.original_rank,

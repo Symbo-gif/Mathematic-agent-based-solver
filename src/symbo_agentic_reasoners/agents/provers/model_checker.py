@@ -79,6 +79,28 @@ class State:
     is_accepting: bool = False
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.state_id,
             'values': self.values,
@@ -88,6 +110,17 @@ class State:
 
 @dataclass
 class Transition:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """A transition between states"""
     source: str
     target: str
@@ -95,10 +128,32 @@ class Transition:
     guard: Optional[str] = None
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'source': self.source,
             'target': self.target,
             'action': self.action
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         }
 
 
@@ -115,14 +170,47 @@ class Model:
         atomic_props: Atomic propositions
     """
     name: str
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     states: Dict[str, State]
     transitions: List[Transition]
     initial_states: Set[str]
     atomic_props: Set[str] = field(default_factory=set)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'name': self.name,
+            """Perform to dict operation.
+
+            Args:
+            No arguments
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.to_dict(...)
+            """
             'state_count': len(self.states),
             'transition_count': len(self.transitions),
             'initial_count': len(self.initial_states),
@@ -137,6 +225,17 @@ class Counterexample:
     loop_start: Optional[int] = None  # For lasso-shaped counterexamples
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'length': len(self.path),
             'path': self.path[:10],  # Truncate for display
@@ -155,6 +254,17 @@ class CheckResult:
     time_ms: int = 0
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'property': self.property_checked,
             'type': self.property_type.value,

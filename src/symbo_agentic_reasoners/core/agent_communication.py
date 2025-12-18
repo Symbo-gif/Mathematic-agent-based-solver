@@ -54,6 +54,28 @@ class SupervisorProtocol(AgentProtocol):
     """Protocol for the supervisor agent"""
     
     def handle_message(self, message: AgentMessage):
+        """Perform handle message operation.
+
+        Args:
+        message: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.handle_message(...)
+        """
+        """Perform handle message operation.
+
+        Args:
+        message: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.handle_message(...)
+        """
         if message.message_type == MessageType.REQUEST:
             self.route_request(message)
         elif message.message_type == MessageType.RESPONSE:
@@ -65,6 +87,17 @@ class SupervisorProtocol(AgentProtocol):
         pass
         
     def process_response(self, message: AgentMessage):
+        """Perform handle message operation.
+
+        Args:
+        message: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.handle_message(...)
+        """
         """Process responses from specialists"""
         # Implementation would aggregate responses and generate final answer
         pass
@@ -74,6 +107,17 @@ class SpecialistProtocol(AgentProtocol):
     """Protocol for specialist agents"""
     
     def handle_message(self, message: AgentMessage):
+        """Perform handle message operation.
+
+        Args:
+        message: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.handle_message(...)
+        """
         if message.message_type == MessageType.REQUEST:
             self.process_request(message)
             

@@ -239,8 +239,41 @@ class IsolatedExecutor:
                 self.factorials = []
 
             def visit_BinOp(self, node):
+                """Perform visit BinOp operation.
+
+                Args:
+                node: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.visit_BinOp(...)
+                """
+                """Perform visit BinOp operation.
+
+                Args:
+                node: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.visit_BinOp(...)
+                """
                 self.ops += 1
                 if isinstance(node.op, ast.Pow):
+                    """Perform visit Call operation.
+
+                    Args:
+                    node: Description needed
+
+                    Returns:
+                    Result of the operation
+
+                    Example:
+                    >>> result = obj.visit_Call(...)
+                    """
                     # Check if exponent is a large constant
                     if isinstance(node.right, ast.Constant):
                         exp_val = node.right.value
@@ -249,6 +282,17 @@ class IsolatedExecutor:
                 self.generic_visit(node)
 
             def visit_Call(self, node):
+                """Perform visit Call operation.
+
+                Args:
+                node: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.visit_Call(...)
+                """
                 self.ops += 1
                 if isinstance(node.func, ast.Name):
                     if node.func.id == 'factorial':

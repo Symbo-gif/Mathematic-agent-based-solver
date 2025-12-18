@@ -162,6 +162,17 @@ def definite_integrate(expr_str: str, var: str = 'x', a: Union[float, str] = Non
 
         # Normalize infinity and symbolic constant representations
         def normalize_bound(bound):
+            """Perform normalize bound operation.
+
+            Args:
+            bound: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.normalize_bound(...)
+            """
             if bound is None:
                 return None
             if isinstance(bound, (int, float)):

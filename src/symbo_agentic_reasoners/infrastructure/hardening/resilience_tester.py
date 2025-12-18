@@ -98,6 +98,28 @@ class FaultScenario:
     parameters: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'scenario_id': self.scenario_id,
             'name': self.name,
@@ -118,6 +140,17 @@ class TestResult:
         status: Test outcome
         recovery_time_ms: Time to recover
         observations: Observed behaviors
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         timestamp: When test was run
     """
     test_id: str
@@ -129,8 +162,30 @@ class TestResult:
     errors: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'test_id': self.test_id,
+            """Perform to dict operation.
+
+            Args:
+            No arguments
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.to_dict(...)
+            """
             'scenario': self.scenario.name,
             'status': self.status.value,
             'recovery_ms': self.recovery_time_ms,
@@ -152,6 +207,17 @@ class ResilienceReport:
     generated_at: datetime = field(default_factory=datetime.now)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'report_id': self.report_id,
             'tests_run': self.tests_run,

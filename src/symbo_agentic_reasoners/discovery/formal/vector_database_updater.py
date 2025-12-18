@@ -85,6 +85,28 @@ class DiscoveryIndex:
     status: IndexStatus = IndexStatus.INDEXED
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'index_id': self.index_id,
             'discovery_id': self.discovery_id,

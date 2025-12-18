@@ -82,4 +82,15 @@ class RealAnalysisProblemGenerator:
             return {'type': 'sobolev_embedding', 'space': 'W^{1,2}', 'dimension': 1, 'theorem': 'Sobolev'}
 
 def generate_real_analysis_problem(difficulty=None):
+    """Perform generate real analysis problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_real_analysis_problem(...)
+    """
     return RealAnalysisProblemGenerator().generate_problem(difficulty)

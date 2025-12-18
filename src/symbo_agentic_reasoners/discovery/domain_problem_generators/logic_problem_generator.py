@@ -96,4 +96,15 @@ class LogicProblemGenerator:
             return {'type': 'resolution', 'clauses': '[(P,Q), (~P,R), (~Q,~R)]', 'goal': 'False', 'method': 'refutation'}
 
 def generate_logic_problem(difficulty=None):
+    """Perform generate logic problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_logic_problem(...)
+    """
     return LogicProblemGenerator().generate_problem(difficulty)

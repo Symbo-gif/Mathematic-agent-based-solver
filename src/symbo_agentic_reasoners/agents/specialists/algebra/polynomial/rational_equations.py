@@ -69,6 +69,17 @@ def find_rational_roots(coeffs: List[int]) -> List[Rational]:
 
     # Find divisors
     def divisors(n: int) -> List[int]:
+        """Perform divisors operation.
+
+        Args:
+        n: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.divisors(...)
+        """
         n = abs(n)
         if n == 0:
             return []

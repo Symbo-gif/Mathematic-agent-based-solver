@@ -82,6 +82,28 @@ class SearchTask:
     created_at: datetime = field(default_factory=datetime.now)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.task_id,
             'priority': self.priority,
@@ -98,6 +120,17 @@ class SearchResult:
         task_id: Associated task ID
         status: Execution status
         result: The actual result
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         error: Error message if failed
         execution_time_ms: Time taken
     """
@@ -109,6 +142,28 @@ class SearchResult:
     worker_id: Optional[str] = None
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        >>> result = obj.to_dict(...)
+        """
         return {
             'task_id': self.task_id,
             'status': self.status.value,
@@ -129,6 +184,17 @@ class WorkerInfo:
     current_task: Optional[str] = None
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.worker_id,
             'status': self.status.value,
@@ -620,6 +686,14 @@ if __name__ == "__main__":
     
     # Test function
     def search_function(x: int, delay: float = 0.1) -> int:
+        """Search for function.
+
+        Returns:
+        Found result or None
+
+        Example:
+        >>> result = obj.search_function(...)
+        """
         time.sleep(delay)
         return x * x
     

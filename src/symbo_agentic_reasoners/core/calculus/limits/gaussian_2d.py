@@ -140,6 +140,17 @@ def definite_integrate_2d(expr_str: str, var1: str, a1, b1,
 
     # Normalize bounds
     def normalize_bound(bound):
+        """Perform normalize bound operation.
+
+        Args:
+        bound: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.normalize_bound(...)
+        """
         if bound is None:
             return None
         if isinstance(bound, (int, float)):

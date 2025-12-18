@@ -455,6 +455,17 @@ def evaluate_nt_series(series_type: str, params: Dict = None) -> Tuple[Optional[
     # This series converges (Prime Number Theorem connection)
     if series_type == 'mobius_log_squared':
         def term(n):
+            """Perform term operation.
+
+            Args:
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.term(...)
+            """
             if n < 2:
                 return 0.0
             return mobius(n) / (n * math.log(n) ** 2)
@@ -466,6 +477,17 @@ def evaluate_nt_series(series_type: str, params: Dict = None) -> Tuple[Optional[
     # Related to derivative of 1/zeta(s) at s=2
     if series_type == 'mobius_log_over_nsq':
         def term(n):
+            """Perform term operation.
+
+            Args:
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.term(...)
+            """
             if n < 2:
                 return 0.0
             return mobius(n) * math.log(n) / (n ** 2)
@@ -476,6 +498,17 @@ def evaluate_nt_series(series_type: str, params: Dict = None) -> Tuple[Optional[
     # sum_{n=2}^{oo} (Lambda(n) - 1)/(n*log(n))
     if series_type == 'mangoldt_minus_1':
         def term(n):
+            """Perform term operation.
+
+            Args:
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.term(...)
+            """
             if n < 2:
                 return 0.0
             lam = mangoldt(n)
@@ -489,6 +522,17 @@ def evaluate_nt_series(series_type: str, params: Dict = None) -> Tuple[Optional[
     if series_type == 'totient_deviation':
         pi_sq = math.pi ** 2
         def term(n):
+            """Perform term operation.
+
+            Args:
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.term(...)
+            """
             return (totient(n) - 6*n/pi_sq) / (n ** 3)
 
         result, status = number_theoretic_sum(term, 1, float('inf'), max_terms=50000)
@@ -497,6 +541,17 @@ def evaluate_nt_series(series_type: str, params: Dict = None) -> Tuple[Optional[
     # Euler product: prod_p (1 - 1/p^2)/(1 - 1/p)^2
     if series_type == 'euler_product_zeta_ratio':
         def factor(p):
+            """Perform factor operation.
+
+            Args:
+            p: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.factor(...)
+            """
             return (1 - 1/p**2) / (1 - 1/p)**2
 
         result = prime_product(factor, limit=50000)
@@ -562,6 +617,18 @@ def pollard_rho(n: int, max_iterations: int = 1000000) -> Optional[int]:
     for c in [1, 2, 3, 5, 7, 11]:
         # Polynomial f(x) = x^2 + c mod n
         def f(x: int, c=c) -> int:
+            """Perform f operation.
+
+            Args:
+            x: Description needed
+            c: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.f(...)
+            """
             return (x * x + c) % n
 
         x = 2

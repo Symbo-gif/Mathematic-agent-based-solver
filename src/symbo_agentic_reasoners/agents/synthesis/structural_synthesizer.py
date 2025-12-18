@@ -99,6 +99,28 @@ class StructureSpec:
     relations: Dict[str, str] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'name': self.name,
             'kind': self.kind.value,
@@ -118,6 +140,17 @@ class SynthesizedStructure:
         spec: Original specification
         construction: How it was constructed
         verified_axioms: Axioms verified to hold
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         counterexamples: Any counterexamples found
     """
     structure_id: str
@@ -129,6 +162,17 @@ class SynthesizedStructure:
     status: SynthesisStatus = SynthesisStatus.COMPLETE
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'structure_id': self.structure_id,
             'name': self.spec.name,

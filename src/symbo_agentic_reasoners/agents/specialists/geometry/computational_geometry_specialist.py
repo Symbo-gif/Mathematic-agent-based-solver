@@ -165,9 +165,31 @@ class ComputationalGeometrySpecialist(BDIAgent):
         pivot = min(points, key=lambda p: (p.y, p.x))
 
         def polar_angle(p: Point) -> float:
+            """Perform polar angle operation.
+
+            Args:
+            p: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.polar_angle(...)
+            """
             return math.atan2(p.y - pivot.y, p.x - pivot.x)
 
         def distance(p: Point) -> float:
+            """Perform distance operation.
+
+            Args:
+            p: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.distance(...)
+            """
             return (p.x - pivot.x) ** 2 + (p.y - pivot.y) ** 2
 
         # Sort by polar angle

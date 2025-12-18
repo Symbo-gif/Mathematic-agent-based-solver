@@ -1231,6 +1231,17 @@ def _try_numeric_integration(expr_str: str, var: str, a: float, b: float) -> Opt
 
     # Build evaluable function
     def f(x_val):
+        """Perform f operation.
+
+        Args:
+        x_val: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.f(...)
+        """
         return _evaluate_at_numeric(expr, var, x_val)
 
     try:

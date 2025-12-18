@@ -271,6 +271,17 @@ class QuineMcCluskey:
         all_terms = set(minterms) | set(dont_cares)
 
         def count_ones(n: int) -> int:
+            """Perform count ones operation.
+
+            Args:
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.count_ones(...)
+            """
             return bin(n).count('1')
 
         def term_to_str(term: int, mask: int, n: int) -> str:
@@ -381,6 +392,19 @@ class QuineMcCluskey:
                 break
 
         def pi_to_expr(term: int, mask: int, n: int) -> str:
+            """Perform pi to expr operation.
+
+            Args:
+            term: Description needed
+            mask: Description needed
+            n: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.pi_to_expr(...)
+            """
             vars_list = [chr(ord('A') + i) for i in range(n)]
             parts = []
             for i in range(n):

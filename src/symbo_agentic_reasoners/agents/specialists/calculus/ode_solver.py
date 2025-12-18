@@ -46,8 +46,42 @@ class ODESolver(BDIAgent):
         print(f"[{self.agent_id}] ODE Solver initialized")
     
     def process(self, task_entry):
+        """Perform process operation.
+
+        Args:
+        task_entry: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.process(...)
+        """
+        """Perform process operation.
+
+        Args:
+        task_entry: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.process(...)
+        """
         self.tasks_executed += 1
         try:
+            """Perform  create result entry operation.
+
+            Args:
+            task_entry: Description needed
+            result: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj._create_result_entry(...)
+            """
             metadata = task_entry.metadata if hasattr(task_entry, 'metadata') else {}
             expr_str = metadata.get('sympy_expr', metadata.get('raw_input', ''))
             # Simplified ODE solving
@@ -55,16 +89,52 @@ class ODESolver(BDIAgent):
             self.tasks_succeeded += 1
             return self._create_result_entry(task_entry, result)
         except Exception as e:
+            """Perform  create error entry operation.
+
+            Args:
+            task_entry: Description needed
+            error: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj._create_error_entry(...)
+            """
             self.tasks_failed += 1
             return self._create_error_entry(task_entry, str(e))
     
     def _create_result_entry(self, task_entry, result):
+        """Perform  create result entry operation.
+
+        Args:
+        task_entry: Description needed
+        result: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._create_result_entry(...)
+        """
         if not self.blackboard: return result
         return create_entry(EntryType.PARTIAL_RESULT, create_variable(str(result)),
             self.agent_id, task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'result',
             ['ode'], EntryStatus.PENDING, {'result_str': str(result)})
     
     def _create_error_entry(self, task_entry, error):
+        """Perform  create error entry operation.
+
+        Args:
+        task_entry: Description needed
+        error: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._create_error_entry(...)
+        """
         if not self.blackboard: return None
         return create_entry(EntryType.PARTIAL_RESULT, create_variable(f"ERROR: {error}"),
             self.agent_id, task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'error',
@@ -239,6 +309,14 @@ class ODESolver(BDIAgent):
                             'result_str': str(solution),
                             'task_id': task_id,
                             'algorithm': 'native_ode'
+                        """Retrieve agent statistics.
+
+                        Returns:
+                        dict: Agent statistics including solve count, success rate, etc.
+
+                        Example:
+                        >>> stats = agent.get_statistics()
+                        """
                         }
                     )
                     self.blackboard.post(result_entry)
@@ -274,6 +352,14 @@ class ODESolver(BDIAgent):
             while not intention.is_complete():
                 intention.advance()
     def get_statistics(self):
+        """Retrieve agent statistics.
+
+        Returns:
+        dict: Agent statistics including solve count, success rate, etc.
+
+        Example:
+        >>> stats = agent.get_statistics()
+        """
         stats = super().get_statistics()
         stats.update({'tasks_executed': self.tasks_executed, 'tasks_succeeded': self.tasks_succeeded,
             'tasks_failed': self.tasks_failed,

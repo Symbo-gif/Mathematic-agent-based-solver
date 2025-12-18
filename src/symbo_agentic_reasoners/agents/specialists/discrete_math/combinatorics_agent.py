@@ -264,6 +264,19 @@ def generate_partitions(n: int) -> List[List[int]]:
     partitions = []
 
     def _generate(remaining: int, max_val: int, current: List[int]):
+        """Perform  generate operation.
+
+        Args:
+        remaining: Description needed
+        max_val: Description needed
+        current: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._generate(...)
+        """
         if remaining == 0:
             partitions.append(current[:])
             return
@@ -295,12 +308,36 @@ def fibonacci(n: int) -> int:
 def _fib_matrix(n: int) -> int:
     """Compute Fibonacci using matrix exponentiation O(log n)."""
     def matrix_mult(A, B):
+        """Perform matrix mult operation.
+
+        Args:
+        A: Description needed
+        B: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.matrix_mult(...)
+        """
         return [
             [A[0][0]*B[0][0] + A[0][1]*B[1][0], A[0][0]*B[0][1] + A[0][1]*B[1][1]],
             [A[1][0]*B[0][0] + A[1][1]*B[1][0], A[1][0]*B[0][1] + A[1][1]*B[1][1]]
         ]
 
     def matrix_pow(M, p):
+        """Perform matrix pow operation.
+
+        Args:
+        M: Description needed
+        p: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.matrix_pow(...)
+        """
         if p == 1:
             return M
         if p % 2 == 0:

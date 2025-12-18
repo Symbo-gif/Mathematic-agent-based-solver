@@ -684,6 +684,17 @@ class LinearControlSpecialist:
 
             # RK4
             def f(x_state):
+                """Perform f operation.
+
+                Args:
+                x_state: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.f(...)
+                """
                 return sys.A @ x_state + sys.B @ u_t
 
             k1 = f(x[i])

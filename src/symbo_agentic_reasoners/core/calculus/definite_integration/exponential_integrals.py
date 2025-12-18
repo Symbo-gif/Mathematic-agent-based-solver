@@ -224,6 +224,17 @@ def _try_exponential_ray_moments(expr_str: str, var: str) -> Optional[str]:
 
     # Calculate n!
     def factorial(n):
+        """Perform factorial operation.
+
+        Args:
+        n: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.factorial(...)
+        """
         if n <= 1:
             return 1
         result = 1
@@ -436,6 +447,17 @@ def _evaluate_monomial_exp_integral(term: Expr, var: str, a_coeff: float, a_symb
 
     # Calculate n!
     def factorial(n):
+        """Perform factorial operation.
+
+        Args:
+        n: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.factorial(...)
+        """
         if n <= 0:
             return 1
         result = 1

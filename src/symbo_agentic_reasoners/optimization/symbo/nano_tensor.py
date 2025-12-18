@@ -152,6 +152,17 @@ def _lambdify_native(vars_list, expr):
     var_names = [str(v) for v in vars_list]
 
     def evaluator(*args):
+        """Perform evaluator operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.evaluator(...)
+        """
         result_str = expr_str
         for name, val in zip(var_names, args):
             result_str = result_str.replace(name, str(val))
@@ -404,9 +415,31 @@ class NanoTensor:
 
                 # Create evaluation functions
                 def eval_f(x_val):
+                    """Perform eval f operation.
+
+                    Args:
+                    x_val: Description needed
+
+                    Returns:
+                    Result of the operation
+
+                    Example:
+                    >>> result = obj.eval_f(...)
+                    """
                     return eval(f_str.replace(var_str, str(x_val)))
 
                 def eval_g(x_val):
+                    """Perform eval g operation.
+
+                    Args:
+                    x_val: Description needed
+
+                    Returns:
+                    Result of the operation
+
+                    Example:
+                    >>> result = obj.eval_g(...)
+                    """
                     return eval(g_str.replace(var_str, str(x_val)))
 
                 # Search for roots of g (simpler polynomial typically)
@@ -986,6 +1019,17 @@ class SymbolicTrainer:
         self.fitted_coeffs = sol_dict
 
         for k, v in sol_dict.items():
+            """Perform objective operation.
+
+            Args:
+            deg: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.objective(...)
+            """
             self.kb.add_fact('policy_coefficient', k, v)
 
     def predict(self, state_point: Dict[str, float]) -> np.ndarray:
@@ -1103,6 +1147,28 @@ class HybridTrainer(SymbolicTrainer):
         n_coeffs = len(self.nt.coeff_vars)
 
         if n_coeffs == 0:
+            """Perform forward operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.forward(...)
+            """
+            """Perform forward operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.forward(...)
+            """
             # Generate Taylor expansion if not already done
             center = {f'x{i}': 0.0 for i in range(n_features)}
             self.nt.generate_taylor(center)

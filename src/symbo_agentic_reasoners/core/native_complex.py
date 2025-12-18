@@ -181,6 +181,17 @@ class Complex:
     def simplify(self):
         """Simplify the complex number, converting floats to fractions where possible."""
         def _simplify_component(x):
+            """Perform  simplify component operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj._simplify_component(...)
+            """
             if isinstance(x, float):
                 # Check if close to integer
                 if abs(x - round(x)) < 1e-10:

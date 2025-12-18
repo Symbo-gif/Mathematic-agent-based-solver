@@ -234,6 +234,17 @@ class FourierAnalysisSpecialist(BDIAgent):
     def _compute_an(self, func, n: int, omega: float, a: float, b: float, period: float) -> float:
         """Compute an = (2/T) * integral(f(x)*cos(n*omega*x), x, -T/2, T/2)."""
         def integrand(x):
+            """Perform integrand operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.integrand(...)
+            """
             return func(x) * math.cos(n * omega * x)
         integral = self._numerical_integrate(integrand, a, b)
         return (2 / period) * integral
@@ -241,6 +252,17 @@ class FourierAnalysisSpecialist(BDIAgent):
     def _compute_bn(self, func, n: int, omega: float, a: float, b: float, period: float) -> float:
         """Compute bn = (2/T) * integral(f(x)*sin(n*omega*x), x, -T/2, T/2)."""
         def integrand(x):
+            """Perform integrand operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.integrand(...)
+            """
             return func(x) * math.sin(n * omega * x)
         integral = self._numerical_integrate(integrand, a, b)
         return (2 / period) * integral
@@ -273,6 +295,17 @@ class FourierAnalysisSpecialist(BDIAgent):
         }
 
         def evaluator(val):
+            """Perform evaluator operation.
+
+            Args:
+            val: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.evaluator(...)
+            """
             namespace[var] = val
             try:
                 return eval(expr_str, {"__builtins__": {}}, namespace)

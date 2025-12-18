@@ -362,6 +362,17 @@ class AnalyticFunctionsSpecialist:
             # Use numerical differentiation
 
             def g(z):
+                """Perform g operation.
+
+                Args:
+                z: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.g(...)
+                """
                 return (z - z0) ** n * f(z)
 
             # Numerical (n-1)th derivative at z0
@@ -704,6 +715,18 @@ class AnalyticFunctionsSpecialist:
             # Evaluate series at z
             val = 0j
             for n, a_n in enumerate(coeffs):
+                """Perform make series func operation.
+
+                Args:
+                c: Description needed
+                cent: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.make_series_func(...)
+                """
                 val += a_n * (z - current_center) ** n
 
             values.append(val)
@@ -715,6 +738,7 @@ class AnalyticFunctionsSpecialist:
                 new_center = current_center
 
                 def make_series_func(c, cent):
+                    """Create series evaluation function centered at given point."""
                     return lambda w: sum(c[n] * (w - cent) ** n for n in range(len(c)))
 
                 # Recenter at current point

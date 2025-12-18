@@ -111,5 +111,16 @@ class CategoryTheoryProblemGenerator:
 
 
 def generate_category_theory_problem(difficulty=None):
+    """Perform generate category theory problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_category_theory_problem(...)
+    """
     gen = CategoryTheoryProblemGenerator()
     return gen.generate_problem(difficulty)

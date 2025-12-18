@@ -280,6 +280,19 @@ class TemporalLogicSpecialist(BDIAgent):
         paths = []
 
         def dfs(current: str, path: List[str], depth: int):
+            """Perform dfs operation.
+
+            Args:
+            current: Description needed
+            path: Description needed
+            depth: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.dfs(...)
+            """
             if depth >= max_length:
                 paths.append(path.copy())
                 return

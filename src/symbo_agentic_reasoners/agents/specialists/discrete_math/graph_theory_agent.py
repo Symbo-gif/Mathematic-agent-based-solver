@@ -289,6 +289,17 @@ def tarjan_scc(graph: Dict[int, List[Tuple[int, float]]]) -> List[List[int]]:
     sccs = []
 
     def strongconnect(v):
+        """Perform strongconnect operation.
+
+        Args:
+        v: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.strongconnect(...)
+        """
         index[v] = index_counter[0]
         lowlink[v] = index_counter[0]
         index_counter[0] += 1
@@ -367,6 +378,7 @@ def has_cycle(graph: Dict[int, List[Tuple[int, float]]], directed: bool = True) 
         color = {v: WHITE for v in graph}
 
         def dfs(v):
+            """DFS with 3-color marking for cycle detection in directed graphs."""
             color[v] = GRAY
             for neighbor, _ in graph.get(v, []):
                 if color.get(neighbor, WHITE) == GRAY:
@@ -385,6 +397,7 @@ def has_cycle(graph: Dict[int, List[Tuple[int, float]]], directed: bool = True) 
         visited = set()
 
         def dfs(v, parent):
+            """DFS with parent tracking for cycle detection in undirected graphs."""
             visited.add(v)
             for neighbor, _ in graph.get(v, []):
                 if neighbor not in visited:
@@ -419,6 +432,18 @@ def is_bipartite(graph: Dict[int, List[Tuple[int, float]]]) -> Tuple[bool, Dict[
         while queue:
             u = queue.popleft()
             for v, _ in graph.get(u, []):
+                """Perform dfs operation.
+
+                Args:
+                u: Description needed
+                parent: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.dfs(...)
+                """
                 if v not in color:
                     color[v] = 1 - color[u]
                     queue.append(v)
@@ -441,6 +466,7 @@ def find_bridges(graph: Dict[int, List[Tuple[int, float]]]) -> List[Tuple[int, i
     bridges = []
 
     def dfs(u, parent):
+        """Depth-first search helper for bridge detection using Tarjan's algorithm."""
         disc[u] = low[u] = timer[0]
         timer[0] += 1
 
@@ -474,6 +500,7 @@ def find_articulation_points(graph: Dict[int, List[Tuple[int, float]]]) -> List[
     ap = set()
 
     def dfs(u):
+        """Depth-first search helper for articulation point detection."""
         children = 0
         disc[u] = low[u] = timer[0]
         timer[0] += 1
@@ -520,6 +547,7 @@ def ford_fulkerson_max_flow(graph: Dict[int, List[Tuple[int, float]]], source: i
     max_flow = 0
 
     def bfs():
+        """Breadth-first search to find augmenting path for maximum flow (Ford-Fulkerson)."""
         parent = {source: None}
         visited = {source}
         queue = deque([source])
@@ -784,6 +812,17 @@ class GraphTheoryAgent(BDIAgent):
                 visited = []
 
                 def dfs(node):
+                    """Perform dfs operation.
+
+                    Args:
+                    node: Description needed
+
+                    Returns:
+                    Result of the operation
+
+                    Example:
+                    >>> result = obj.dfs(...)
+                    """
                     if node in visited:
                         return
                     visited.append(node)

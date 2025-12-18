@@ -192,6 +192,17 @@ def enhanced_implicit_multiplication(text: str) -> str:
 
     # This is conservative - only split 2-char sequences that aren't functions
     def add_mul_between_letters(match):
+        """Perform add mul between letters operation.
+
+        Args:
+        match: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.add_mul_between_letters(...)
+        """
         seq = match.group(0)
         if seq.lower() in known_functions:
             return seq

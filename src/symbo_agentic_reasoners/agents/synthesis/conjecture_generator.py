@@ -100,6 +100,28 @@ class Conjecture:
     created_at: datetime = field(default_factory=datetime.now)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.conjecture_id,
             'statement': self.statement[:100] + '...' if len(self.statement) > 100 else self.statement,
@@ -107,6 +129,17 @@ class Conjecture:
             'domain': self.domain,
             'status': self.status.value,
             'confidence': round(self.confidence, 2)
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         }
 
 
@@ -118,6 +151,17 @@ class GenerationResult:
     generation_method: str
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'count': len(self.conjectures),
             'source': self.pattern_source,

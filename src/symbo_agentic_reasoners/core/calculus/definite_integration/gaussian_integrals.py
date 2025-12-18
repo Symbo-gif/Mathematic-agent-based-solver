@@ -223,6 +223,17 @@ def _try_gaussian_moment_integral(expr_str: str, var: str) -> Optional[str]:
 
     # Helper: compute (2k-1)!! = 1 * 3 * 5 * ... * (2k-1)
     def double_factorial_odd(n):
+        """Perform double factorial odd operation.
+
+        Args:
+        n: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.double_factorial_odd(...)
+        """
         if n == 0:
             return 1
         result = 1
@@ -378,6 +389,17 @@ def _try_half_gaussian_integral(expr_str: str, var: str) -> Optional[str]:
 
     # Helper: compute (2k-1)!! = 1 * 3 * 5 * ... * (2k-1)
     def double_factorial_odd(n):
+        """Perform double factorial odd operation.
+
+        Args:
+        n: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.double_factorial_odd(...)
+        """
         if n <= 0:
             return 1
         result = 1
@@ -387,6 +409,17 @@ def _try_half_gaussian_integral(expr_str: str, var: str) -> Optional[str]:
 
     # Helper: compute k! = k factorial
     def factorial(k):
+        """Perform factorial operation.
+
+        Args:
+        k: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.factorial(...)
+        """
         if k <= 1:
             return 1
         result = 1
@@ -740,6 +773,17 @@ def _try_linear_gaussian_full_line(expr_str: str, var: str) -> Optional[str]:
 
     # Helper for double factorial: (2k-1)!! = 1*3*5*...*(2k-1)
     def double_factorial_odd(k):
+        """Perform double factorial odd operation.
+
+        Args:
+        k: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.double_factorial_odd(...)
+        """
         if k <= 0:
             return 1
         result = 1

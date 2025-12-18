@@ -248,6 +248,28 @@ class AccessLog:
     metadata: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'timestamp': self.timestamp.isoformat(),
             'agent_id': self.agent_id,
@@ -259,6 +281,17 @@ class AccessLog:
 
 @dataclass
 class SecurityAlert:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Security alert notification"""
     alert_id: str
     timestamp: datetime
@@ -270,6 +303,17 @@ class SecurityAlert:
     acknowledged: bool = False
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'alert_id': self.alert_id,
             'timestamp': self.timestamp.isoformat(),
@@ -319,6 +363,17 @@ class AccessPolicy:
         # Fallback to literal match if pattern compilation failed
         # But enforce strict length limit to prevent bypass attacks
         if len(self.agent_pattern) > MAX_LITERAL_PATTERN_LENGTH:
+            """Perform to dict operation.
+
+            Args:
+            No arguments
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.to_dict(...)
+            """
             logger.error(f"Policy {self.policy_id}: agent_pattern too long for literal fallback ({len(self.agent_pattern)} > {MAX_LITERAL_PATTERN_LENGTH})")
             return False
         return agent_id == self.agent_pattern
@@ -339,6 +394,17 @@ class AccessPolicy:
         return resource == self.resource_pattern
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'policy_id': self.policy_id,
             'agent_pattern': self.agent_pattern,

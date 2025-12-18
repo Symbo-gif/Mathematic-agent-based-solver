@@ -90,6 +90,28 @@ class RegressionSpecialist(BDIAgent):
         self._stats = {'regressions': 0}
 
     def _register_services(self):
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
         if self.df:
             self.df.register_service(create_service_registration(
                 agent_id=self.agent_id,
@@ -405,6 +427,17 @@ class RegressionSpecialist(BDIAgent):
         coefficients = [0.0] * p
 
         def sigmoid(z: float) -> float:
+            """Perform sigmoid operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.sigmoid(...)
+            """
             if z < -500:
                 return 0.0
             if z > 500:

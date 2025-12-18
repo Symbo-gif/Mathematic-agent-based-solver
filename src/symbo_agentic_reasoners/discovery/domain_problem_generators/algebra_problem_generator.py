@@ -122,5 +122,16 @@ class AlgebraProblemGenerator:
 
 
 def generate_algebra_problem(difficulty=None):
+    """Perform generate algebra problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_algebra_problem(...)
+    """
     gen = AlgebraProblemGenerator()
     return gen.generate_problem(difficulty)

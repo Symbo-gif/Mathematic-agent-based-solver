@@ -91,6 +91,28 @@ class TacticCandidate:
     tactical_notes: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'tactic': self.tactic,
             'probability': self.probability,
@@ -215,6 +237,28 @@ class PolicyNetwork:
                 )
 
             def forward(self, x):
+                """Perform forward operation.
+
+                Args:
+                x: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.forward(...)
+                """
+                """Perform forward operation.
+
+                Args:
+                x: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.forward(...)
+                """
                 # x: [batch, seq_len]
                 seq_len = x.size(1)
                 embedded = self.embedding(x) + self.pos_encoding[:, :seq_len, :]

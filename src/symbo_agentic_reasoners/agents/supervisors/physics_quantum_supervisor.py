@@ -250,6 +250,22 @@ class PhysicsQuantumSupervisor(BDIAgent):
         return self.df.search(service_type=service_type)
 
     def get_statistics(self) -> Dict[str, Any]:
+        """Retrieve agent statistics.
+
+        Returns:
+        dict: Agent statistics including solve count, success rate, etc.
+
+        Example:
+        >>> stats = agent.get_statistics()
+        """
+        """Retrieve agent statistics.
+
+        Returns:
+        dict: Agent statistics including solve count, success rate, etc.
+
+        Example:
+        >>> stats = agent.get_statistics()
+        """
         stats = super().get_statistics()
         stats['tasks_routed'] = self.tasks_routed
         return stats

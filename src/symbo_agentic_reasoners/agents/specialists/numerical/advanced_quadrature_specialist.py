@@ -94,6 +94,28 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         self._init_quadrature_tables()
 
     def _register_services(self):
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
+        """Perform  register services operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj._register_services(...)
+        """
         if self.df:
             self.df.register_service(create_service_registration(
                 agent_id=self.agent_id,
@@ -295,6 +317,17 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         half_width = (b - a) / 2
 
         def transformed_func(t: float) -> float:
+            """Perform transformed func operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.transformed_func(...)
+            """
             # Double exponential transformation
             sinh_t = math.sinh(t)
             cosh_t = math.cosh(t)
@@ -592,6 +625,17 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         if a == float('-inf') and b == float('inf'):
             # Transform: x = t / (1 - t²), dx = (1 + t²) / (1 - t²)² dt
             def transformed(t: float) -> float:
+                """Perform transformed operation.
+
+                Args:
+                t: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.transformed(...)
+                """
                 if abs(t) >= 1:
                     return 0.0
                 x = t / (1 - t * t)
@@ -603,6 +647,17 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         elif a == float('-inf'):
             # Transform: x = b - (1 - t) / t, dx = 1/t² dt
             def transformed(t: float) -> float:
+                """Perform transformed operation.
+
+                Args:
+                t: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.transformed(...)
+                """
                 if t <= 0:
                     return 0.0
                 x = b - (1 - t) / t
@@ -614,6 +669,17 @@ class AdvancedQuadratureSpecialist(BDIAgent):
         elif b == float('inf'):
             # Transform: x = a + (1 - t) / t
             def transformed(t: float) -> float:
+                """Perform transformed operation.
+
+                Args:
+                t: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.transformed(...)
+                """
                 if t <= 0:
                     return 0.0
                 x = a + (1 - t) / t

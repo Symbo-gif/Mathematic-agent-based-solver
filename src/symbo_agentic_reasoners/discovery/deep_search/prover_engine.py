@@ -88,6 +88,30 @@ class NativeSymbolicProver(ProverEngine):
         )
 
     def apply_tactic(self, state: ProofState, tactic: TacticCandidate) -> Tuple[str, bool]:
+        """Perform apply tactic operation.
+
+        Args:
+        state: Description needed
+        tactic: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.apply_tactic(...)
+        """
+        """Perform apply tactic operation.
+
+        Args:
+        state: Description needed
+        tactic: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.apply_tactic(...)
+        """
         goal_str = state.goal
         tactic_name = tactic.tactic.split()[0]
 
@@ -152,6 +176,17 @@ class NativeSymbolicProver(ProverEngine):
                 return str(simplified), False
 
             if tactic_name == 'sorry':
+                """Perform health check operation.
+
+                Args:
+                No arguments
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.health_check(...)
+                """
                 return "\u22a4", True
 
         except (TypeError, ValueError, AttributeError, NotImplementedError) as e:
@@ -162,6 +197,17 @@ class NativeSymbolicProver(ProverEngine):
         return f"after_{tactic_name}: {goal_str}", False
 
     def health_check(self) -> bool:
+        """Perform health check operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.health_check(...)
+        """
         try:
             x = Symbol('x')
             return simplify(x - x) == Integer(0)

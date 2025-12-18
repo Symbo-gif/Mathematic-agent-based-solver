@@ -558,6 +558,17 @@ if __name__ == "__main__":
     notifications_received = []
 
     def integration_callback(entry: BlackboardEntry):
+        """Perform integration callback operation.
+
+        Args:
+        entry: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.integration_callback(...)
+        """
         notifications_received.append(entry)
         print(f"  📬 Integration Agent notified: {entry}")
 

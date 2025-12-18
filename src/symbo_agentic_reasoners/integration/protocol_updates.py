@@ -464,6 +464,28 @@ if __name__ == "__main__":
 
     class MockOrchestrator:
         def accept_result(self, r):
+            """Perform accept result operation.
+
+            Args:
+            r: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.accept_result(...)
+            """
+            """Perform accept result operation.
+
+            Args:
+            r: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.accept_result(...)
+            """
             return r
 
     update = OrchestratorPhase4Update(

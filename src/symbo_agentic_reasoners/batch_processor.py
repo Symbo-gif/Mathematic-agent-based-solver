@@ -90,6 +90,28 @@ class BatchResult:
     items: List[ProblemItem] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'batch_id': self.batch_id,
             'start_time': self.start_time.isoformat(),
@@ -169,6 +191,28 @@ class BatchProcessor:
         """Create a simple fallback solver using native symbolic engine."""
         class FallbackSolver:
             def solve(self, problem: str):
+                """Perform solve operation.
+
+                Args:
+                problem: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.solve(...)
+                """
+                """Perform solve operation.
+
+                Args:
+                problem: Description needed
+
+                Returns:
+                Result of the operation
+
+                Example:
+                >>> result = obj.solve(...)
+                """
                 from symbo_agentic_reasoners.core.native_symbolic import sympify, simplify
                 from symbo_agentic_reasoners.core.solver_engine import SolveResult, SolveStatus
 

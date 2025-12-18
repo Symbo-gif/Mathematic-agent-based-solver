@@ -88,6 +88,28 @@ class Formula:
     subformulas: List['Formula'] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'text': self.text,
             'negated': self.negated,
@@ -100,6 +122,17 @@ class Formula:
 
 @dataclass
 class ProofStep:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """A step in a proof"""
     step_number: int
     formula: Formula
@@ -107,6 +140,28 @@ class ProofStep:
     premises: List[int] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        >>> result = obj.to_dict(...)
+        """
         return {
             'step': self.step_number,
             'formula': str(self.formula),
@@ -126,6 +181,17 @@ class ProofResult:
     time_ms: int = 0
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'status': self.status.value,
             'goal': self.goal,

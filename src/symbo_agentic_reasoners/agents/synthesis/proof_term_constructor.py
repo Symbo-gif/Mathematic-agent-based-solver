@@ -88,6 +88,28 @@ class ProofTerm:
     bound_var: Optional[str] = None
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'kind': self.kind.value,
             'name': self.name,
@@ -136,12 +158,34 @@ class TypeContext:
 
 @dataclass
 class TypeCheckOutput:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Output of type checking"""
     result: TypeCheckResult
     inferred_type: Optional[str]
     errors: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'result': self.result.value,
             'type': self.inferred_type,

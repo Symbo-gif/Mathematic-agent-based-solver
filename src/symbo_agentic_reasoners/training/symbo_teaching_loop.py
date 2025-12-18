@@ -109,6 +109,28 @@ class LearningStatistics:
             self.learning_events = []
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'problems_solved': self.problems_solved,
             'solutions_verified': self.solutions_verified,
@@ -399,6 +421,17 @@ class SymboTeachingLoop:
     def _trigger_auto_distillation(self):
         """Trigger automatic distillation in background"""
         def distill():
+            """Perform distill operation.
+
+            Args:
+            No arguments
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.distill(...)
+            """
             try:
                 result = self.run_distillation()
                 logger.info(f"Auto-distillation completed: {result.get('status')}")

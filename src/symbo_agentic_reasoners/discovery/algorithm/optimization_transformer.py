@@ -80,6 +80,28 @@ class OptimizationOpportunity:
     estimated_speedup: float = 1.0
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'type': self.opt_type.value,
             'location': self.location,
@@ -97,6 +119,17 @@ class TransformationResult:
         original_code: Original code
         optimized_code: Transformed code
         status: Transformation status
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         optimizations_applied: List of applied optimizations
         estimated_speedup: Overall estimated speedup
     """
@@ -108,6 +141,17 @@ class TransformationResult:
     notes: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'status': self.status.value,
             'optimizations_count': len(self.optimizations_applied),

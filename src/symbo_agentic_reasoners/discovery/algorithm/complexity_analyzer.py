@@ -82,11 +82,44 @@ class ComplexityResult:
     details: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'time': self.time_complexity.value,
             'space': self.space_complexity.value,
             'confidence': round(self.confidence, 2),
             'method': self.method.value
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         }
 
 
@@ -98,6 +131,17 @@ class EmpiricalMeasurement:
     iterations: int
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'n': self.input_size,
             'time_ms': round(self.runtime_ms, 3),
@@ -262,6 +306,18 @@ class ComplexityAnalyzer:
         max_depth = [0]
         
         def visit(node, depth=0):
+            """Perform visit operation.
+
+            Args:
+            node: Description needed
+            depth: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.visit(...)
+            """
             if isinstance(node, (ast.For, ast.While)):
                 depth += 1
                 max_depth[0] = max(max_depth[0], depth)

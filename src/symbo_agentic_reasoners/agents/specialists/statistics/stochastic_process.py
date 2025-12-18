@@ -106,6 +106,28 @@ class MarkovChainProperties:
     mean_first_passage_times: Optional[Dict[Tuple[int, int], float]] = None
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'num_states': self.num_states,
             'is_irreducible': self.is_irreducible,
@@ -117,6 +139,17 @@ class MarkovChainProperties:
 
 @dataclass
 class ProcessAnalysisResult:
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     """Result of stochastic process analysis"""
     process_type: ProcessType
     parameters: Dict[str, Any]
@@ -124,6 +157,17 @@ class ProcessAnalysisResult:
     properties: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'process_type': self.process_type.value,
             'parameters': {k: str(v) for k, v in self.parameters.items()},

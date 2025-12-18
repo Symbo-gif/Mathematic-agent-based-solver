@@ -88,6 +88,28 @@ class AlgorithmSpec:
     hints: List[str] = field(default_factory=list)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.spec_id,
             'name': self.name,
@@ -110,6 +132,17 @@ class SynthesizedAlgorithm:
         correctness_notes: Notes on correctness
     """
     algorithm_id: str
+    """Perform to dict operation.
+
+    Args:
+    No arguments
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.to_dict(...)
+    """
     spec: AlgorithmSpec
     code: str
     category: AlgorithmCategory
@@ -121,6 +154,17 @@ class SynthesizedAlgorithm:
     created_at: datetime = field(default_factory=datetime.now)
     
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'id': self.algorithm_id,
             'name': self.spec.name,

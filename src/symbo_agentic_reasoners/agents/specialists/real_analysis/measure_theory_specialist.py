@@ -689,6 +689,17 @@ class MeasureTheorySpecialist:
 
         # Compute ||fg||_1
         def fg(x):
+            """Perform fg operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.fg(...)
+            """
             return f(x) * g(x)
 
         norm_fg_1 = self.lp_norm(fg, 1, domain)

@@ -86,6 +86,28 @@ class SafeStreamHandler(logging.StreamHandler):
     """StreamHandler that safely handles Unicode encoding on Windows console."""
 
     def emit(self, record):
+        """Perform emit operation.
+
+        Args:
+        record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.emit(...)
+        """
+        """Perform emit operation.
+
+        Args:
+        record: Description needed
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.emit(...)
+        """
         try:
             msg = self.format(record)
             stream = self.stream
@@ -101,6 +123,17 @@ class SafeStreamHandler(logging.StreamHandler):
         except RecursionError:
             raise
         except Exception:
+            """Perform filter operation.
+
+            Args:
+            record: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.filter(...)
+            """
             self.handleError(record)
 
 # Context variable for correlation ID (thread-safe)
@@ -111,6 +144,14 @@ class CorrelationFilter(logging.Filter):
     """Adds correlation ID to log records"""
 
     def filter(self, record):
+        """Add correlation ID to log record.
+
+        Args:
+            record: LogRecord to filter
+
+        Returns:
+            bool: Always True (all records pass)
+        """
         record.correlation_id = correlation_id.get() or '-'
         return True
 
@@ -129,6 +170,14 @@ class SYMBO_AGENTIC_REASONERSFormatter(logging.Formatter):
             )
 
     def format(self, record):
+        """Format log record as JSON or colored text.
+
+        Args:
+            record: LogRecord to format
+
+        Returns:
+            str: Formatted log message (JSON or colored text)
+        """
         if self.json_format:
             import json
             log_dict = {

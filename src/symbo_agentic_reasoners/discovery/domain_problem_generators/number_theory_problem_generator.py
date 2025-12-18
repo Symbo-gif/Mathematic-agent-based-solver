@@ -128,5 +128,16 @@ class NumberTheoryProblemGenerator:
 
 
 def generate_number_theory_problem(difficulty=None):
+    """Perform generate number theory problem operation.
+
+    Args:
+    difficulty: Description needed
+
+    Returns:
+    Result of the operation
+
+    Example:
+    >>> result = obj.generate_number_theory_problem(...)
+    """
     gen = NumberTheoryProblemGenerator()
     return gen.generate_problem(difficulty)

@@ -67,6 +67,28 @@ class ProofState:
         return len(self.children) == 0
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'state_id': self.state_id,
             'goal': self.goal,
@@ -93,6 +115,17 @@ class SearchResult:
         states_explored: Number of states explored
         max_depth_reached: Maximum depth reached
         time_elapsed_ms: Time taken in milliseconds
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         status: Search status
     """
     success: bool
@@ -104,6 +137,17 @@ class SearchResult:
     value_at_root: float = 0.5
 
     def to_dict(self) -> Dict[str, Any]:
+        """Perform to dict operation.
+
+        Args:
+        No arguments
+
+        Returns:
+        Result of the operation
+
+        Example:
+        >>> result = obj.to_dict(...)
+        """
         return {
             'success': self.success,
             'proof_steps': self.proof_steps,

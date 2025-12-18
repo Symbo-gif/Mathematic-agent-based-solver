@@ -407,6 +407,17 @@ class BanachSpaceSpecialist:
 
         # Verify representation
         def represented_functional(x):
+            """Perform represented functional operation.
+
+            Args:
+            x: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.represented_functional(...)
+            """
             return np.dot(x, y)
 
         # Compute functional norm

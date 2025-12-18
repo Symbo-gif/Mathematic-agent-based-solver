@@ -55,6 +55,17 @@ class Contour:
     def reverse(self) -> 'Contour':
         """Return reversed contour."""
         def rev_param(t):
+            """Perform rev param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.rev_param(...)
+            """
             s = self.t_end - (t - self.t_start)
             return self.parametrization(s)
 
@@ -149,6 +160,17 @@ class ContourIntegrationSpecialist:
             Circular Contour
         """
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             theta = 2 * np.pi * t * orientation
             return center + radius * np.exp(1j * theta)
 
@@ -180,6 +202,17 @@ class ContourIntegrationSpecialist:
             Arc Contour
         """
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             theta = theta_start + t * (theta_end - theta_start)
             return center + radius * np.exp(1j * theta)
 
@@ -207,6 +240,17 @@ class ContourIntegrationSpecialist:
             Line segment Contour
         """
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             return z_start + t * (z_end - z_start)
 
         return Contour(
@@ -249,6 +293,17 @@ class ContourIntegrationSpecialist:
             corners = corners[::-1]
 
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             # t in [0, 1] maps to 4 sides
             side = int(t * 4) % 4
             local_t = (t * 4) % 1
@@ -312,6 +367,17 @@ class ContourIntegrationSpecialist:
             Keyhole Contour
         """
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             if t < 0.25:
                 # Outer circle (counterclockwise from branch_angle to 2*pi - branch_angle)
                 s = t / 0.25
@@ -361,6 +427,17 @@ class ContourIntegrationSpecialist:
             return contours[0]
 
         def param(t):
+            """Perform param operation.
+
+            Args:
+            t: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.param(...)
+            """
             # Find which contour we're in
             idx = int(t * n) % n
             local_t = (t * n) % 1
@@ -570,6 +647,17 @@ class ContourIntegrationSpecialist:
             f^(n)(z0)
         """
         def integrand(z):
+            """Perform integrand operation.
+
+            Args:
+            z: Description needed
+
+            Returns:
+            Result of the operation
+
+            Example:
+            >>> result = obj.integrand(...)
+            """
             return f(z) / (z - z0) ** (n + 1)
 
         result = self.integrate(integrand, contour)
