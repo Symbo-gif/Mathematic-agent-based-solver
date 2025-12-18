@@ -976,10 +976,10 @@
     }
   },
   "Agents/Specialists": {
-    "total": 1902,
+    "total": 1987,
     "documented": 1755,
-    "coverage": 92.27129337539432,
-    "missing": 147,
+    "coverage": 88.3241066935078,
+    "missing": 232,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1112,6 +1112,36 @@
         "documented": 20,
         "coverage": 100.0,
         "missing": 0
+      },
+      "computability\\complexity_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "computability\\kolmogorov_complexity.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "computability\\recursion_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "computability\\turing_completeness.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "computability\\turing_degrees.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "control_theory\\dynamical_systems_specialist.py": {
         "total": 15,
@@ -1467,6 +1497,36 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "riemannian\\comparison.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "riemannian\\curvature.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "riemannian\\geodesic.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "riemannian\\holonomy.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "riemannian\\metric.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "statistics\\bayesian_engine.py": {
         "total": 4,
         "documented": 4,
@@ -1532,6 +1592,48 @@
         "documented": 3,
         "coverage": 27.27272727272727,
         "missing": 8
+      },
+      "statistics\\bayesian_decision\\decision_rules.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\bayesian_decision\\sequential_decision.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\bayesian_decision\\utility_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\timeseries\\arima.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\timeseries\\kalman_filter.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\timeseries\\nonlinear_timeseries.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "statistics\\timeseries\\spectral_analysis.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "physics\\electromagnetism\\circuits_specialist.py": {
         "total": 12,
@@ -1728,10 +1830,10 @@
     }
   },
   "Agents/Supervisors": {
-    "total": 213,
+    "total": 223,
     "documented": 203,
-    "coverage": 95.30516431924883,
-    "missing": 10,
+    "coverage": 91.03139013452915,
+    "missing": 20,
     "files": {
       "algebra_supervisor.py": {
         "total": 14,
@@ -1756,6 +1858,12 @@
         "documented": 10,
         "coverage": 100.0,
         "missing": 0
+      },
+      "computability_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "control_theory_supervisor.py": {
         "total": 8,
@@ -1858,6 +1966,12 @@
         "documented": 8,
         "coverage": 100.0,
         "missing": 0
+      },
+      "riemannian_geometry_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "stats_supervisor.py": {
         "total": 14,
