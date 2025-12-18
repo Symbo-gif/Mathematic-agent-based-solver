@@ -1968,11 +1968,17 @@
     }
   },
   "Agents/Supervisors": {
-    "total": 243,
-    "documented": 203,
-    "coverage": 83.53909465020575,
+    "total": 293,
+    "documented": 253,
+    "coverage": 86.3481228668942,
     "missing": 40,
     "files": {
+      "algebraic_number_theory_supervisor.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "algebraic_topology_supervisor.py": {
         "total": 5,
         "documented": 0,
@@ -1982,6 +1988,18 @@
       "algebra_supervisor.py": {
         "total": 14,
         "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "analytic_number_theory_supervisor.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "bayesian_decision_theory_supervisor.py": {
+        "total": 9,
+        "documented": 9,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2129,6 +2147,12 @@
         "coverage": 0.0,
         "missing": 5
       },
+      "spectral_graph_theory_supervisor.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "stats_supervisor.py": {
         "total": 14,
         "documented": 14,
@@ -2146,6 +2170,12 @@
         "documented": 0,
         "coverage": 0.0,
         "missing": 5
+      },
+      "timeseries_supervisor.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
       }
     }
   },
