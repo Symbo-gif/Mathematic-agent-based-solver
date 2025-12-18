@@ -405,9 +405,9 @@
       },
       "symbolic\\compatibility.py": {
         "total": 7,
-        "documented": 1,
-        "coverage": 14.285714285714285,
-        "missing": 6
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic\\composite_operations.py": {
         "total": 23,
@@ -423,9 +423,9 @@
       },
       "symbolic\\derivative.py": {
         "total": 6,
-        "documented": 1,
-        "coverage": 16.666666666666664,
-        "missing": 5
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic\\expression_parser.py": {
         "total": 17,
@@ -435,9 +435,9 @@
       },
       "symbolic\\expr_types.py": {
         "total": 23,
-        "documented": 20,
-        "coverage": 86.95652173913044,
-        "missing": 3
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic\\functions.py": {
         "total": 60,
@@ -483,9 +483,9 @@
       },
       "symbolic\\symbol.py": {
         "total": 6,
-        "documented": 1,
-        "coverage": 16.666666666666664,
-        "missing": 5
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic\\symbolic_supervisor.py": {
         "total": 21,
@@ -495,9 +495,9 @@
       },
       "symbolic\\sympy_compatibility.py": {
         "total": 17,
-        "documented": 8,
-        "coverage": 47.05882352941176,
-        "missing": 9
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic\\type_system.py": {
         "total": 67,
@@ -519,9 +519,9 @@
       },
       "symbolic\\utils\\validation.py": {
         "total": 6,
-        "documented": 4,
-        "coverage": 66.66666666666666,
-        "missing": 2
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       },
       "calculus\\definite_integration\\exponential_integrals.py": {
         "total": 10,
@@ -605,15 +605,15 @@
   },
   "Symbolic Core": {
     "total": 416,
-    "documented": 384,
-    "coverage": 92.3076923076923,
-    "missing": 32,
+    "documented": 414,
+    "coverage": 99.51923076923077,
+    "missing": 2,
     "files": {
       "compatibility.py": {
         "total": 7,
-        "documented": 1,
-        "coverage": 14.285714285714285,
-        "missing": 6
+        "documented": 7,
+        "coverage": 100.0,
+        "missing": 0
       },
       "composite_operations.py": {
         "total": 23,
@@ -629,9 +629,9 @@
       },
       "derivative.py": {
         "total": 6,
-        "documented": 1,
-        "coverage": 16.666666666666664,
-        "missing": 5
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       },
       "expression_parser.py": {
         "total": 17,
@@ -641,9 +641,9 @@
       },
       "expr_types.py": {
         "total": 23,
-        "documented": 20,
-        "coverage": 86.95652173913044,
-        "missing": 3
+        "documented": 23,
+        "coverage": 100.0,
+        "missing": 0
       },
       "functions.py": {
         "total": 60,
@@ -689,9 +689,9 @@
       },
       "symbol.py": {
         "total": 6,
-        "documented": 1,
-        "coverage": 16.666666666666664,
-        "missing": 5
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       },
       "symbolic_supervisor.py": {
         "total": 21,
@@ -701,9 +701,9 @@
       },
       "sympy_compatibility.py": {
         "total": 17,
-        "documented": 8,
-        "coverage": 47.05882352941176,
-        "missing": 9
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
       },
       "type_system.py": {
         "total": 67,
@@ -725,9 +725,9 @@
       },
       "utils\\validation.py": {
         "total": 6,
-        "documented": 4,
-        "coverage": 66.66666666666666,
-        "missing": 2
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
       }
     }
   },

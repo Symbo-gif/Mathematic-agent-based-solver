@@ -32,6 +32,7 @@ def check_expression_depth(expr, max_depth: int = MAX_EXPRESSION_DEPTH) -> Tuple
         (is_safe, error_message)
     """
     def get_depth(e, current_depth=0):
+        """Recursively compute expression tree depth."""
         if current_depth > max_depth:
             return current_depth
         if hasattr(e, 'args'):
@@ -73,6 +74,7 @@ def check_term_count(expr, max_terms: int = MAX_TERM_COUNT) -> Tuple[bool, str]:
         (is_safe, error_message)
     """
     def count_terms(e):
+        """Recursively count terms in expression tree."""
         if hasattr(e, 'args'):
             return sum(count_terms(arg) for arg in e.args)
         return 1

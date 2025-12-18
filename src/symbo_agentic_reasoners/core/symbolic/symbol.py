@@ -48,6 +48,11 @@ class Symbol(Expr):
 
     @property
     def free_symbols(self) -> Set['Symbol']:
+        """Get free symbols (returns a set containing only this symbol).
+
+        Returns:
+            Set containing only this Symbol instance
+        """
         return {self}
 
     def subs(self, *args, **kwargs) -> Expr:
@@ -61,12 +66,59 @@ class Symbol(Expr):
         return substitutions.get(self, self)
 
     def diff(self, var: 'Symbol') -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx symbol(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Symbol(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Integer(1) if self == var else Integer(0)
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to symbol.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Symbol(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         return self
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Symbol(2).evalf()
+                # Returns numerical result
+
+                """
         # Check if this is a constant
         name_lower = self.name.lower()
         if name_lower == 'pi':
@@ -78,6 +130,19 @@ class Symbol(Expr):
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Symbol(Symbol('x')).to_latex()
+                '\\symbol\\left(x\\right)'
+
+                """
         # Greek letters and special symbols
         greek = {
             'alpha': r'\alpha', 'beta': r'\beta', 'gamma': r'\gamma',

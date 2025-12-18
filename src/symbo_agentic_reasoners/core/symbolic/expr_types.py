@@ -233,10 +233,20 @@ class Expr(ABC):
 
     @property
     def is_zero(self) -> bool:
+        """Check if this expression is zero (sympy compatibility property).
+
+        Returns:
+            False (base implementation, overridden in Integer)
+        """
         return False
 
     @property
     def is_one(self) -> bool:
+        """Check if this expression is one (sympy compatibility property).
+
+        Returns:
+            False (base implementation, overridden in Integer)
+        """
         return False
 
     # =========================================================================
@@ -324,6 +334,20 @@ class MathConstant:
 
     @staticmethod
     def is_constant(name: str) -> bool:
+        """Check if a name represents a mathematical constant.
+
+        Args:
+            name: Symbol name to check
+
+        Returns:
+            True if name is a recognized constant (pi, e, euler, gamma, phi, i)
+
+        Example:
+            >>> MathConstant.is_constant('pi')
+            True
+            >>> MathConstant.is_constant('x')
+            False
+        """
         return name.lower() in ('pi', 'e', 'euler', 'gamma', 'phi', 'i')
 
 

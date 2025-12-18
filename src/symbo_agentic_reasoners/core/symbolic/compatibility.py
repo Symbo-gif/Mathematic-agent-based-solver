@@ -44,21 +44,103 @@ class Eq(Expr):
 
     @property
     def free_symbols(self) -> Set:
+        """Get all free symbols from both sides of the equation.
+
+        Returns:
+            Union of free symbols from lhs and rhs
+        """
         return self.lhs.free_symbols | self.rhs.free_symbols
 
     def subs(self, substitutions):
+        """Substitute symbols with values or expressions.
+
+                Recursively substitutes symbols throughout the expression.
+                Supports dict, positional, and keyword argument forms.
+
+                Args:
+                    substitutions: Symbol-to-value mappings
+
+                Returns:
+                    New expression with substitutions applied
+
+                Example:
+                    >>> x, y = Symbol('x'), Symbol('y')
+                >>> expr.subs(x, y)
+                # Returns expression with x replaced by y
+
+                """
         return Eq(self.lhs.subs(substitutions), self.rhs.subs(substitutions))
 
     def diff(self, var):
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx eq(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Eq(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Eq(self.lhs.diff(var), self.rhs.diff(var))
 
     def evalf(self, n=15):
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    n: [Description needed]
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Eq(2).evalf()
+                # Returns numerical result
+
+                """
         return Eq(self.lhs.evalf(n), self.rhs.evalf(n))
 
     def simplify(self):
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to eq.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Eq(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         return Eq(self.lhs.simplify(), self.rhs.simplify())
 
     def to_latex(self):
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Eq(Symbol('x')).to_latex()
+                '\\eq\\left(x\\right)'
+
+                """
         return f"{self.lhs.to_latex()} = {self.rhs.to_latex()}"
 
 

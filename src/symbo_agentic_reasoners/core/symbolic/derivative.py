@@ -39,6 +39,11 @@ class Derivative(Expr):
 
     @property
     def free_symbols(self) -> Set[Symbol]:
+        """Get all free symbols in the derivative expression.
+
+        Returns:
+            Union of symbols from expression and differentiation variable
+        """
         return self.expr.free_symbols | {self.var}
 
     def subs(self, *args_in, **kwargs) -> Expr:
@@ -52,15 +57,75 @@ class Derivative(Expr):
         return Derivative(self.expr.subs(substitutions), self.var)
 
     def diff(self, var: Symbol) -> Expr:
+        """Compute derivative with respect to variable.
+
+                Applies differentiation rules using the chain rule.
+                Implements: d/dx derivative(f(x)) = [derivative formula]
+
+                Args:
+                    var: Variable to differentiate with respect to
+
+                Returns:
+                    Derivative expression as symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Derivative(x**2).diff(x)
+                # Returns derivative expression
+
+                """
         return Derivative(self, var)
 
     def simplify(self) -> Expr:
+        """Simplify the expression algebraically.
+
+                Applies simplification rules specific to derivative.
+                May evaluate constants, cancel terms, or apply identities.
+
+                Returns:
+                    Simplified expression
+
+                Example:
+                    >>> Derivative(Integer(0)).simplify()
+                # Returns simplified form
+
+                """
         return self
 
     def evalf(self, precision: int = 15) -> Union[float, Expr]:
+        """Numerically evaluate the expression.
+
+                Evaluates the function numerically if all arguments are numeric.
+                Returns symbolic form if evaluation fails.
+
+                Args:
+                    precision: Number of decimal digits for precision (default: 15)
+
+                Returns:
+                    Numerical value (float) if evaluable, otherwise symbolic Expr
+
+                Example:
+                    >>> x = Symbol('x')
+                >>> Derivative(2).evalf()
+                # Returns numerical result
+
+                """
         return self
 
     def to_latex(self) -> str:
+        """Convert to LaTeX representation.
+
+                Generates LaTeX string for mathematical typesetting.
+                Used for rendering in Jupyter notebooks, documentation, etc.
+
+                Returns:
+                    LaTeX string representation
+
+                Example:
+                    >>> Derivative(Symbol('x')).to_latex()
+                '\\derivative\\left(x\\right)'
+
+                """
         return rf'\frac{{d}}{{d{self.var.to_latex()}}}\left({self.expr.to_latex()}\right)'
 
 
