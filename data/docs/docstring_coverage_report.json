@@ -1707,9 +1707,9 @@
   },
   "Discovery": {
     "total": 519,
-    "documented": 467,
-    "coverage": 89.98073217726397,
-    "missing": 52,
+    "documented": 476,
+    "coverage": 91.71483622350675,
+    "missing": 43,
     "files": {
       "curiosity_engine.py": {
         "total": 35,
@@ -1911,9 +1911,9 @@
       },
       "undecidability\\__init__.py": {
         "total": 9,
-        "documented": 0,
-        "coverage": 0.0,
-        "missing": 9
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
       }
     }
   },
