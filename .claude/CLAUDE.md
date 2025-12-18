@@ -9,20 +9,20 @@ All symbolic mathematics is pure Python - no SymPy, no SageMath, no external CAS
 
 ---
 
-## System Agent Inventory (162 BDI Agents)
+## System Agent Inventory (181 BDI Agents)
 
 ### Summary Statistics
 
 | Category | Count | Description |
 |----------|-------|-------------|
 | **Coordinators** | 1 | Multi-domain orchestration (Tier 1) |
-| **Supervisors** | 23 | Domain routers (Tier 2) - **+3 Phase 1** |
-| **Specialists** | 123 | Computational experts (Tier 3) - **+27 Phase 1** |
+| **Supervisors** | 25 | Domain routers (Tier 2) - **+3 Phase 1, +2 Phase 2** |
+| **Specialists** | 140 | Computational experts (Tier 3) - **+27 Phase 1, +17 Phase 2** |
 | **Base Agents** | 3 | Utility/analysis agents (Tier 1) |
 | **Synthesis Agents** | 4 | Phase 6 formal verification |
 | **Prover Agents** | 2 | Phase 6 proof verification |
 | **System Agents** | 6 | Codebase management (BDI) |
-| **TOTAL BDI** | **162** | All BDI agents (**+30 from Phase 1 expansion**) |
+| **TOTAL BDI** | **181** | All BDI agents (**+49 from Phases 1-2**) |
 
 ---
 
@@ -34,7 +34,7 @@ All symbolic mathematics is pure Python - no SymPy, no SageMath, no external CAS
 
 ---
 
-### TIER 2: SUPERVISORS (23 Domain Routers)
+### TIER 2: SUPERVISORS (25 Domain Routers)
 
 | Supervisor | File | Domain |
 |------------|------|--------|
@@ -61,10 +61,12 @@ All symbolic mathematics is pure Python - no SymPy, no SageMath, no external CAS
 | **StochasticProcessesSupervisor** | `agents/supervisors/stochastic_processes_supervisor.py` | **Stochastic Processes (Phase 1)** |
 | **ModelTheorySupervisor** | `agents/supervisors/model_theory_supervisor.py` | **Model Theory (Phase 1)** |
 | **ProofTheorySupervisor** | `agents/supervisors/proof_theory_supervisor.py` | **Proof Theory (Phase 1)** |
+| **ComputabilitySupervisor** | `agents/supervisors/computability_supervisor.py` | **Computability Theory (Phase 2)** |
+| **RiemannianGeometrySupervisor** | `agents/supervisors/riemannian_geometry_supervisor.py` | **Riemannian Geometry (Phase 2)** |
 
 ---
 
-### TIER 3: SPECIALISTS BY DOMAIN (123 Total)
+### TIER 3: SPECIALISTS BY DOMAIN (140 Total)
 
 #### Algebra Specialists (7)
 

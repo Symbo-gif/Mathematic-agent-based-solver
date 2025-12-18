@@ -198,6 +198,34 @@ class StatisticsSupervisor(BDIAgent):
         raw_input = metadata.get('raw_input', '').lower()
         operation = metadata.get('operation', 'compute')
 
+        # TIME SERIES (BEFORE general stats - Phase 2)
+        timeseries_keywords = [
+            'time series', 'arima', 'autoregressive', 'moving average',
+            'kalman filter', 'state space', 'forecasting', 'trend', 'seasonality',
+            'acf', 'pacf', 'stationarity', 'box-jenkins'
+        ]
+        if any(kw in raw_input for kw in timeseries_keywords):
+            return {
+                'target': 'Time Series Specialist',
+                'service_type': 'math.statistics.timeseries',
+                'paradigm': 'timeseries',
+                'reason': 'Detected time series keywords (ARIMA/forecasting/etc)'
+            }
+
+        # BAYESIAN DECISION THEORY (BEFORE general Bayesian - Phase 2)
+        bayesian_decision_keywords = [
+            'utility', 'decision theory', 'loss function', 'bayes risk',
+            'minimax', 'admissible', 'decision rule', 'optimal stopping',
+            'multi-armed bandit', 'sequential decision', 'posterior risk'
+        ]
+        if any(kw in raw_input for kw in bayesian_decision_keywords):
+            return {
+                'target': 'Bayesian Decision Specialist',
+                'service_type': 'math.statistics.bayesian.decision',
+                'paradigm': 'bayesian_decision',
+                'reason': 'Detected Bayesian decision theory keywords (utility/loss/etc)'
+            }
+
         # Bayesian keywords (highest priority for paradigm enforcement)
         bayesian_keywords = [
             'prior', 'posterior', 'bayes', 'bayesian', 'belief',

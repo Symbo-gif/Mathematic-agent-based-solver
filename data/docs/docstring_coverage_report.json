@@ -976,10 +976,10 @@
     }
   },
   "Agents/Specialists": {
-    "total": 1715,
-    "documented": 1715,
-    "coverage": 100.0,
-    "missing": 0,
+    "total": 1902,
+    "documented": 1755,
+    "coverage": 92.27129337539432,
+    "missing": 147,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1329,6 +1329,30 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "model_theory\\categoricity.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "model_theory\\compactness.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "model_theory\\ominimality.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "model_theory\\quantifier_elimination.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "numerical\\advanced_quadrature_specialist.py": {
         "total": 22,
         "documented": 22,
@@ -1389,6 +1413,36 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "proof_theory\\constructive_math.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "proof_theory\\curry_howard.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "proof_theory\\cut_elimination.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "proof_theory\\ordinal_analysis.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "proof_theory\\type_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "real_analysis\\function_spaces_specialist.py": {
         "total": 14,
         "documented": 14,
@@ -1448,6 +1502,36 @@
         "documented": 19,
         "coverage": 100.0,
         "missing": 0
+      },
+      "stochastic\\brownian_motion.py": {
+        "total": 15,
+        "documented": 15,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "stochastic\\levy_processes.py": {
+        "total": 9,
+        "documented": 1,
+        "coverage": 11.11111111111111,
+        "missing": 8
+      },
+      "stochastic\\martingale_theory.py": {
+        "total": 10,
+        "documented": 2,
+        "coverage": 20.0,
+        "missing": 8
+      },
+      "stochastic\\sde_solver.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "stochastic\\stochastic_calculus.py": {
+        "total": 11,
+        "documented": 3,
+        "coverage": 27.27272727272727,
+        "missing": 8
       },
       "physics\\electromagnetism\\circuits_specialist.py": {
         "total": 12,
@@ -1521,6 +1605,36 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "discrete_math\\spectral_graphs\\adjacency_spectrum.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "discrete_math\\spectral_graphs\\cheeger_inequality.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "discrete_math\\spectral_graphs\\laplacian_spectrum.py": {
+        "total": 6,
+        "documented": 1,
+        "coverage": 16.666666666666664,
+        "missing": 5
+      },
+      "discrete_math\\spectral_graphs\\random_walks.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "discrete_math\\spectral_graphs\\spectral_clustering.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "algebra\\polynomial\\domain_solver.py": {
         "total": 2,
         "documented": 2,
@@ -1562,14 +1676,62 @@
         "documented": 7,
         "coverage": 100.0,
         "missing": 0
+      },
+      "algebra\\number_theory\\algebraic\\class_field_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "algebra\\number_theory\\algebraic\\ideal_theory.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "algebra\\number_theory\\algebraic\\local_fields.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "algebra\\number_theory\\algebraic\\number_fields.py": {
+        "total": 6,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 6
+      },
+      "algebra\\number_theory\\analytic\\analytic_continuation.py": {
+        "total": 9,
+        "documented": 1,
+        "coverage": 11.11111111111111,
+        "missing": 8
+      },
+      "algebra\\number_theory\\analytic\\arithmetic_functions.py": {
+        "total": 10,
+        "documented": 2,
+        "coverage": 20.0,
+        "missing": 8
+      },
+      "algebra\\number_theory\\analytic\\prime_distribution.py": {
+        "total": 9,
+        "documented": 1,
+        "coverage": 11.11111111111111,
+        "missing": 8
+      },
+      "algebra\\number_theory\\analytic\\zeta_functions.py": {
+        "total": 10,
+        "documented": 2,
+        "coverage": 20.0,
+        "missing": 8
       }
     }
   },
   "Agents/Supervisors": {
-    "total": 193,
-    "documented": 193,
-    "coverage": 100.0,
-    "missing": 0,
+    "total": 213,
+    "documented": 203,
+    "coverage": 95.30516431924883,
+    "missing": 10,
     "files": {
       "algebra_supervisor.py": {
         "total": 14,
@@ -1649,6 +1811,12 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "model_theory_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "optimization_supervisor.py": {
         "total": 9,
         "documented": 9,
@@ -1679,6 +1847,12 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "proof_theory_supervisor.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
       "real_analysis_supervisor.py": {
         "total": 8,
         "documented": 8,
@@ -1688,6 +1862,12 @@
       "stats_supervisor.py": {
         "total": 14,
         "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "stochastic_processes_supervisor.py": {
+        "total": 10,
+        "documented": 10,
         "coverage": 100.0,
         "missing": 0
       }
