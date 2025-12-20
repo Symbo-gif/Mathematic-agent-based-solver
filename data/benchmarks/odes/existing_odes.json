@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "source": "Kamke Handbook, Textbooks, Literature",
+    "total_problems": 0,
+    "collection_date": "2025-12-19",
+    "description": "Classic ODE problems from mathematical literature"
+  },
+  "problems": [
+    {
+      "id": "ODE_EXISTING_001",
+      "equation": "dy/dx + y = 0",
+      "type": "first_order_linear_homogeneous",
+      "order": 1,
+      "initial_conditions": "y(0) = 1",
+      "solution": "y = exp(-x)",
+      "source": "Kamke #1",
+      "difficulty_level": 2,
+      "metadata": {
+        "historical_significance": "Classic exponential decay",
+        "applications": [
+          "radioactive decay",
+          "cooling"
+        ]
+      }
+    }
+  ]
+}

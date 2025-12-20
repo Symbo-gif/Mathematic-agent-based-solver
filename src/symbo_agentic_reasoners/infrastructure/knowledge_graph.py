@@ -54,6 +54,7 @@ from typing import Dict, Any, List, Optional, Set, Tuple
 from dataclasses import dataclass, field, asdict
 from enum import Enum
 from pathlib import Path
+from datetime import datetime
 import uuid
 
 logger = logging.getLogger('symbo_agentic_reasoners.knowledge_graph')
@@ -68,6 +69,7 @@ class NodeType(Enum):
     EXAMPLE = "example"
     COUNTEREXAMPLE = "counterexample"
     AXIOM = "axiom"
+    STRATEGY = "strategy"  # High-level problem-solving approach (vs HEURISTIC = algorithmic pattern)
 
 
 class EdgeType(Enum):
@@ -80,6 +82,14 @@ class EdgeType(Enum):
     DEPENDS_ON = "depends_on"
     ANALOGOUS_TO = "analogous_to"
     SPECIALIZES = "specializes"
+    # Strategy-specific edge types
+    SOLVED_BY = "solved_by"  # Problem → Strategy (this strategy solved it)
+    EFFECTIVE_FOR = "effective_for"  # Strategy → ProblemType (high success rate)
+    COMPOSED_WITH = "composed_with"  # Strategy → Strategy (sequential composition)
+    PREREQUISITE_OF = "prerequisite_of"  # Strategy → Strategy (must apply before)
+    ENABLES = "enables"  # Strategy → Strategy (makes subsequent viable)
+    SUBSUMES = "subsumes"  # Strategy → Strategy (generalization relationship)
+    REFINES = "refines"  # Strategy → Strategy (specialization relationship)
 
 
 @dataclass
@@ -93,6 +103,36 @@ class KnowledgeNode:
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: str = ""
     confidence: float = 1.0  # For conjectures: 0.0-1.0
+
+
+@dataclass
+class StrategyNode(KnowledgeNode):
+    """
+    Strategy node for problem-solving approaches.
+
+    Distinguishes STRATEGY from HEURISTIC:
+    - HEURISTIC: Low-level algorithmic pattern (e.g., "iterative refinement")
+    - STRATEGY: High-level reasoning approach (e.g., "Pólya cycle", "invariant method")
+    """
+    category: str = ""  # 'structural', 'heuristic', 'nonstandard', 'meta'
+    abstract_description: str = ""
+    detection_signals: List[str] = field(default_factory=list)
+    applicability_conditions: List[str] = field(default_factory=list)
+    composition_compatible: List[str] = field(default_factory=list)
+    success_rates_by_domain: Dict[str, 'SuccessMetrics'] = field(default_factory=dict)
+    typical_agent_sequence: List[str] = field(default_factory=list)
+    reformulation_pattern: Optional[str] = None
+
+
+@dataclass
+class SuccessMetrics:
+    """Success tracking for a strategy in a domain."""
+    domain: str = ""
+    applications: int = 0
+    successes: int = 0
+    avg_time_ms: float = 0.0
+    avg_complexity_reduction: float = 0.0
+    last_success: Optional[str] = None  # ISO timestamp
 
 
 @dataclass
@@ -154,7 +194,16 @@ class MathematicalKnowledgeGraph:
                 proof TEXT,
                 metadata TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                confidence REAL DEFAULT 1.0
+                confidence REAL DEFAULT 1.0,
+                -- Strategy-specific columns (NULL for non-strategy nodes)
+                strategy_category TEXT,
+                abstract_description TEXT,
+                detection_signals TEXT,
+                applicability_conditions TEXT,
+                composition_compatible TEXT,
+                success_rates_by_domain TEXT,
+                typical_agent_sequence TEXT,
+                reformulation_pattern TEXT
             )
         ''')
 
@@ -172,12 +221,35 @@ class MathematicalKnowledgeGraph:
             )
         ''')
 
+        # Strategy applications tracking table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS strategy_applications (
+                application_id TEXT PRIMARY KEY,
+                strategy_id TEXT NOT NULL,
+                trace_id TEXT NOT NULL,
+                conversation_id TEXT,
+                problem_type TEXT,
+                domain TEXT,
+                success BOOLEAN,
+                time_ms REAL,
+                complexity_before TEXT,
+                complexity_after TEXT,
+                detection_confidence REAL,
+                applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                metadata TEXT,
+                FOREIGN KEY (strategy_id) REFERENCES nodes(node_id)
+            )
+        ''')
+
         # Indices for fast queries
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_node_type ON nodes(node_type)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_domain ON nodes(domain)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_edge_type ON edges(edge_type)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_source ON edges(source_id)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_target ON edges(target_id)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_strategy_applications_strategy ON strategy_applications(strategy_id)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_strategy_applications_domain ON strategy_applications(domain)')
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_strategy_applications_problem ON strategy_applications(problem_type)')
 
         self.conn.commit()
 
@@ -249,6 +321,32 @@ class MathematicalKnowledgeGraph:
 
         logger.info(f"Added conjecture: {statement[:50]}... (confidence: {confidence})")
         return node
+
+    def get_node(self, node_id: str) -> Optional[KnowledgeNode]:
+        """
+        Retrieve node by ID.
+
+        Args:
+            node_id: Node identifier
+
+        Returns:
+            KnowledgeNode if found, None otherwise
+        """
+        # Check cache first
+        if node_id in self.nodes_cache:
+            return self.nodes_cache[node_id]
+
+        # Query database
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM nodes WHERE node_id = ?', (node_id,))
+        row = cursor.fetchone()
+
+        if row:
+            node = self._row_to_node(row)
+            self.nodes_cache[node_id] = node
+            return node
+
+        return None
 
     def add_relationship(
         self,
@@ -468,18 +566,61 @@ class MathematicalKnowledgeGraph:
     def _insert_node(self, node: KnowledgeNode):
         """Insert node into database."""
         cursor = self.conn.cursor()
-        cursor.execute('''
-            INSERT INTO nodes (node_id, node_type, statement, domain, proof, metadata, confidence)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            node.node_id,
-            node.node_type.value,
-            node.statement,
-            node.domain,
-            node.proof,
-            json.dumps(node.metadata),
-            node.confidence
-        ))
+
+        # Check if it's a strategy node with additional fields
+        if isinstance(node, StrategyNode):
+            # Serialize complex fields
+            success_rates_json = json.dumps({
+                domain: {
+                    'domain': metrics.domain,
+                    'applications': metrics.applications,
+                    'successes': metrics.successes,
+                    'avg_time_ms': metrics.avg_time_ms,
+                    'avg_complexity_reduction': metrics.avg_complexity_reduction,
+                    'last_success': metrics.last_success
+                }
+                for domain, metrics in node.success_rates_by_domain.items()
+            })
+
+            cursor.execute('''
+                INSERT INTO nodes (
+                    node_id, node_type, statement, domain, proof, metadata, confidence,
+                    strategy_category, abstract_description, detection_signals,
+                    applicability_conditions, composition_compatible,
+                    success_rates_by_domain, typical_agent_sequence, reformulation_pattern
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                node.node_id,
+                node.node_type.value,
+                node.statement,
+                node.domain,
+                node.proof,
+                json.dumps(node.metadata),
+                node.confidence,
+                node.category,
+                node.abstract_description,
+                json.dumps(node.detection_signals),
+                json.dumps(node.applicability_conditions),
+                json.dumps(node.composition_compatible),
+                success_rates_json,
+                json.dumps(node.typical_agent_sequence),
+                node.reformulation_pattern
+            ))
+        else:
+            # Regular node insertion
+            cursor.execute('''
+                INSERT INTO nodes (node_id, node_type, statement, domain, proof, metadata, confidence)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                node.node_id,
+                node.node_type.value,
+                node.statement,
+                node.domain,
+                node.proof,
+                json.dumps(node.metadata),
+                node.confidence
+            ))
         self.conn.commit()
 
     def _insert_edge(self, edge: KnowledgeEdge):
@@ -506,17 +647,50 @@ class MathematicalKnowledgeGraph:
         return self._row_to_node(row) if row else None
 
     def _row_to_node(self, row: tuple) -> KnowledgeNode:
-        """Convert database row to KnowledgeNode."""
-        return KnowledgeNode(
-            node_id=row[0],
-            node_type=NodeType(row[1]),
-            statement=row[2],
-            domain=row[3],
-            proof=row[4],
-            metadata=json.loads(row[5]) if row[5] else {},
-            created_at=row[6],
-            confidence=row[7]
-        )
+        """Convert database row to KnowledgeNode or StrategyNode."""
+        node_type = NodeType(row[1])
+
+        # Base fields (indices 0-7)
+        base_fields = {
+            'node_id': row[0],
+            'node_type': node_type,
+            'statement': row[2],
+            'domain': row[3],
+            'proof': row[4],
+            'metadata': json.loads(row[5]) if row[5] else {},
+            'created_at': row[6],
+            'confidence': row[7]
+        }
+
+        # If it's a strategy node and has strategy-specific fields (indices 8-15)
+        if node_type == NodeType.STRATEGY and len(row) > 8 and row[8] is not None:
+            # Deserialize success_rates_by_domain
+            success_rates = {}
+            if row[13]:  # success_rates_by_domain JSON
+                success_data = json.loads(row[13])
+                for domain, metrics_dict in success_data.items():
+                    success_rates[domain] = SuccessMetrics(
+                        domain=metrics_dict.get('domain', domain),
+                        applications=metrics_dict.get('applications', 0),
+                        successes=metrics_dict.get('successes', 0),
+                        avg_time_ms=metrics_dict.get('avg_time_ms', 0.0),
+                        avg_complexity_reduction=metrics_dict.get('avg_complexity_reduction', 0.0),
+                        last_success=metrics_dict.get('last_success')
+                    )
+
+            return StrategyNode(
+                **base_fields,
+                category=row[8] or "",
+                abstract_description=row[9] or "",
+                detection_signals=json.loads(row[10]) if row[10] else [],
+                applicability_conditions=json.loads(row[11]) if row[11] else [],
+                composition_compatible=json.loads(row[12]) if row[12] else [],
+                success_rates_by_domain=success_rates,
+                typical_agent_sequence=json.loads(row[14]) if row[14] else [],
+                reformulation_pattern=row[15] if len(row) > 15 else None
+            )
+
+        return KnowledgeNode(**base_fields)
 
     def _row_to_dict(self, row: tuple, row_type: str) -> Dict:
         """Convert row to dictionary."""

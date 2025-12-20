@@ -22,7 +22,7 @@ class TestDiophantineBasicSpecialist:
         assert len(services) > 0
 
     def test_simple_linear_diophantine(self, specialist):
-        task = create_entry(EntryType.TASK, content="3x + 5y = 1", metadata={'operation': 'solve_linear', 'a': 3, 'b': 5, 'c': 1})
+        task = create_entry(EntryType.TASK, content="3x + 5y = 1", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 3, 'b': 5, 'c': 1})
         result = specialist.process(task)
         assert 'solution' in result
 
@@ -31,28 +31,28 @@ class TestDiophantineBasicSpecialist:
         pass
 
     def test_edge_case_no_solution(self, specialist):
-        task = create_entry(EntryType.TASK, content="2x + 4y = 3", metadata={'operation': 'solve_linear', 'a': 2, 'b': 4, 'c': 3})
+        task = create_entry(EntryType.TASK, content="2x + 4y = 3", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 2, 'b': 4, 'c': 3})
         result = specialist.process(task)
         # gcd(2,4)=2 does not divide 3
         assert result.get('has_solution') == False or 'error' in result
 
     def test_edge_case_gcd_divides(self, specialist):
-        task = create_entry(EntryType.TASK, content="2x + 4y = 6", metadata={'operation': 'solve_linear', 'a': 2, 'b': 4, 'c': 6})
+        task = create_entry(EntryType.TASK, content="2x + 4y = 6", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 2, 'b': 4, 'c': 6})
         result = specialist.process(task)
         assert result.get('has_solution') == True or 'solution' in result
 
     def test_edge_case_coprime_coefficients(self, specialist):
-        task = create_entry(EntryType.TASK, content="7x + 11y = 1", metadata={'operation': 'solve_linear', 'a': 7, 'b': 11, 'c': 1})
+        task = create_entry(EntryType.TASK, content="7x + 11y = 1", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 7, 'b': 11, 'c': 1})
         result = specialist.process(task)
         assert result.get('has_solution') == True
 
     def test_invalid_input(self, specialist):
-        task = create_entry(EntryType.TASK, content="Invalid", metadata={'operation': 'solve_linear', 'a': 0, 'b': 0, 'c': 1})
+        task = create_entry(EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 0, 'b': 0, 'c': 1})
         result = specialist.process(task)
         assert 'error' in result
 
     def test_blackboard_integration(self, specialist, blackboard):
-        task = create_entry(EntryType.TASK, content="Test", metadata={'operation': 'solve_linear', 'a': 1, 'b': 1, 'c': 1})
+        task = create_entry(EntryType.TASK, content="Test", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 1, 'b': 1, 'c': 1})
         specialist.process(task)
         assert specialist.tasks_executed >= 1
 
@@ -67,7 +67,7 @@ class TestDiophantineBasicSpecialist:
 
     @pytest.mark.parametrize("a,b,c", [(1,1,1), (3,5,1), (7,11,1), (2,3,5)])
     def test_multiple_equations(self, specialist, a, b, c):
-        task = create_entry(EntryType.TASK, content=f"{a}x+{b}y={c}", metadata={'operation': 'solve_linear', 'a': a, 'b': b, 'c': c})
+        task = create_entry(EntryType.TASK, content=f"{a}x+{b}y={c}", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': a, 'b': b, 'c': c})
         result = specialist.process(task)
         assert result is not None
 

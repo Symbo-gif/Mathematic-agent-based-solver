@@ -22,43 +22,43 @@ class TestLiftingTheExponentSpecialist:
         assert len(services) > 0
 
     def test_simple_valuation(self, specialist):
-        task = create_entry(EntryType.TASK, content="v_2(24)", metadata={'operation': 'p_adic_valuation', 'n': 24, 'p': 2})
+        task = create_entry(EntryType.TASK, content="v_2(24)", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 24, 'p': 2})
         result = specialist.process(task)
         assert 'valuation' in result
         # v_2(24) = v_2(8*3) = 3
         assert result['valuation'] == 3
 
     def test_complex_large_number(self, specialist):
-        task = create_entry(EntryType.TASK, content="v_5(625)", metadata={'operation': 'p_adic_valuation', 'n': 625, 'p': 5})
+        task = create_entry(EntryType.TASK, content="v_5(625)", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 625, 'p': 5})
         result = specialist.process(task)
         # v_5(625) = v_5(5^4) = 4
         assert result.get('valuation') == 4
 
     def test_edge_case_coprime(self, specialist):
-        task = create_entry(EntryType.TASK, content="v_3(10)", metadata={'operation': 'p_adic_valuation', 'n': 10, 'p': 3})
+        task = create_entry(EntryType.TASK, content="v_3(10)", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 10, 'p': 3})
         result = specialist.process(task)
         # gcd(10, 3) = 1, so v_3(10) = 0
         assert result.get('valuation') == 0
 
     def test_edge_case_zero(self, specialist):
-        task = create_entry(EntryType.TASK, content="v_2(0)", metadata={'operation': 'p_adic_valuation', 'n': 0, 'p': 2})
+        task = create_entry(EntryType.TASK, content="v_2(0)", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 0, 'p': 2})
         result = specialist.process(task)
         # v_p(0) = ∞ or error
         assert result is not None
 
     def test_edge_case_one(self, specialist):
-        task = create_entry(EntryType.TASK, content="v_2(1)", metadata={'operation': 'p_adic_valuation', 'n': 1, 'p': 2})
+        task = create_entry(EntryType.TASK, content="v_2(1)", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 1, 'p': 2})
         result = specialist.process(task)
         # v_p(1) = 0 for any p
         assert result.get('valuation') == 0
 
     def test_invalid_input(self, specialist):
-        task = create_entry(EntryType.TASK, content="Invalid", metadata={'operation': 'p_adic_valuation', 'n': 1, 'p': 0})
+        task = create_entry(EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 1, 'p': 0})
         result = specialist.process(task)
         assert 'error' in result
 
     def test_blackboard_integration(self, specialist, blackboard):
-        task = create_entry(EntryType.TASK, content="Test", metadata={'operation': 'p_adic_valuation', 'n': 8, 'p': 2})
+        task = create_entry(EntryType.TASK, content="Test", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': 8, 'p': 2})
         specialist.process(task)
         assert specialist.tasks_executed >= 1
 
@@ -73,7 +73,7 @@ class TestLiftingTheExponentSpecialist:
 
     @pytest.mark.parametrize("n,p", [(8,2), (27,3), (125,5), (100,2)])
     def test_multiple_valuations(self, specialist, n, p):
-        task = create_entry(EntryType.TASK, content=f"v_{p}({n})", metadata={'operation': 'p_adic_valuation', 'n': n, 'p': p})
+        task = create_entry(EntryType.TASK, content=f"v_{p}({n})", author_agent="test", conversation_id="test_001", metadata={'operation': 'p_adic_valuation', 'n': n, 'p': p})
         result = specialist.process(task)
         assert result is not None
 

@@ -67,6 +67,24 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "convex_analysis.py": {
+        "total": 19,
+        "documented": 18,
+        "coverage": 94.73684210526315,
+        "missing": 1
+      },
+      "elementary_combinatorics.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "elementary_number_theory.py": {
+        "total": 24,
+        "documented": 24,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "error_handler.py": {
         "total": 4,
         "documented": 4,
@@ -88,6 +106,18 @@
       "fallback_tracker.py": {
         "total": 21,
         "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "generating_functions.py": {
+        "total": 17,
+        "documented": 17,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "inequalities.py": {
+        "total": 9,
+        "documented": 9,
         "coverage": 100.0,
         "missing": 0
       },
@@ -122,8 +152,14 @@
         "missing": 0
       },
       "orchestrator.py": {
-        "total": 5,
-        "documented": 5,
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "orchestrator_strategy_integration.py": {
+        "total": 14,
+        "documented": 14,
         "coverage": 100.0,
         "missing": 0
       },
@@ -151,9 +187,21 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "simplification.py": {
+        "total": 11,
+        "documented": 8,
+        "coverage": 72.72727272727273,
+        "missing": 3
+      },
       "solver_engine.py": {
         "total": 1,
         "documented": 1,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "special_functions.py": {
+        "total": 5,
+        "documented": 5,
         "coverage": 100.0,
         "missing": 0
       },
@@ -380,8 +428,8 @@
         "missing": 0
       },
       "solver\\router.py": {
-        "total": 5,
-        "documented": 5,
+        "total": 7,
+        "documented": 7,
         "coverage": 100.0,
         "missing": 0
       },
@@ -878,8 +926,8 @@
     }
   },
   "Infrastructure": {
-    "total": 317,
-    "documented": 317,
+    "total": 344,
+    "documented": 344,
     "coverage": 100.0,
     "missing": 0,
     "files": {
@@ -902,8 +950,8 @@
         "missing": 0
       },
       "agent_registry.py": {
-        "total": 50,
-        "documented": 50,
+        "total": 69,
+        "documented": 69,
         "coverage": 100.0,
         "missing": 0
       },
@@ -926,8 +974,14 @@
         "missing": 0
       },
       "knowledge_graph.py": {
-        "total": 18,
-        "documented": 18,
+        "total": 19,
+        "documented": 19,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "knowledge_graph_strategy_extensions.py": {
+        "total": 7,
+        "documented": 7,
         "coverage": 100.0,
         "missing": 0
       },
@@ -976,10 +1030,10 @@
     }
   },
   "Agents/Specialists": {
-    "total": 2672,
-    "documented": 2525,
-    "coverage": 94.49850299401199,
-    "missing": 147,
+    "total": 3060,
+    "documented": 2874,
+    "coverage": 93.92156862745098,
+    "missing": 186,
     "files": {
       "algebra\\arithmetic_specialist.py": {
         "total": 22,
@@ -1035,7 +1089,31 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "calculus\\advanced_integration_specialist.py": {
+        "total": 22,
+        "documented": 22,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\bernoulli_ode_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "calculus\\differentiation_specialist.py": {
+        "total": 18,
+        "documented": 18,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\exact_ode_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\exp_trig_integration_specialist.py": {
         "total": 18,
         "documented": 18,
         "coverage": 100.0,
@@ -1059,6 +1137,12 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "calculus\\linear_nonhomogeneous_ode_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "calculus\\ode_solver.py": {
         "total": 7,
         "documented": 7,
@@ -1066,8 +1150,8 @@
         "missing": 0
       },
       "calculus\\ode_specialist.py": {
-        "total": 35,
-        "documented": 35,
+        "total": 39,
+        "documented": 39,
         "coverage": 100.0,
         "missing": 0
       },
@@ -1077,9 +1161,33 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "calculus\\riccati_ode_specialist.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\separable_ode_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "calculus\\special_functions_specialist.py": {
         "total": 29,
         "documented": 29,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\substitution_specialist.py": {
+        "total": 22,
+        "documented": 22,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "calculus\\tabular_integration_specialist.py": {
+        "total": 20,
+        "documented": 20,
         "coverage": 100.0,
         "missing": 0
       },
@@ -1352,6 +1460,66 @@
         "documented": 18,
         "coverage": 100.0,
         "missing": 0
+      },
+      "inequalities\\cauchy_schwarz_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "inequalities\\chebyshev_inequality_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\convex_function_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\convex_set_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\holder_inequality_specialist.py": {
+        "total": 6,
+        "documented": 6,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "inequalities\\jensen_inequality_specialist.py": {
+        "total": 5,
+        "documented": 1,
+        "coverage": 20.0,
+        "missing": 4
+      },
+      "inequalities\\proximal_operator_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\rearrangement_inequality_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\separation_theorem_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
+      },
+      "inequalities\\subgradient_specialist.py": {
+        "total": 5,
+        "documented": 0,
+        "coverage": 0.0,
+        "missing": 5
       },
       "information_theory\\channel_capacity_specialist.py": {
         "total": 12,
@@ -1845,6 +2013,48 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "discrete_math\\generating_functions\\asymptotic_extraction_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\bivariate_gf_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\exponential_gf_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\gf_composition_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\ordinary_gf_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\rational_gf_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "discrete_math\\generating_functions\\recurrence_gf_specialist.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "discrete_math\\spectral_graphs\\adjacency_spectrum.py": {
         "total": 5,
         "documented": 0,
@@ -1874,6 +2084,48 @@
         "documented": 0,
         "coverage": 0.0,
         "missing": 5
+      },
+      "algebra\\elementary_number_theory\\congruence_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\continued_fractions_specialist.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\diophantine_basic_specialist.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\lifting_the_exponent_specialist.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\pell_equation_specialist.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\quadratic_residue_specialist.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\elementary_number_theory\\tonelli_shanks_specialist.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
       },
       "algebra\\polynomial\\domain_solver.py": {
         "total": 2,
@@ -1953,11 +2205,29 @@
         "coverage": 20.0,
         "missing": 8
       },
+      "algebra\\number_theory\\analytic\\explicit_formula.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "algebra\\number_theory\\analytic\\l_function_advanced.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "algebra\\number_theory\\analytic\\prime_distribution.py": {
         "total": 9,
         "documented": 1,
         "coverage": 11.11111111111111,
         "missing": 8
+      },
+      "algebra\\number_theory\\analytic\\zero_density.py": {
+        "total": 10,
+        "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
       },
       "algebra\\number_theory\\analytic\\zeta_functions.py": {
         "total": 10,
@@ -1968,9 +2238,9 @@
     }
   },
   "Agents/Supervisors": {
-    "total": 293,
-    "documented": 253,
-    "coverage": 86.3481228668942,
+    "total": 336,
+    "documented": 296,
+    "coverage": 88.09523809523809,
     "missing": 40,
     "files": {
       "algebraic_number_theory_supervisor.py": {
@@ -1992,8 +2262,8 @@
         "missing": 0
       },
       "analytic_number_theory_supervisor.py": {
-        "total": 10,
-        "documented": 10,
+        "total": 13,
+        "documented": 13,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2004,8 +2274,8 @@
         "missing": 0
       },
       "calculus_supervisor.py": {
-        "total": 14,
-        "documented": 14,
+        "total": 16,
+        "documented": 16,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2046,8 +2316,14 @@
         "missing": 0
       },
       "discrete_math_supervisor.py": {
-        "total": 14,
-        "documented": 14,
+        "total": 21,
+        "documented": 21,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "elementary_number_theory_supervisor.py": {
+        "total": 15,
+        "documented": 15,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2072,6 +2348,12 @@
       "geometry_supervisor.py": {
         "total": 10,
         "documented": 10,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "inequalities_convexity_supervisor.py": {
+        "total": 16,
+        "documented": 16,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2356,8 +2638,8 @@
     }
   },
   "Middleware": {
-    "total": 198,
-    "documented": 198,
+    "total": 307,
+    "documented": 307,
     "coverage": 100.0,
     "missing": 0,
     "files": {
@@ -2380,8 +2662,8 @@
         "missing": 0
       },
       "knowledge_management.py": {
-        "total": 32,
-        "documented": 32,
+        "total": 38,
+        "documented": 38,
         "coverage": 100.0,
         "missing": 0
       },
@@ -2391,9 +2673,63 @@
         "coverage": 100.0,
         "missing": 0
       },
+      "meta_learning_extensions.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
       "precondition_validation.py": {
         "total": 33,
         "documented": 33,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\heuristic_pattern_learner.py": {
+        "total": 12,
+        "documented": 12,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\meta_strategy_learner.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\nonstandard_move_learner.py": {
+        "total": 11,
+        "documented": 11,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\strategy_coordinator.py": {
+        "total": 14,
+        "documented": 14,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\strategy_detectors.py": {
+        "total": 13,
+        "documented": 13,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\strategy_patterns.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\strategy_transfer_engine.py": {
+        "total": 9,
+        "documented": 9,
+        "coverage": 100.0,
+        "missing": 0
+      },
+      "strategy_learning\\structural_strategy_learner.py": {
+        "total": 11,
+        "documented": 11,
         "coverage": 100.0,
         "missing": 0
       }

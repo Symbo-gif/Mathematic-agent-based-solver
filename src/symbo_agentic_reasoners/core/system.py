@@ -556,7 +556,7 @@ class Phase2System:
             from symbo_agentic_reasoners.agents.specialists.calculus.integration_specialist import IntegrationSpecialist
             from symbo_agentic_reasoners.agents.specialists.calculus.series_specialist import SeriesSpecialist
             from symbo_agentic_reasoners.agents.specialists.calculus.limit_evaluator import LimitEvaluator
-            from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import ODESolver
+            from symbo_agentic_reasoners.agents.specialists.calculus.ode_specialist import ODESolutionSpecialist
             
             # Linear algebra specialists
             from symbo_agentic_reasoners.agents.specialists.linear_algebra.matrix_ops_specialist import MatrixOperationsSpecialist
@@ -678,8 +678,8 @@ class Phase2System:
                 blackboard=self.blackboard
             )
             
-            self.specialists['ode'] = ODESolver(
-                agent_id='ode_solver_001',
+            self.specialists['ode'] = ODESolutionSpecialist(
+                agent_id='ode_specialist_001',
                 df=self.df,
                 blackboard=self.blackboard
             )

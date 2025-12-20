@@ -64,7 +64,7 @@ def blackboard():
     bb = Blackboard()
     yield bb
     # Cleanup
-    bb.entries.clear()
+    bb.clear()
 
 
 @pytest.fixture

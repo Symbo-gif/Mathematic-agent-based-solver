@@ -1,0 +1,20 @@
+{
+  "year": 2024,
+  "description": "AIME 2024 Problems (I and II)",
+  "problems": [
+    {
+      "id": "AIME_2024_I_1",
+      "year": 2024,
+      "exam": "AIME I",
+      "number": 1,
+      "problem": "Problem text goes here...",
+      "answer": 123,
+      "topics": [
+        "combinatorics",
+        "number_theory"
+      ],
+      "difficulty": "medium",
+      "source": "https://artofproblemsolving.com/wiki/index.php/..."
+    }
+  ]
+}

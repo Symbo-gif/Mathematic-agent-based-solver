@@ -1,0 +1,331 @@
+{
+  "overall": {
+    "total": 30001,
+    "correct": 25184,
+    "incorrect": 4817,
+    "timeout": 0,
+    "error": 0,
+    "accuracy": 83.9438685377154
+  },
+  "by_category": {
+    "first_order_linear_homogeneous": {
+      "total": 1414,
+      "correct": 1413,
+      "incorrect": 1
+    },
+    "first_order_linear_nonhomogeneous": {
+      "total": 8587,
+      "correct": 8587,
+      "incorrect": 0
+    },
+    "first_order_separable": {
+      "total": 10000,
+      "correct": 5184,
+      "incorrect": 4816
+    },
+    "second_order_constant_nonhomogeneous": {
+      "total": 8748,
+      "correct": 8748,
+      "incorrect": 0
+    },
+    "second_order_constant_homogeneous": {
+      "total": 1252,
+      "correct": 1252,
+      "incorrect": 0
+    }
+  },
+  "by_difficulty": {
+    "2": {
+      "total": 2486,
+      "correct": 2485
+    },
+    "4": {
+      "total": 7420,
+      "correct": 6256
+    },
+    "3": {
+      "total": 4978,
+      "correct": 3750
+    },
+    "5": {
+      "total": 7523,
+      "correct": 6328
+    },
+    "6": {
+      "total": 5086,
+      "correct": 3857
+    },
+    "7": {
+      "total": 2508,
+      "correct": 2508
+    }
+  },
+  "by_source": {
+    "existing": {
+      "total": 1,
+      "correct": 0
+    },
+    "synthetic": {
+      "total": 30000,
+      "correct": 25184
+    }
+  },
+  "time_stats": {
+    "average": 0.00198020603985696,
+    "median": 0.0016379356384277344,
+    "p95": 0.0022182464599609375,
+    "max": 3.1621005535125732
+  },
+  "error_messages": {},
+  "false_positive_count": 7495,
+  "false_positive_samples": [
+    {
+      "problem_id": "ODE_FOL_00001",
+      "problem_text": "dy/dx + (8)*y = cos(x)",
+      "expected": "symbolic",
+      "system": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "category": "first_order_linear_nonhomogeneous"
+    },
+    {
+      "problem_id": "ODE_FOL_00003",
+      "problem_text": "dy/dx + (1/x)*y = x",
+      "expected": "symbolic",
+      "system": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "category": "first_order_linear_nonhomogeneous"
+    },
+    {
+      "problem_id": "ODE_FOL_00004",
+      "problem_text": "dy/dx + (1/x)*y = x",
+      "expected": "symbolic",
+      "system": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "category": "first_order_linear_nonhomogeneous"
+    },
+    {
+      "problem_id": "ODE_FOL_00005",
+      "problem_text": "dy/dx + (2*x)*y = sin(x)",
+      "expected": "symbolic",
+      "system": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "category": "first_order_linear_nonhomogeneous"
+    },
+    {
+      "problem_id": "ODE_FOL_00008",
+      "problem_text": "dy/dx + (1)*y = cos(x)",
+      "expected": "symbolic",
+      "system": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "category": "first_order_linear_nonhomogeneous"
+    }
+  ],
+  "separable_failure_count": 4816,
+  "separable_failure_samples": [
+    {
+      "problem_id": "ODE_FOS_00000",
+      "problem_text": "dy/dx = (4*x)*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002263307571411133,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00001",
+      "problem_text": "dy/dx = (4*x)*(1/y)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0018384456634521484,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00002",
+      "problem_text": "dy/dx = (4*x)*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0015592575073242188,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 6,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00003",
+      "problem_text": "dy/dx = (x**2)*(1/y)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.001434326171875,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00008",
+      "problem_text": "dy/dx = (sin(x))*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.001992464065551758,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00009",
+      "problem_text": "dy/dx = (exp(x))*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0014328956604003906,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00011",
+      "problem_text": "dy/dx = (exp(x))*(y**2)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'nonlinear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.001718759536743164,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 6,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00013",
+      "problem_text": "dy/dx = (exp(x))*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0015168190002441406,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00014",
+      "problem_text": "dy/dx = (3*x)*(1/y)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0013494491577148438,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 4",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    },
+    {
+      "problem_id": "ODE_FOS_00015",
+      "problem_text": "dy/dx = (sin(x))*(sqrt(y))",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not solve as separable ODE', 'method': 'separable', 'classification': {'order': 1, 'type': 'separable', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.001435995101928711,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_separable",
+      "difficulty": 6,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_separable"
+      }
+    }
+  ]
+}

@@ -175,6 +175,19 @@ class SyntaxParserAgent(BDIAgent):
     def _compile_patterns(self):
         """Compile regex patterns for mathematical operations"""
         self.patterns = {
+            # ODE patterns - MUST come before other patterns to match first
+            'ode_first_order': re.compile(
+                r'd([a-zA-Z])/d([a-zA-Z])\s*(.+)',
+                re.IGNORECASE
+            ),
+            'ode_second_order': re.compile(
+                r'd2([a-zA-Z])/d([a-zA-Z])2\s*(.+)',
+                re.IGNORECASE
+            ),
+            'ode_higher_order': re.compile(
+                r'd(\d+)([a-zA-Z])/d([a-zA-Z])\^?(\d+)\s*(.+)',
+                re.IGNORECASE
+            ),
             'derivative': re.compile(
                 r'(derivative|differentiate|diff|d/dx)\s+(?:of\s+)?(.*?)(?:\s+with respect to\s+(\w+))?$',
                 re.IGNORECASE
@@ -378,13 +391,39 @@ class SyntaxParserAgent(BDIAgent):
             match = pattern.search(text)
             if match:
                 groups = match.groups()
+
+                # Special handling for ODE patterns
+                if op_name == 'ode_first_order':
+                    # groups = (dependent_var, independent_var, rest_of_equation)
+                    # Example: "dy/dx + y = 0" -> ('y', 'x', '+ y = 0')
+                    dependent_var = groups[0]
+                    independent_var = groups[1]
+                    # Return full text as expression for ODE solver
+                    return 'ode', text, independent_var, {'dependent_var': dependent_var, 'order': 1}
+
+                elif op_name == 'ode_second_order':
+                    # groups = (dependent_var, independent_var, rest_of_equation)
+                    # Example: "d2y/dx2 + 4y' + 4y = 0" -> ('y', 'x', '+ 4y' + 4y = 0')
+                    dependent_var = groups[0]
+                    independent_var = groups[1]
+                    return 'ode', text, independent_var, {'dependent_var': dependent_var, 'order': 2}
+
+                elif op_name == 'ode_higher_order':
+                    # groups = (order_num, dependent_var, independent_var, order_num2, rest)
+                    order = int(groups[0])
+                    dependent_var = groups[1]
+                    independent_var = groups[2]
+                    return 'ode', text, independent_var, {'dependent_var': dependent_var, 'order': order}
+
                 # Special handling for limit_latex: groups = (variable, point, expression)
-                if op_name == 'limit_latex':
+                elif op_name == 'limit_latex':
                     operation = 'limit'
                     variable = groups[0]
                     point = groups[1].strip()
                     expression = groups[2].strip() if len(groups) > 2 else text
                     return operation, expression, variable, {'point': point}
+
+                # Default handling for other patterns
                 operation = op_name
                 expression = groups[1] if len(groups) > 1 else text
                 variable = groups[2] if len(groups) > 2 else 'x'

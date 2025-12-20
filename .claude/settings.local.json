@@ -42,7 +42,31 @@
       "Bash(timeout 60 python -m pytest:*)",
       "Bash(timeout 180 python -m pytest:*)",
       "Bash(xargs -I {} bash -c \"echo ''{}:'' && grep -c ''hasattr\\(task_entry, .metadata.\\)'' {} 2>/dev/null || echo ''0''\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(timeout 60 powershell:*)",
+      "Bash(log:*)",
+      "Bash(html)",
+      "Bash(json)",
+      "Bash(csv:*)",
+      "Bash(timeout 3000 python run_learning_stress_test.py:*)",
+      "Bash(tee:*)",
+      "WebSearch",
+      "Bash(if not exist \"C:\\\\dev\\\\Mathematic agent based solver\\\\src\\\\symbo_agentic_reasoners\\\\benchmarks\" mkdir \"C:\\\\dev\\\\Mathematic agent based solver\\\\src\\\\symbo_agentic_reasoners\\\\benchmarks\")",
+      "Bash(if not exist \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\" mkdir \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\")",
+      "Bash(if not exist \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\\\\results\" mkdir \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\\\\results\")",
+      "Bash(if not exist \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\\\\checkpoints\" mkdir \"C:\\\\dev\\\\Mathematic agent based solver\\\\data\\\\benchmarks\\\\checkpoints\")",
+      "Bash(if not exist \"C:\\\\dev\\\\Mathematic agent based solver\\\\docs\\\\benchmarks\" mkdir \"C:\\\\dev\\\\Mathematic agent based solver\\\\docs\\\\benchmarks\")",
+      "Bash(timeout 3600 python:*)",
+      "Bash(xargs basename:*)",
+      "Bash(timeout 30 python -m pytest:*)",
+      "Bash(timeout 180 python:*)",
+      "Bash(timeout:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\\\dev\\\\Mathematic agent based solver\\\\create_shortcut.ps1\")",
+      "Bash(del \"C:\\\\dev\\\\Mathematic agent based solver\\\\create_shortcut.ps1\")",
+      "Bash(for file in tests/agents/specialists/calculus/test_separableodespecialist_complete.py tests/agents/specialists/calculus/test_linearnonhomogodespecialist_complete.py tests/agents/specialists/calculus/test_bernoulliodespecialist_complete.py tests/agents/specialists/calculus/test_exactodespecialist_complete.py tests/agents/specialists/calculus/test_riccatiodespecialist_complete.py)",
+      "Bash(do echo \"File: $file\")",
+      "Bash(for file in tests/agents/specialists/calculus/test_separableodespecialist_complete.py tests/agents/specialists/calculus/test_linearnonhomogodespecialist_complete.py tests/agents/specialists/calculus/test_bernoulliodespecialist_complete.py tests/agents/specialists/calculus/test_exactodespecialist_complete.py tests/agents/specialists/calculus/test_riccatiodespecialist_complete.py tests/agents/specialists/algebra/number_theory/analytic/test_explicitformulaspecialist_complete.py tests/agents/specialists/algebra/number_theory/analytic/test_zerodensityspecialist_complete.py tests/agents/specialists/algebra/number_theory/analytic/test_lfunctionadvancedspecialist_complete.py)",
+      "Bash(do basename \"$file\")"
     ]
   }
 }

@@ -86,6 +86,17 @@ from symbo_agentic_reasoners.core.orchestration.native_fallback import NativeFal
 from symbo_agentic_reasoners.core.orchestration.blackboard_integration import BlackboardIntegration
 from symbo_agentic_reasoners.core.orchestration.learning_memory import LearningMemory
 
+# Import exploration layer (Tier 1.5)
+try:
+    from symbo_agentic_reasoners.exploration import UniversalStrategyExplorer
+    from symbo_agentic_reasoners.exploration.data_structures import (
+        Strategy, StrategyRanking, ExplorationOutcome, estimate_complexity
+    )
+    EXPLORATION_AVAILABLE = True
+except ImportError:
+    EXPLORATION_AVAILABLE = False
+    UniversalStrategyExplorer = None
+
 
 class MainOrchestrator(BDIAgent):
     """
@@ -187,10 +198,26 @@ class MainOrchestrator(BDIAgent):
             knowledge_team=self.knowledge_team
         )
 
+        # Initialize exploration layer (Tier 1.5)
+        self.universal_explorer = None
+        if EXPLORATION_AVAILABLE and self.df:
+            try:
+                self.universal_explorer = UniversalStrategyExplorer(
+                    agent_id=f'{self.agent_id}_explorer',
+                    directory_facilitator=self.df,
+                    blackboard=self.blackboard,
+                    knowledge_team=self.knowledge_team
+                )
+                logger.info(f"  Exploration Layer: ENABLED (UniversalStrategyExplorer active)")
+            except Exception as e:
+                logger.warning(f"  Exploration Layer: DISABLED (init failed: {e})")
+
         # Statistics (some delegated to sub-engines)
         self.tasks_routed = 0
         self.tasks_completed = 0
         self.tasks_failed = 0
+        self.strategies_explored = 0
+        self.successful_strategies = 0
 
         logger.info(f"[{self.agent_id}] Initialized")
         logger.info(f"  NON-INTERVENTION directive: {self.NON_INTERVENTION} (HARD-CODED)")
@@ -238,6 +265,42 @@ class MainOrchestrator(BDIAgent):
         # CRITICAL: Enforce NON-INTERVENTION
         if not self.NON_INTERVENTION:
             raise RuntimeError("FATAL: NON_INTERVENTION directive violated!")
+
+        # NEW: EXPLORATION PHASE (Tier 1.5) - Systematic strategy search and ranking
+        if self._should_explore(structured):
+            logger.info(f"  [{self.agent_id}] Entering EXPLORATION PHASE...")
+
+            strategy_ranking = self._explore_strategies(structured)
+
+            # Try ranked strategies in order
+            for strategy, confidence in strategy_ranking.ranked_strategies:
+                logger.info(
+                    f"  [{self.agent_id}] Trying strategy: '{strategy.name}' "
+                    f"(confidence={confidence:.2f})"
+                )
+
+                try:
+                    result = self._execute_strategy(strategy, structured)
+                    if result:
+                        logger.info(
+                            f"  [EXPLORATION SUCCESS] Strategy '{strategy.name}' solved the problem"
+                        )
+                        self._record_strategy_success(strategy, structured, result)
+                        self.learning.record_solution(structured, result)
+                        self.successful_strategies += 1
+                        return result
+                except Exception as e:
+                    logger.warning(
+                        f"  [EXPLORATION FAILURE] Strategy '{strategy.name}' failed: {e}"
+                    )
+                    self._record_strategy_failure(strategy, structured, e)
+                    continue  # Try next strategy
+
+            # If all strategies exhausted, fall through to standard decomposition path
+            logger.info(
+                f"  [{self.agent_id}] All exploration strategies exhausted, "
+                "falling back to standard decomposition"
+            )
 
         # Step 1: Decompose if complex (HTN logic)
         logger.debug(f"  [{self.agent_id}] Step 1: Decomposing task...")
@@ -395,7 +458,244 @@ class MainOrchestrator(BDIAgent):
             stats['pool_stats'] = self.agent_pool.get_statistics()
         if self.knowledge_team:
             stats['knowledge_team_stats'] = self.knowledge_team.get_statistics()
+        # Exploration statistics
+        if self.universal_explorer:
+            stats.update({
+                'exploration_enabled': True,
+                'strategies_explored': self.strategies_explored,
+                'successful_strategies': self.successful_strategies,
+                'explorer_stats': self.universal_explorer.get_statistics()
+            })
         return stats
+
+    # ========================================================================
+    # EXPLORATION PHASE METHODS (Tier 1.5 Integration)
+    # ========================================================================
+
+    def _should_explore(self, problem: StructuredProblem) -> bool:
+        """
+        Decide if problem warrants exploration.
+
+        Exploration is triggered when:
+        - Exploration layer is available
+        - Problem is sufficiently complex
+        - Domain has high strategy variance (calculus > algebra)
+        - Not time-critical (future enhancement)
+
+        Args:
+            problem: The structured problem
+
+        Returns:
+            True if exploration should be performed
+        """
+        if not self.universal_explorer:
+            return False
+
+        # Estimate problem complexity
+        complexity = estimate_complexity(problem)
+
+        # Complex problems benefit more from exploration
+        if complexity == 'low':
+            # Simple problems: skip exploration, use standard path
+            return False
+
+        # High-variance domains benefit from exploration
+        high_variance_domains = [
+            MathDomain.CALCULUS,      # Many integration/differentiation techniques
+            MathDomain.LOGIC,         # Multiple proof strategies
+            MathDomain.NUMBER_THEORY  # Various approaches to proofs
+        ]
+
+        # Explore if: medium/high complexity OR high-variance domain
+        should_explore = (
+            complexity in ['medium', 'high'] or
+            problem.domain in high_variance_domains
+        )
+
+        logger.debug(
+            f"[{self.agent_id}] Exploration decision: {should_explore} "
+            f"(complexity={complexity}, domain={problem.domain.value})"
+        )
+
+        return should_explore
+
+    def _explore_strategies(self, problem: StructuredProblem) -> StrategyRanking:
+        """
+        Get ranked strategies from exploration layer.
+
+        Delegates to UniversalStrategyExplorer which:
+        1. Queries knowledge management for historical successes
+        2. Consults domain explorers for specialized strategies
+        3. Scores and ranks all candidates
+        4. Returns top N strategies within budget
+
+        Args:
+            problem: The structured problem
+
+        Returns:
+            StrategyRanking with ranked strategies and metadata
+
+        Raises:
+            RuntimeError: If exploration fails
+        """
+        try:
+            ranking = self.universal_explorer.explore_strategies(problem)
+            self.strategies_explored += len(ranking.ranked_strategies)
+
+            logger.info(
+                f"  [{self.agent_id}] Exploration generated {len(ranking.ranked_strategies)} "
+                f"ranked strategies (budget={ranking.exploration_budget})"
+            )
+            logger.debug(f"  Reasoning: {ranking.reasoning}")
+
+            return ranking
+
+        except Exception as e:
+            logger.error(f"  [{self.agent_id}] Exploration failed: {e}")
+            # Re-raise to fall back to standard decomposition
+            raise RuntimeError(f"Exploration failed: {e}")
+
+    def _execute_strategy(
+        self,
+        strategy: Strategy,
+        problem: StructuredProblem
+    ) -> Optional[Any]:
+        """
+        Execute a specific strategy by calling supervisors/specialists.
+
+        Translates strategy techniques into concrete agent invocations.
+
+        Args:
+            strategy: The strategy to execute
+            problem: The problem being solved
+
+        Returns:
+            Result if strategy succeeds, None otherwise
+
+        Raises:
+            Exception: If strategy execution fails
+        """
+        logger.debug(
+            f"  [{self.agent_id}] Executing strategy '{strategy.name}' "
+            f"with techniques: {strategy.techniques}"
+        )
+
+        # For now, use the existing routing logic but with strategy context
+        # Future enhancement: Could execute technique-by-technique for partial results
+
+        # Query DF for capable agent (same as standard path)
+        service_type = self.invoker.get_service_type(problem.domain)
+        agents = self.invoker.find_capable_agents(service_type)
+
+        if not agents:
+            raise NoAgentAvailableError(
+                f"No agent available for domain: {problem.domain.value}"
+            )
+
+        selected_agent = agents[0]
+
+        # Try direct invocation
+        if hasattr(selected_agent, 'instance') and selected_agent.instance is not None:
+            result = self.invoker.direct_invoke(problem, selected_agent.instance)
+            if result is not None:
+                self.tasks_routed += 1
+                self.tasks_completed += 1
+                return result
+
+        # Fallback to blackboard
+        task = self.blackboard_ops.post_task(problem, selected_agent.agent_id)
+        result = self.blackboard_ops.await_result(task)
+
+        if task.task_id in self.active_tasks:
+            del self.active_tasks[task.task_id]
+        self.completed_tasks.append(task)
+        self.tasks_completed += 1
+
+        return result
+
+    def _record_strategy_success(
+        self,
+        strategy: Strategy,
+        problem: StructuredProblem,
+        result: Any
+    ):
+        """
+        Record successful strategy exploration.
+
+        Updates:
+        - Strategy success_rate (Bayesian update)
+        - Exploration result in knowledge management
+        - Learning system with solution
+
+        Args:
+            strategy: The successful strategy
+            problem: The problem that was solved
+            result: The solution result
+        """
+        if not self.universal_explorer:
+            return
+
+        try:
+            # Record exploration result
+            self.universal_explorer.record_exploration(
+                strategy=strategy,
+                problem=problem,
+                outcome=ExplorationOutcome.SUCCESS,
+                execution_time=0.0,  # TODO: Track actual time
+                lessons_learned=[f"Strategy '{strategy.name}' successful for {problem.domain.value}"]
+            )
+
+            logger.debug(
+                f"  [{self.agent_id}] Recorded successful exploration: "
+                f"strategy='{strategy.name}'"
+            )
+
+        except Exception as e:
+            logger.warning(f"  [{self.agent_id}] Failed to record success: {e}")
+
+    def _record_strategy_failure(
+        self,
+        strategy: Strategy,
+        problem: StructuredProblem,
+        error: Exception
+    ):
+        """
+        Record failed strategy exploration to learn from mistakes.
+
+        Updates:
+        - Strategy success_rate (Bayesian update)
+        - Exploration result with error classification
+        - Anti-pattern detection
+
+        Args:
+            strategy: The failed strategy
+            problem: The problem attempted
+            error: The exception that occurred
+        """
+        if not self.universal_explorer:
+            return
+
+        try:
+            # Classify error type
+            error_type = type(error).__name__
+
+            # Record exploration result
+            self.universal_explorer.record_exploration(
+                strategy=strategy,
+                problem=problem,
+                outcome=ExplorationOutcome.FAILURE,
+                execution_time=0.0,  # TODO: Track actual time
+                error_type=error_type,
+                lessons_learned=[f"Strategy '{strategy.name}' failed: {str(error)[:100]}"]
+            )
+
+            logger.debug(
+                f"  [{self.agent_id}] Recorded failed exploration: "
+                f"strategy='{strategy.name}', error={error_type}"
+            )
+
+        except Exception as e:
+            logger.warning(f"  [{self.agent_id}] Failed to record failure: {e}")
 
 
 if __name__ == "__main__":

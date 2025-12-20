@@ -29,45 +29,39 @@ class TestCongruenceSpecialist:
         assert len(services) > 0
 
     def test_simple_linear_congruence(self, specialist):
-        task = create_entry(EntryType.TASK, content="3x ≡ 5 mod 7",
-                           metadata={'operation': 'solve_linear', 'a': 3, 'b': 5, 'm': 7})
+        task = create_entry(EntryType.TASK, content="3x ≡ 5 mod 7", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 3, 'b': 5, 'm': 7})
         result = specialist.process(task)
         assert 'solutions' in result or 'error' in result
 
     def test_complex_crt_system(self, specialist):
-        task = create_entry(EntryType.TASK, content="CRT system",
-                           metadata={'operation': 'chinese_remainder', 'remainders': [2, 3, 2], 'moduli': [3, 5, 7]})
+        task = create_entry(EntryType.TASK, content="CRT system", author_agent="test", conversation_id="test_001", metadata={'operation': 'chinese_remainder', 'remainders': [2, 3, 2], 'moduli': [3, 5, 7]})
         result = specialist.process(task)
         assert 'solution' in result or 'error' in result
 
     def test_edge_case_no_solution(self, specialist):
-        task = create_entry(EntryType.TASK, content="No solution",
-                           metadata={'operation': 'solve_linear', 'a': 2, 'b': 1, 'm': 4})
+        task = create_entry(EntryType.TASK, content="No solution", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 2, 'b': 1, 'm': 4})
         result = specialist.process(task)
         # 2x ≡ 1 (mod 4) has no solution
         assert result.get('has_solution') == False or 'error' in result
 
     def test_edge_case_multiple_solutions(self, specialist):
-        task = create_entry(EntryType.TASK, content="Multiple solutions",
-                           metadata={'operation': 'solve_linear', 'a': 2, 'b': 2, 'm': 4})
+        task = create_entry(EntryType.TASK, content="Multiple solutions", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 2, 'b': 2, 'm': 4})
         result = specialist.process(task)
         # Should handle multiple solutions
         assert result is not None
 
     def test_edge_case_coprime_crt(self, specialist):
-        task = create_entry(EntryType.TASK, content="Coprime CRT",
-                           metadata={'operation': 'chinese_remainder', 'remainders': [1, 2], 'moduli': [3, 5]})
+        task = create_entry(EntryType.TASK, content="Coprime CRT", author_agent="test", conversation_id="test_001", metadata={'operation': 'chinese_remainder', 'remainders': [1, 2], 'moduli': [3, 5]})
         result = specialist.process(task)
         assert 'solution' in result
 
     def test_invalid_input(self, specialist):
-        task = create_entry(EntryType.TASK, content="Invalid",
-                           metadata={'operation': 'solve_linear', 'a': 0, 'b': 0, 'm': 0})
+        task = create_entry(EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 0, 'b': 0, 'm': 0})
         result = specialist.process(task)
         assert 'error' in result
 
     def test_blackboard_integration(self, specialist, blackboard):
-        task = create_entry(EntryType.TASK, content="Test", metadata={'operation': 'solve_linear', 'a': 1, 'b': 1, 'm': 2})
+        task = create_entry(EntryType.TASK, content="Test", author_agent="test", conversation_id="test_001", metadata={'operation': 'solve_linear', 'a': 1, 'b': 1, 'm': 2})
         specialist.process(task)
         assert specialist.tasks_executed >= 1
 
@@ -84,6 +78,7 @@ class TestCongruenceSpecialist:
     @pytest.mark.parametrize("a,b,m", [(1,1,2), (3,5,7), (2,4,6), (5,7,11)])
     def test_multiple_congruences(self, specialist, a, b, m):
         task = create_entry(EntryType.TASK, content=f"{a}x ≡ {b} mod {m}",
+                           author_agent="test", conversation_id="test_multi",
                            metadata={'operation': 'solve_linear', 'a': a, 'b': b, 'm': m})
         result = specialist.process(task)
         assert result is not None

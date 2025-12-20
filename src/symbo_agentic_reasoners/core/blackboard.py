@@ -103,6 +103,9 @@ class EntryType(Enum):
     PROOF_STEP: Individual step in a proof
     VERIFICATION_REQUEST: Request for verification
     HYPOTHESIS: Conjecture or hypothesis to test
+    STRATEGY_EXPLORATION: Request for strategy exploration (Tier 1.5)
+    STRATEGY_RANKING: Ranked list of strategies for a problem (Tier 1.5)
+    EXPLORATION_RESULT: Result from exploring a strategy (Tier 1.5)
     """
     TASK = 'task'
     SUBTASK = 'subtask'
@@ -111,6 +114,9 @@ class EntryType(Enum):
     PROOF_STEP = 'proof_step'
     VERIFICATION_REQUEST = 'verification_request'
     HYPOTHESIS = 'hypothesis'
+    STRATEGY_EXPLORATION = 'strategy_exploration'
+    STRATEGY_RANKING = 'strategy_ranking'
+    EXPLORATION_RESULT = 'exploration_result'
 
 
 @dataclass

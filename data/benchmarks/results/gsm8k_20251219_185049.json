@@ -1,0 +1,124 @@
+{
+  "benchmark": "gsm8k",
+  "timestamp": "2025-12-19 18:50:49",
+  "total_problems": 5,
+  "results": [
+    {
+      "problem_id": "gsm8k_test_0000",
+      "problem_text": "Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+      "expected_answer": "18",
+      "system_answer": "Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+      "status": "incorrect",
+      "time_seconds": 0.11836433410644531,
+      "specialist_used": "native_direct",
+      "domain": "algebra",
+      "category": "word_problem",
+      "difficulty": null,
+      "error_message": null,
+      "metadata": {
+        "dataset": "gsm8k",
+        "split": "test",
+        "index": 0
+      }
+    },
+    {
+      "problem_id": "gsm8k_test_0001",
+      "problem_text": "A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?",
+      "expected_answer": "3",
+      "system_answer": "A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?",
+      "status": "incorrect",
+      "time_seconds": 0.0032143592834472656,
+      "specialist_used": "native_direct",
+      "domain": "linearalgebra",
+      "category": "word_problem",
+      "difficulty": null,
+      "error_message": null,
+      "metadata": {
+        "dataset": "gsm8k",
+        "split": "test",
+        "index": 1
+      }
+    },
+    {
+      "problem_id": "gsm8k_test_0002",
+      "problem_text": "Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?",
+      "expected_answer": "70000",
+      "system_answer": "150*increasedthevalueofthehouseby",
+      "status": "incorrect",
+      "time_seconds": 0.0025780200958251953,
+      "specialist_used": "algebra.arithmetic",
+      "domain": "linearalgebra",
+      "category": "word_problem",
+      "difficulty": null,
+      "error_message": null,
+      "metadata": {
+        "dataset": "gsm8k",
+        "split": "test",
+        "index": 2
+      }
+    },
+    {
+      "problem_id": "gsm8k_test_0003",
+      "problem_text": "James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meters does he run a week?",
+      "expected_answer": "540",
+      "system_answer": "James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meters does he run a week?",
+      "status": "incorrect",
+      "time_seconds": 0.0024461746215820312,
+      "specialist_used": "native_direct",
+      "domain": "algebra",
+      "category": "word_problem",
+      "difficulty": null,
+      "error_message": null,
+      "metadata": {
+        "dataset": "gsm8k",
+        "split": "test",
+        "index": 3
+      }
+    },
+    {
+      "problem_id": "gsm8k_test_0004",
+      "problem_text": "Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, containing seeds, mealworms and vegetables to help keep them healthy.  She gives the chickens their feed in three separate meals. In the morning, she gives her flock of chickens 15 cups of feed.  In the afternoon, she gives her chickens another 25 cups of feed.  How many cups of feed does she need to give her chickens in the final meal of the day if the size of Wendi's flock is 20 chickens?",
+      "expected_answer": "20",
+      "system_answer": "20*chickens",
+      "status": "correct",
+      "time_seconds": 0.004380464553833008,
+      "specialist_used": "algebra.arithmetic",
+      "domain": "algebra",
+      "category": "word_problem",
+      "difficulty": null,
+      "error_message": null,
+      "metadata": {
+        "dataset": "gsm8k",
+        "split": "test",
+        "index": 4
+      }
+    }
+  ],
+  "summary": {
+    "benchmark_name": "gsm8k",
+    "total_problems": 5,
+    "correct": 1,
+    "incorrect": 4,
+    "timeout": 0,
+    "error": 0,
+    "parse_failure": 0,
+    "skipped": 0,
+    "accuracy": 20.0,
+    "mean_time_seconds": 0.026196670532226563,
+    "median_time_seconds": 0.0032143592834472656,
+    "p95_time_seconds": 0.11836433410644531,
+    "total_time_seconds": 0.1309833526611328,
+    "by_category": {
+      "word_problem": {
+        "total": 5,
+        "correct": 1,
+        "incorrect": 4,
+        "timeout": 0,
+        "error": 0,
+        "accuracy": 20.0
+      }
+    },
+    "start_time": "",
+    "end_time": "2025-12-19 18:50:49"
+  }
+}

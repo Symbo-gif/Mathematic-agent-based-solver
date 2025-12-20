@@ -1,0 +1,147 @@
+{
+  "benchmark": "ode_suite",
+  "timestamp": "2025-12-19 18:54:51",
+  "total_problems": 5,
+  "results": [
+    {
+      "problem_id": "ODE_EXISTING_001",
+      "problem_text": "dy/dx + y = 0",
+      "expected_answer": "y = exp(-x)",
+      "system_answer": "ODE solution (Phase 2: Simplified solver)",
+      "status": "incorrect",
+      "time_seconds": 0.09068942070007324,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_homogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "existing",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_homogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00000",
+      "problem_text": "dy/dx + (2*x**2)*y = exp(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "ODE solution (Phase 2: Simplified solver)",
+      "status": "incorrect",
+      "time_seconds": 0.0016562938690185547,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00001",
+      "problem_text": "dy/dx + (1*x)*y = sin(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "ODE solution (Phase 2: Simplified solver)",
+      "status": "incorrect",
+      "time_seconds": 0.0013768672943115234,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00002",
+      "problem_text": "dy/dx + (3)*y = exp(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "ODE solution (Phase 2: Simplified solver)",
+      "status": "incorrect",
+      "time_seconds": 0.0013113021850585938,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00003",
+      "problem_text": "dy/dx + (2*x)*y = sin(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "ODE solution (Phase 2: Simplified solver)",
+      "status": "incorrect",
+      "time_seconds": 0.0013568401336669922,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    }
+  ],
+  "summary": {
+    "benchmark_name": "ode_suite",
+    "total_problems": 5,
+    "correct": 0,
+    "incorrect": 5,
+    "timeout": 0,
+    "error": 0,
+    "parse_failure": 0,
+    "skipped": 0,
+    "accuracy": 0.0,
+    "mean_time_seconds": 0.01927814483642578,
+    "median_time_seconds": 0.0013768672943115234,
+    "p95_time_seconds": 0.09068942070007324,
+    "total_time_seconds": 0.0963907241821289,
+    "by_category": {
+      "first_order_linear_homogeneous": {
+        "total": 1,
+        "correct": 0,
+        "incorrect": 1,
+        "timeout": 0,
+        "error": 0,
+        "accuracy": 0.0
+      },
+      "first_order_linear_nonhomogeneous": {
+        "total": 4,
+        "correct": 0,
+        "incorrect": 4,
+        "timeout": 0,
+        "error": 0,
+        "accuracy": 0.0
+      }
+    },
+    "start_time": "",
+    "end_time": "2025-12-19 18:54:51"
+  }
+}

@@ -1,0 +1,30 @@
+# SYMBO_AGENTIC_REASONERS Full Dependencies
+# ======================
+# Install with: pip install -r requirements-full.txt
+# Includes all optional dependencies for full functionality
+
+# Core mathematical computing
+sympy>=1.12,<2.0
+numpy>=1.24.0,<2.0
+scipy>=1.10.0
+mpmath>=1.3.0
+
+# Machine Learning (for Symbo neural-symbolic engine)
+torch>=2.0.0
+
+# Vector Database (for knowledge retrieval)
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# Graph algorithms
+networkx>=3.0
+
+# Bayesian optimization
+scikit-optimize>=0.9.0
+
+# Logic programming
+kanren>=0.2.3
+
+# Visualization
+matplotlib>=3.7.0
+plotly>=5.14.0

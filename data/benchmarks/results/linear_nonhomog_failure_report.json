@@ -1,0 +1,438 @@
+{
+  "total_failures": 7495,
+  "sample_cases": [
+    {
+      "problem_id": "ODE_FOL_00001",
+      "problem_text": "dy/dx + (8)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0019230842590332031,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00482",
+      "problem_text": "dy/dx + (1*x**2)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0023076534271240234,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_01004",
+      "problem_text": "dy/dx + (2*x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0019867420196533203,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 7",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_01499",
+      "problem_text": "dy/dx + (1/x)*y = sin(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0023529529571533203,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 4",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_02006",
+      "problem_text": "dy/dx + (3*x)*y = 1",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0017294883728027344,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_02492",
+      "problem_text": "dy/dx + (1*x**2)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002382516860961914,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_02990",
+      "problem_text": "dy/dx + (1*x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002183198928833008,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_03488",
+      "problem_text": "dy/dx + (1/x)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0019180774688720703,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_03986",
+      "problem_text": "dy/dx + (1*x**2)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0025358200073242188,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 10",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_04482",
+      "problem_text": "dy/dx + (1*x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0016171932220458984,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_04970",
+      "problem_text": "dy/dx + (1/x)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.001852273941040039,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 9",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_05444",
+      "problem_text": "dy/dx + (3*x**2)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002287626266479492,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_05934",
+      "problem_text": "dy/dx + (2)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0017268657684326172,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_06416",
+      "problem_text": "dy/dx + (1/x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002082347869873047,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 8",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_06924",
+      "problem_text": "dy/dx + (5*x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0016398429870605469,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 3",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_07445",
+      "problem_text": "dy/dx + (1/x)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0019767284393310547,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_07950",
+      "problem_text": "dy/dx + (1/x)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0019383430480957031,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 10",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_08445",
+      "problem_text": "dy/dx + (3*x)*y = cos(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0023038387298583984,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_08955",
+      "problem_text": "dy/dx + (2*x)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.002489328384399414,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_09466",
+      "problem_text": "dy/dx + (3*x)*y = x**2",
+      "expected_answer": "symbolic",
+      "system_answer": "{'success': False, 'error': 'Could not integrate \u03bc(x)*Q(x)', 'method': 'integrating_factor', 'classification': {'order': 1, 'type': 'linear_first', 'linearity': 'linear', 'homogeneous': False}}",
+      "status": "incorrect",
+      "time_seconds": 0.0015745162963867188,
+      "specialist_used": "calculus.ode",
+      "domain": "calculus",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    }
+  ],
+  "error_patterns": {
+    "Wrong answer (has result)": 7495
+  },
+  "pattern_analysis": {
+    "polynomial_P": 0,
+    "constant_P": 0,
+    "trig_P": 424,
+    "exp_P": 0,
+    "polynomial_Q": 359,
+    "constant_Q": 0,
+    "trig_Q": 424,
+    "exp_Q": 197
+  }
+}

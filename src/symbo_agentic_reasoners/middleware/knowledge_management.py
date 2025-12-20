@@ -524,6 +524,118 @@ class MemoryIndexerAgent:
             'has_embedding_model': self.embedding_model is not None
         }
 
+    # =======================================================================
+    # EXPLORATION SUPPORT METHODS
+    # =======================================================================
+
+    def store_exploration_result(self, result):
+        """
+        Store an exploration result in the vector database.
+
+        Args:
+            result: ExplorationResult instance with strategy, problem, outcome
+
+        Stores with vector embedding based on:
+        - Problem characteristics
+        - Strategy techniques
+        - Outcome type
+        - Error patterns (if failed)
+        """
+        try:
+            # Import here to avoid circular dependency
+            from symbo_agentic_reasoners.exploration.data_structures import ExplorationResult
+
+            if not isinstance(result, ExplorationResult):
+                logger.warning("Invalid exploration result type, skipping storage")
+                return
+
+            # Generate embedding from exploration text
+            embedding_text = result.to_embedding_text()
+            embedding = self._generate_embedding(embedding_text, str(result.outcome.value))
+
+            # Store in vector DB with exploration-specific metadata
+            exploration_data = result.to_dict()
+
+            # Fixed W-004: Use VectorEntry for consistency
+            if hasattr(self.vector_db, 'store'):
+                from symbo_agentic_reasoners.core.vector_database import VectorEntry
+                vector_entry = VectorEntry(
+                    entry_id=result.exploration_id,
+                    content=exploration_data,
+                    embedding=embedding.tolist() if embedding is not None else None,
+                    metadata={
+                        'type': 'exploration_result',
+                        'problem_signature': result.problem_signature,
+                        'strategy_id': result.strategy.strategy_id,
+                        'outcome': result.outcome.value,
+                        'timestamp': result.timestamp.isoformat()
+                    },
+                    entry_type='exploration_result'
+                )
+                self.vector_db.store(vector_entry)
+            elif hasattr(self.vector_db, 'insert'):
+                self.vector_db.insert({
+                    'id': result.exploration_id,
+                    'embedding': embedding.tolist() if embedding is not None else [],
+                    'type': 'exploration_result',
+                    'problem_signature': result.problem_signature,
+                    'strategy_id': result.strategy.strategy_id,
+                    'outcome': result.outcome.value,
+                    'data': json.dumps(exploration_data),
+                    'timestamp': result.timestamp.isoformat()
+                })
+
+            logger.debug(
+                f"Stored exploration result: {result.exploration_id} "
+                f"(strategy={result.strategy.name}, outcome={result.outcome.value})"
+            )
+
+        except Exception as e:
+            logger.warning(f"Failed to store exploration result: {e}")
+
+    def query_similar_explorations(self, problem_sig: str, limit: int = 10):
+        """
+        Query for similar past explorations via vector similarity.
+
+        Args:
+            problem_sig: Problem signature hash
+            limit: Maximum number of results to return
+
+        Returns:
+            List of ExplorationResult instances from similar past explorations
+        """
+        try:
+            # Import here to avoid circular dependency
+            from symbo_agentic_reasoners.exploration.data_structures import ExplorationResult
+
+            # Query vector DB for similar explorations
+            results = []
+
+            if hasattr(self.vector_db, 'search'):
+                # Search by problem signature with exploration type filter
+                search_results = self.vector_db.search(
+                    query_signature=problem_sig,
+                    type_filter='exploration_result',
+                    limit=limit
+                )
+
+                for result_data in search_results:
+                    try:
+                        exploration = ExplorationResult.from_dict(result_data.get('data', {}))
+                        results.append(exploration)
+                    except Exception as e:
+                        logger.warning(f"Failed to deserialize exploration result: {e}")
+
+            logger.debug(
+                f"Retrieved {len(results)} similar explorations for signature {problem_sig[:8]}..."
+            )
+
+            return results
+
+        except Exception as e:
+            logger.warning(f"Failed to query similar explorations: {e}")
+            return []
+
 
 # ===========================================================================
 # AGENT 2.3: THE RETRIEVAL SPECIALIST (RAG INTEGRATION)
@@ -740,6 +852,70 @@ class RetrievalSpecialistAgent:
             'external_sources': self.external_sources
         }
 
+    # =======================================================================
+    # EXPLORATION SUPPORT METHODS
+    # =======================================================================
+
+    def retrieve_successful_strategies(self, problem, domain):
+        """
+        Find strategies that succeeded for similar problems.
+
+        Uses vector similarity search to find problems solved successfully
+        and extracts the strategies that worked.
+
+        Args:
+            problem: StructuredProblem instance
+            domain: MathDomain enum
+
+        Returns:
+            List of Strategy instances that have succeeded on similar problems
+        """
+        try:
+            # Import here to avoid circular dependency
+            from symbo_agentic_reasoners.exploration.data_structures import (
+                hash_problem, ExplorationOutcome
+            )
+
+            # Compute problem signature
+            problem_sig = hash_problem(problem)
+
+            # Query for similar explorations
+            if not hasattr(self, 'memory_indexer'):
+                logger.debug("No memory indexer available, cannot retrieve strategies")
+                return []
+
+            similar_explorations = self.memory_indexer.query_similar_explorations(
+                problem_sig,
+                limit=20
+            )
+
+            # Filter for successes and extract strategies
+            successful_strategies = []
+            seen_strategy_ids = set()
+
+            for exploration in similar_explorations:
+                if exploration.outcome == ExplorationOutcome.SUCCESS:
+                    strategy = exploration.strategy
+
+                    # Avoid duplicates
+                    if strategy.strategy_id not in seen_strategy_ids:
+                        seen_strategy_ids.add(strategy.strategy_id)
+                        successful_strategies.append(strategy)
+
+            # Rank by success_rate
+            successful_strategies.sort(key=lambda s: s.success_rate, reverse=True)
+
+            logger.debug(
+                f"Retrieved {len(successful_strategies)} successful strategies "
+                f"for domain {domain.value}"
+            )
+
+            return successful_strategies
+
+        except Exception as e:
+            logger.warning(f"Failed to retrieve successful strategies: {e}")
+            return []
+
 
 # ===========================================================================
 # KNOWLEDGE MANAGEMENT TEAM COORDINATOR
@@ -806,6 +982,22 @@ class KnowledgeManagementTeam:
         return self.memory_indexer.index_result(
             conversation_id, problem, result, proof_trace
         )
+
+    # =======================================================================
+    # EXPLORATION SUPPORT METHODS
+    # =======================================================================
+
+    def store_exploration_result(self, result):
+        """Store exploration result via memory indexer"""
+        return self.memory_indexer.store_exploration_result(result)
+
+    def query_similar_explorations(self, problem_sig: str, limit: int = 10):
+        """Query similar explorations via memory indexer"""
+        return self.memory_indexer.query_similar_explorations(problem_sig, limit)
+
+    def retrieve_successful_strategies(self, problem, domain):
+        """Retrieve successful strategies via retrieval specialist"""
+        return self.retrieval_specialist.retrieve_successful_strategies(problem, domain)
 
     def get_statistics(self) -> Dict[str, Any]:
         """Get team statistics"""

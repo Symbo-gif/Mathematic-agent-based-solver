@@ -1,0 +1,252 @@
+{
+  "benchmark": "ode_suite",
+  "timestamp": "2025-12-19 18:49:44",
+  "total_problems": 10,
+  "results": [
+    {
+      "problem_id": "ODE_EXISTING_001",
+      "problem_text": "dy/dx + y = 0",
+      "expected_answer": "y = exp(-x)",
+      "system_answer": "[Integer(0)]",
+      "status": "incorrect",
+      "time_seconds": 0.1407465934753418,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_homogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "existing",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_homogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00000",
+      "problem_text": "dy/dx + (2*x**2)*y = exp(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0020599365234375,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 6",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00001",
+      "problem_text": "dy/dx + (1*x)*y = sin(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0015277862548828125,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 5",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00002",
+      "problem_text": "dy/dx + (3)*y = exp(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0014576911926269531,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 1",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00003",
+      "problem_text": "dy/dx + (2*x)*y = sin(x)",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0014617443084716797,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 5,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00004",
+      "problem_text": "dy/dx + (8)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0013127326965332031,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 2",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00005",
+      "problem_text": "dy/dx + (3*x)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0013282299041748047,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 9",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00006",
+      "problem_text": "dy/dx + (2*x)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.001459360122680664,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 3,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 10",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00007",
+      "problem_text": "dy/dx + (2*x)*y = 0",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0013003349304199219,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_homogeneous",
+      "difficulty": 4,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 4",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_homogeneous"
+      }
+    },
+    {
+      "problem_id": "ODE_FOL_00008",
+      "problem_text": "dy/dx + (5*x)*y = x",
+      "expected_answer": "symbolic",
+      "system_answer": "[]",
+      "status": "incorrect",
+      "time_seconds": 0.0014677047729492188,
+      "specialist_used": "algebra.solve",
+      "domain": "algebra",
+      "category": "first_order_linear_nonhomogeneous",
+      "difficulty": 2,
+      "error_message": null,
+      "metadata": {
+        "dataset": "ode_suite",
+        "source": "synthetic",
+        "initial_conditions": "y(0) = 4",
+        "boundary_conditions": null,
+        "ode_order": 1,
+        "ode_type": "first_order_linear_nonhomogeneous"
+      }
+    }
+  ],
+  "summary": {
+    "benchmark_name": "ode_suite",
+    "total_problems": 10,
+    "correct": 0,
+    "incorrect": 10,
+    "timeout": 0,
+    "error": 0,
+    "parse_failure": 0,
+    "skipped": 0,
+    "accuracy": 0.0,
+    "mean_time_seconds": 0.015412211418151855,
+    "median_time_seconds": 0.0014617443084716797,
+    "p95_time_seconds": 0.1407465934753418,
+    "total_time_seconds": 0.15412211418151855,
+    "by_category": {
+      "first_order_linear_homogeneous": {
+        "total": 2,
+        "correct": 0,
+        "incorrect": 2,
+        "timeout": 0,
+        "error": 0,
+        "accuracy": 0.0
+      },
+      "first_order_linear_nonhomogeneous": {
+        "total": 8,
+        "correct": 0,
+        "incorrect": 8,
+        "timeout": 0,
+        "error": 0,
+        "accuracy": 0.0
+      }
+    },
+    "start_time": "",
+    "end_time": "2025-12-19 18:49:44"
+  }
+}

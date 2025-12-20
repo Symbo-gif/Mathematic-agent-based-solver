@@ -94,10 +94,10 @@ def create_specialist(key: str) -> Optional[Any]:
             return IntegrationSpecialist()
 
         elif key == 'calculus.ode':
-            from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import (
-                ODESolver
+            from symbo_agentic_reasoners.agents.specialists.calculus.ode_specialist import (
+                ODESolutionSpecialist
             )
-            return ODESolver()
+            return ODESolutionSpecialist()
 
         elif key == 'algebra.polynomial':
             from symbo_agentic_reasoners.agents.specialists.algebra.polynomial_specialist import (
@@ -142,6 +142,56 @@ class SpecialistRouter:
     def __init__(self):
         """Initialize the router."""
         self._specialists: Dict[str, Any] = {}
+        self._df = None  # Directory Facilitator (lazy init)
+        self._blackboard = None  # Blackboard (lazy init)
+
+    def _ensure_infrastructure(self):
+        """Ensure DF and Blackboard are initialized"""
+        if not self._df:
+            from symbo_agentic_reasoners.infrastructure.directory_facilitator import DirectoryFacilitator
+            from symbo_agentic_reasoners.core.blackboard import Blackboard
+
+            self._df = DirectoryFacilitator()
+            self._blackboard = Blackboard()
+
+            # Register all advanced integration specialists with DF
+            self._register_integration_team()
+
+    def _register_integration_team(self):
+        """Register advanced integration specialists with DF"""
+        try:
+            # Create and register ExpTrig specialist
+            from symbo_agentic_reasoners.agents.specialists.calculus.exp_trig_integration_specialist import (
+                ExponentialTrigIntegrationSpecialist
+            )
+            exp_trig = ExponentialTrigIntegrationSpecialist(df=self._df, blackboard=self._blackboard)
+            self._specialists['calculus.integration.exp_trig'] = exp_trig
+
+            # Create and register Advanced Integration coordinator
+            from symbo_agentic_reasoners.agents.specialists.calculus.advanced_integration_specialist import (
+                AdvancedIntegrationSpecialist
+            )
+            advanced = AdvancedIntegrationSpecialist(df=self._df, blackboard=self._blackboard)
+            self._specialists['calculus.integration.advanced'] = advanced
+
+            # Create and register Tabular specialist
+            from symbo_agentic_reasoners.agents.specialists.calculus.tabular_integration_specialist import (
+                TabularIntegrationSpecialist
+            )
+            tabular = TabularIntegrationSpecialist(df=self._df, blackboard=self._blackboard)
+            self._specialists['calculus.integration.tabular'] = tabular
+
+            # Create and register Substitution specialist
+            from symbo_agentic_reasoners.agents.specialists.calculus.substitution_specialist import (
+                SubstitutionSpecialist
+            )
+            substitution = SubstitutionSpecialist(df=self._df, blackboard=self._blackboard)
+            self._specialists['calculus.integration.substitution'] = substitution
+
+            logger.info("Advanced integration team registered with DF")
+
+        except Exception as e:
+            logger.warning(f"Could not register integration team: {e}")
 
     def get_specialist(self, key: str, domain: str = "", operation: str = "") -> Optional[Any]:
         """
@@ -158,7 +208,19 @@ class SpecialistRouter:
         if key in self._specialists:
             return self._specialists[key]
 
-        specialist = create_specialist(key)
+        # Ensure infrastructure is ready (for ODE specialist to access integration team)
+        if key == 'calculus.ode':
+            self._ensure_infrastructure()
+
+        # Create specialist with DF and Blackboard if ODE
+        if key == 'calculus.ode':
+            from symbo_agentic_reasoners.agents.specialists.calculus.ode_specialist import (
+                ODESolutionSpecialist
+            )
+            specialist = ODESolutionSpecialist(df=self._df, blackboard=self._blackboard)
+        else:
+            specialist = create_specialist(key)
+
         if specialist:
             self._specialists[key] = specialist
 

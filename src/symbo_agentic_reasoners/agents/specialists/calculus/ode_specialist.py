@@ -147,6 +147,9 @@ class ODESolutionSpecialist(BDIAgent):
         self.tasks_failed = 0
         self.odes_solved = 0
 
+        # Cache for advanced integration specialist (lazy load)
+        self._advanced_integration_specialist = None
+
         # Register with Directory Facilitator
         if self.df:
             self._register_services()
@@ -195,12 +198,44 @@ class ODESolutionSpecialist(BDIAgent):
             self.odes_solved += 1
             logger.info(f"  [OK] Result: {result}")
 
-            return result
+            # Extract solution string from result dict
+            if isinstance(result, dict):
+                solution_str = result.get('solution', str(result))
+            else:
+                solution_str = str(result)
+
+            # Create proper result entry for blackboard
+            if self.blackboard:
+                from symbo_agentic_reasoners.core.omdoc_schema import create_variable
+                return create_entry(
+                    EntryType.PARTIAL_RESULT,
+                    create_variable(solution_str),
+                    self.agent_id,
+                    task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'result',
+                    ['ode'],
+                    EntryStatus.COMPLETED,
+                    {'result_str': solution_str, 'full_result': result}
+                )
+            else:
+                # Return solution string for direct use (benchmarks)
+                return solution_str
 
         except Exception as e:
             self.tasks_failed += 1
             logger.warning(f"ODE solving failed: {type(e).__name__}: {e}")
-            return {'success': False, 'error': str(e)}
+            if self.blackboard:
+                from symbo_agentic_reasoners.core.omdoc_schema import create_variable
+                return create_entry(
+                    EntryType.PARTIAL_RESULT,
+                    create_variable(f"Error: {str(e)}"),
+                    self.agent_id,
+                    task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'error',
+                    ['ode', 'error'],
+                    EntryStatus.FAILED,
+                    {'error': str(e)}
+                )
+            else:
+                return f"Error: {str(e)}"
 
     def classify_ode(self, ode_str: str, var: str = 'x', func: str = 'y') -> ODEClassification:
         """
@@ -295,23 +330,69 @@ class ODESolutionSpecialist(BDIAgent):
             parts = ode_str.split('=')
             if len(parts) == 2:
                 lhs, rhs = parts
-                # Check if LHS is just the derivative
-                if f"{func}'" in lhs and func not in rhs:
-                    return True
+                # Check if LHS is ONLY the derivative (no y term)
+                # Remove derivative notation to check for remaining y
+                lhs_without_deriv = lhs.replace(f"{func}'", '').replace(f"d{func}/d{var}", '')
+                # If func still appears in LHS, it's linear, not separable
+                if func in lhs_without_deriv:
+                    return False  # Linear ODE (has y term in LHS)
+                # Check if derivative is in LHS and func appears in RHS
+                if f"{func}'" in lhs and func in rhs:
+                    return True  # Separable: y' = f(x)*g(y)
         return False
 
     def _extract_linear_coefficients(self, ode_str: str, var: str, func: str) -> Tuple[str, str]:
         """Extract P(x) and Q(x) from y' + P(x)*y = Q(x)."""
-        # Simplified extraction
+        # Simplified extraction for standard form: dy/dx + P*y = Q
         try:
             if '=' in ode_str:
                 parts = ode_str.split('=')
                 if len(parts) == 2:
                     lhs, rhs = parts[0].strip(), parts[1].strip()
-                    # Look for coefficient of y
-                    # This is a simplified implementation
-                    return '0', rhs
-        except Exception:
+
+                    # Normalize: replace dy/dx with y' for easier parsing
+                    lhs = lhs.replace(f"d{func}/d{var}", f"{func}'")
+
+                    # Pattern: y' + P*y = Q  or  y' - P*y = Q
+                    # Find the coefficient of y (after the derivative term)
+
+                    # Remove the y' term to isolate the y coefficient
+                    lhs_without_deriv = lhs.replace(f"{func}'", '', 1)  # Remove first y'
+
+                    # What's left should be "+ P*y" or "- P*y" or just "y"
+                    # Extract coefficient before y
+                    lhs_clean = lhs_without_deriv.strip()
+
+                    # Parse coefficient of y
+                    p_coeff = '0'
+                    if func in lhs_clean:
+                        # Pattern: + (3)*y  or  + 2*x*y  or just + y
+                        # Remove leading + or -
+                        sign = 1
+                        if lhs_clean.startswith('+'):
+                            lhs_clean = lhs_clean[1:].strip()
+                        elif lhs_clean.startswith('-'):
+                            sign = -1
+                            lhs_clean = lhs_clean[1:].strip()
+
+                        # Remove the y to get coefficient
+                        if lhs_clean.endswith(f"*{func}"):
+                            p_coeff = lhs_clean[:-len(f"*{func}")].strip()
+                        elif lhs_clean.endswith(func):
+                            # Just "y" means coefficient is 1
+                            p_coeff = '1'
+                        else:
+                            # Has y somewhere inside
+                            p_coeff = lhs_clean.replace(func, '').replace('*', '').strip() or '1'
+
+                        # Apply sign
+                        if sign == -1 and p_coeff != '0':
+                            p_coeff = f"-({p_coeff})" if '*' in p_coeff or '+' in p_coeff else f"-{p_coeff}"
+
+                    return p_coeff, rhs
+
+        except Exception as e:
+            logger.debug(f"Coefficient extraction failed: {e}")
             pass
         return '0', '0'
 
@@ -439,35 +520,25 @@ class ODESolutionSpecialist(BDIAgent):
                                 'general_solution': True
                             }
 
-                    # Try to factor: f(x)*g(y)
-                    # For now, handle simple product forms
-                    if '*' in rhs:
-                        factors = rhs.split('*')
-                        x_part = []
-                        y_part = []
-                        for f in factors:
-                            if func in f:
-                                y_part.append(f)
-                            else:
-                                x_part.append(f)
+                    # Try to factor: f(x)*g(y) using improved factorization
+                    f_x, g_y = self._factor_separable_improved(rhs, var, func)
 
-                        if x_part and y_part:
-                            f_x = '*'.join(x_part)
-                            g_y = '*'.join(y_part)
+                    if f_x and g_y:
+                        # Integrate both sides
+                        success_x, int_f, _ = native_integrate(f_x, var)
 
-                            # Integrate both sides
-                            success_x, int_f, _ = native_integrate(f_x, var)
-                            # For y part, we need 1/g(y) - simplified
-                            g_y_inv = f"1/({g_y})"
-                            success_y, int_g_inv, _ = native_integrate(g_y_inv, func)
+                        # For y part, we need 1/g(y)
+                        # Handle special forms: sqrt(y), y^n, 1/y
+                        g_y_inv = self._build_reciprocal(g_y, func)
+                        success_y, int_g_inv, _ = native_integrate(g_y_inv, func)
 
-                            if success_x and success_y:
-                                return {
-                                    'success': True,
-                                    'solution': f"{int_g_inv} = {int_f} + C",
-                                    'method': 'separation_of_variables',
-                                    'general_solution': True
-                                }
+                        if success_x and success_y:
+                            return {
+                                'success': True,
+                                'solution': f"{int_g_inv} = {int_f} + C",
+                                'method': 'separation_of_variables',
+                                'general_solution': True
+                            }
 
             return {
                 'success': False,
@@ -523,6 +594,13 @@ class ODESolutionSpecialist(BDIAgent):
             product = f"({mu})*({q_x})"
             success_prod, int_prod, _ = native_integrate(product, var)
 
+            # If native integration failed, try AdvancedIntegrationSpecialist
+            if not success_prod:
+                advanced_result = self._try_advanced_integration(product, var)
+                if advanced_result and advanced_result.get('success'):
+                    int_prod = advanced_result['solution']
+                    success_prod = True
+
             if success_prod:
                 return {
                     'success': True,
@@ -544,6 +622,276 @@ class ODESolutionSpecialist(BDIAgent):
                 'error': str(e),
                 'method': 'integrating_factor'
             }
+
+    def _try_advanced_integration(self, expression: str, var: str) -> Optional[Dict[str, Any]]:
+        """
+        Try advanced integration using AdvancedIntegrationSpecialist
+
+        Used when native_integrate fails on complex patterns like exp×trig products.
+
+        Args:
+            expression: Expression to integrate
+            var: Integration variable
+
+        Returns:
+            Integration result dict or None
+        """
+        # Lazy load AdvancedIntegrationSpecialist from DF
+        if not self._advanced_integration_specialist:
+            if not self.df:
+                return None
+
+            specialists = self.df.search(service_type='math.calculus.integration.advanced')
+            if specialists:
+                self._advanced_integration_specialist = specialists[0].instance
+            else:
+                logger.debug(f"[{self.agent_id}] AdvancedIntegrationSpecialist not found in DF")
+                return None
+
+        # Create mock task entry for the integration specialist
+        try:
+            if self._advanced_integration_specialist:
+                # Call the specialist's process method with mock task
+                from symbo_agentic_reasoners.core.blackboard import create_entry
+                from symbo_agentic_reasoners.core.omdoc_schema import create_variable
+
+                mock_task = type('MockTask', (), {
+                    'entry_id': f'ode_integration_{hash(expression)}',
+                    'conversation_id': 'ode_integration',
+                    'metadata': {
+                        'expression': expression,
+                        'variable': var,
+                        'raw_input': expression
+                    }
+                })()
+
+                result_entry = self._advanced_integration_specialist.process(mock_task)
+
+                # Extract result from entry
+                if hasattr(result_entry, 'metadata'):
+                    # Check if it's an error entry
+                    if result_entry.metadata.get('error'):
+                        return {
+                            'success': False,
+                            'error': result_entry.metadata.get('error')
+                        }
+                    # Success entry
+                    result_str = result_entry.metadata.get('result', '')
+                    if result_str:
+                        return {
+                            'success': True,
+                            'solution': result_str,
+                            'method': result_entry.metadata.get('method', 'advanced')
+                        }
+                elif isinstance(result_entry, dict):
+                    return result_entry
+
+        except Exception as e:
+            logger.debug(f"[{self.agent_id}] Advanced integration failed: {e}")
+
+        return None
+
+    def _split_respecting_parens(self, expr: str, delimiter: str) -> List[str]:
+        """
+        Split expression by delimiter while respecting parentheses.
+
+        Example:
+            "(4*x)*(1/y)" split by "*" → ["(4*x)", "(1/y)"]
+            "x*y*z" split by "*" → ["x", "y", "z"]
+        """
+        parts = []
+        current = []
+        depth = 0
+
+        for char in expr:
+            if char == '(':
+                depth += 1
+                current.append(char)
+            elif char == ')':
+                depth -= 1
+                current.append(char)
+            elif char == delimiter and depth == 0:
+                # Top-level delimiter found
+                if current:
+                    parts.append(''.join(current).strip())
+                    current = []
+            else:
+                current.append(char)
+
+        # Add final part
+        if current:
+            parts.append(''.join(current).strip())
+
+        return parts
+
+    def _factor_separable_improved(self, rhs: str, var: str, func: str) -> Tuple[Optional[str], Optional[str]]:
+        """
+        Improved factorization for separable ODEs: dy/dx = f(x)*g(y)
+
+        Handles:
+        - Simple products: x*y, sin(x)*y
+        - Square roots: x*sqrt(y), x/sqrt(y)
+        - Powers: x*y^2, x*y^(-1)
+        - Quotients: x/y, y/x
+        - Complex forms: (x+1)*sqrt(y), sin(x)/y^2
+        - Parenthesized: (4*x)*(1/y), (sin(x))*(y**2)
+
+        Args:
+            rhs: Right-hand side expression
+            var: Independent variable (usually 'x')
+            func: Dependent variable (usually 'y')
+
+        Returns:
+            (f_x, g_y) tuple where dy/dx = f(x)*g(y), or (None, None) if not separable
+        """
+        import re
+
+        # Strategy 1: Explicit multiplication (parenthesis-aware)
+        if '*' in rhs:
+            # Split and classify factors (respecting parentheses)
+            x_parts, y_parts = [], []
+            factors = self._split_respecting_parens(rhs, '*')
+
+            for factor in factors:
+                factor = factor.strip()
+
+                # Strip outer parentheses if present
+                if factor.startswith('(') and factor.endswith(')'):
+                    # Check if it's a balanced single pair
+                    depth = 0
+                    balanced = True
+                    for i, char in enumerate(factor):
+                        if char == '(':
+                            depth += 1
+                        elif char == ')':
+                            depth -= 1
+                        if depth == 0 and i < len(factor) - 1:
+                            balanced = False
+                            break
+                    if balanced:
+                        factor = factor[1:-1].strip()
+
+                # Check if factor contains only x (not y)
+                if var in factor and func not in factor:
+                    x_parts.append(factor)
+                # Check if factor contains only y (not x)
+                elif func in factor and var not in factor:
+                    y_parts.append(factor)
+                # Check for sqrt(y) or other y functions
+                elif 'sqrt' in factor.lower() and func in factor:
+                    y_parts.append(factor)
+                # Constants go to x part
+                elif func not in factor and var not in factor:
+                    x_parts.append(factor)
+
+            if x_parts and y_parts:
+                f_x = '*'.join(x_parts) if x_parts else '1'
+                g_y = '*'.join(y_parts) if y_parts else '1'
+                return f_x, g_y
+
+        # Strategy 2: Division patterns
+        if '/' in rhs:
+            # Split by division
+            parts = rhs.split('/', 1)
+            numer = parts[0].strip()
+            denom = parts[1].strip()
+
+            # y/x pattern: f(x) = 1/x, g(y) = y
+            if func in numer and var not in numer and var in denom and func not in denom:
+                return f"1/({denom})", numer
+
+            # x/y pattern: f(x) = x, g(y) = 1/y
+            if var in numer and func not in numer and func in denom and var not in denom:
+                return numer, f"1/({denom})"
+
+            # x/sqrt(y) pattern: f(x) = x, g(y) = 1/sqrt(y) = y^(-1/2)
+            if 'sqrt' in denom.lower() and func in denom:
+                if var in numer and func not in numer:
+                    # Extract sqrt content
+                    sqrt_pattern = r'sqrt\(([^)]+)\)'
+                    match = re.search(sqrt_pattern, denom, re.IGNORECASE)
+                    if match and func in match.group(1):
+                        return numer, f"({match.group(1)})**(-0.5)"
+
+        # Strategy 3: Handle sqrt(y) in numerator
+        if 'sqrt' in rhs.lower():
+            # x*sqrt(y) or similar
+            sqrt_pattern = rf'sqrt\(({func}[^)]*)\)'
+            match = re.search(sqrt_pattern, rhs, re.IGNORECASE)
+            if match:
+                # Extract parts before and after sqrt
+                sqrt_expr = match.group(0)
+                remaining = rhs.replace(sqrt_expr, '').replace('*', '').strip()
+
+                if var in remaining and func not in remaining:
+                    # f(x) = remaining, g(y) = sqrt(y)
+                    return remaining if remaining else '1', f"({match.group(1)})**(0.5)"
+
+        # Strategy 4: Power patterns y^n
+        power_pattern = rf'{func}\s*\*\*\s*(-?\d+\.?\d*)'
+        match = re.search(power_pattern, rhs)
+        if match:
+            power = match.group(1)
+            y_power = match.group(0)
+            # Remove y^n from rhs to get f(x)
+            f_x = rhs.replace(y_power, '').replace('*', '').strip()
+            if f_x and var in f_x:
+                return f_x, f"{func}**{power}"
+
+        return None, None
+
+    def _build_reciprocal(self, g_y: str, func: str) -> str:
+        """
+        Build reciprocal 1/g(y) for integration
+
+        Handles:
+        - g(y) = y → 1/y
+        - g(y) = 1/y → y (reciprocal of reciprocal)
+        - g(y) = sqrt(y) = y^(0.5) → 1/sqrt(y) = y^(-0.5)
+        - g(y) = y^n → y^(-n)
+        - g(y) = y^(0.5) → y^(-0.5)
+
+        Args:
+            g_y: g(y) expression
+            func: Function variable ('y')
+
+        Returns:
+            1/g(y) expression
+        """
+        import re
+
+        # If g_y is already 1/y or 1/(y) or similar, return y
+        if g_y.strip().startswith('1/'):
+            inner = g_y.strip()[2:].strip()
+            # Remove outer parentheses if present
+            if inner.startswith('(') and inner.endswith(')'):
+                inner = inner[1:-1].strip()
+            # If inner is just the function variable, return it
+            if inner == func:
+                return func
+            # Otherwise return the inner expression
+            return inner
+
+        # If already a power, negate exponent
+        power_pattern = rf'{func}\s*\*\*\s*\(?([-\d\.]+)\)?'
+        match = re.search(power_pattern, g_y)
+        if match:
+            exponent = float(match.group(1))
+            return f"{func}**({-exponent})"
+
+        # If sqrt(y), convert to y^(-0.5)
+        if 'sqrt' in g_y.lower():
+            sqrt_pattern = rf'sqrt\(({func})\)'
+            match = re.search(sqrt_pattern, g_y, re.IGNORECASE)
+            if match:
+                return f"{func}**(-0.5)"
+
+        # If just y, return 1/y (which integrates to ln|y|)
+        if g_y.strip() == func:
+            return f"1/{func}"
+
+        # Default: wrap in 1/(...)
+        return f"1/({g_y})"
 
     def solve_exact_ode(
         self,
