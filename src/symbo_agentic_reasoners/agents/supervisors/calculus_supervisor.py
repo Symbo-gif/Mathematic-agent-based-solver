@@ -218,13 +218,48 @@ class CalculusSupervisor(BDIAgent):
         raw_input = metadata.get('raw_input', '').lower()
         operation = metadata.get('operation', 'compute')
 
-        # Priority 1: Differential Equations
+        # Priority 1: Differential Equations - Specific ODE types
         if any(kw in raw_input for kw in ['ode', 'pde', 'differential equation', 'dy/dx', "d'", 'boundary', 'dsolve']):
-            return {
-                'target': 'Differential Equation Solver',
-                'service_type': 'math.calculus.ode',
-                'reason': 'Detected differential equation keywords'
-            }
+            # Sub-route to specific ODE specialist based on type
+            ode_type = self._classify_ode_type(raw_input)
+
+            if ode_type == 'separable':
+                return {
+                    'target': 'Separable ODE Specialist',
+                    'service_type': 'math.calculus.ode.separable',
+                    'reason': 'Detected separable ODE pattern'
+                }
+            elif ode_type == 'linear_nonhomogeneous':
+                return {
+                    'target': 'Linear Nonhomogeneous ODE Specialist',
+                    'service_type': 'math.calculus.ode.linear_nonhomogeneous',
+                    'reason': 'Detected linear first-order ODE pattern'
+                }
+            elif ode_type == 'bernoulli':
+                return {
+                    'target': 'Bernoulli ODE Specialist',
+                    'service_type': 'math.calculus.ode.bernoulli',
+                    'reason': 'Detected Bernoulli ODE pattern'
+                }
+            elif ode_type == 'exact':
+                return {
+                    'target': 'Exact ODE Specialist',
+                    'service_type': 'math.calculus.ode.exact',
+                    'reason': 'Detected exact ODE pattern'
+                }
+            elif ode_type == 'riccati':
+                return {
+                    'target': 'Riccati ODE Specialist',
+                    'service_type': 'math.calculus.ode.riccati',
+                    'reason': 'Detected Riccati ODE pattern'
+                }
+            else:
+                # Fallback to general ODE specialist
+                return {
+                    'target': 'Differential Equation Solver',
+                    'service_type': 'math.calculus.ode',
+                    'reason': 'General differential equation (no specific pattern detected)'
+                }
 
         # Priority 2: Series Expansion
         if any(kw in raw_input for kw in ['series', 'taylor', 'fourier', 'expansion', 'convergence']):
@@ -260,6 +295,16 @@ class CalculusSupervisor(BDIAgent):
 
         # Priority 4: Integration - THE CRITICAL SPLIT
         if any(kw in raw_input for kw in ['integrate', 'integral', 'antiderivative', 'area', 'accumulation']):
+            # Check for advanced integration patterns requiring specialized handling
+            complexity = self._assess_integration_complexity(raw_input, metadata)
+
+            if complexity == 'advanced':
+                return {
+                    'target': 'Advanced Integration Specialist',
+                    'service_type': 'math.calculus.integration.advanced',
+                    'reason': 'Detected complex pattern requiring advanced techniques (exp×trig, tabular, or substitution)'
+                }
+
             # CRITICAL DECISION: Symbolic or Numerical?
 
             # Symbolic indicators
@@ -294,6 +339,116 @@ class CalculusSupervisor(BDIAgent):
             'service_type': 'math.calculus.diff',
             'reason': 'Default routing for general calculus computation'
         }
+
+    def _assess_integration_complexity(self, raw_input: str, metadata: Dict) -> str:
+        """
+        Assess integration complexity to route to specialized handlers.
+
+        Detects patterns requiring advanced integration techniques:
+        - advanced: Complex patterns requiring AdvancedIntegrationSpecialist coordinator
+        - basic: Standard patterns handled by basic IntegrationSpecialist
+
+        Advanced patterns include:
+        - exp(ax) × [sin|cos](bx) products
+        - High-degree polynomial × transcendental (tabular)
+        - Chain rule patterns (substitution)
+        - Trig powers
+
+        Args:
+            raw_input: Raw input string
+            metadata: Task metadata
+
+        Returns:
+            Complexity level: 'advanced' or 'basic'
+        """
+        import re
+
+        # Get expression from metadata if available
+        expression = metadata.get('expression', raw_input)
+        expr_lower = expression.lower()
+
+        # Pattern 1: exp×trig products
+        exp_trig_pattern = r'exp\([^)]+\)\s*\*\s*(sin|cos)\([^)]+\)'
+        if re.search(exp_trig_pattern, expression):
+            return 'advanced'
+
+        # Alternative exp×trig check
+        if 'exp' in expr_lower and ('sin' in expr_lower or 'cos' in expr_lower):
+            if '*' in expression or '·' in expression:
+                return 'advanced'
+
+        # Pattern 2: High-degree polynomial × transcendental
+        high_poly_pattern = r'x\s*\*\*\s*[3-9]|x\^[3-9]'
+        if re.search(high_poly_pattern, expression):
+            if any(func in expr_lower for func in ['exp', 'sin', 'cos', 'ln', 'log']):
+                return 'advanced'
+
+        # Pattern 3: Nested functions (chain rule indicators)
+        if '(' in expression and ')' in expression:
+            # Look for function composition
+            if any(f in expr_lower for f in ['sin(', 'cos(', 'exp(', 'ln(', 'log(']):
+                # Count nesting depth
+                if expression.count('(') >= 2:  # Nested function
+                    return 'advanced'
+
+        # Pattern 4: Trig powers (might be complex)
+        trig_power_pattern = r'(sin|cos)\([^)]+\)\s*\*\*\s*[4-9]'
+        if re.search(trig_power_pattern, expr_lower):
+            return 'advanced'
+
+        return 'basic'
+
+    def _classify_ode_type(self, raw_input: str) -> str:
+        """
+        Classify ODE type to route to appropriate specialist.
+
+        Detects:
+            - separable: dy/dx = f(x)g(y)
+            - linear_nonhomogeneous: y' + P(x)y = Q(x)
+            - bernoulli: y' + P(x)y = Q(x)y^n
+            - exact: M(x,y)dx + N(x,y)dy = 0
+            - riccati: y' = P(x) + Q(x)y + R(x)y^2
+
+        Args:
+            raw_input: Raw input string
+
+        Returns:
+            ODE type: 'separable', 'linear_nonhomogeneous', 'bernoulli', 'exact', 'riccati', or 'general'
+        """
+        # Keywords for specific ODE types
+        if any(kw in raw_input for kw in ['separable', 'separate variables', 'separation of variables']):
+            return 'separable'
+
+        if any(kw in raw_input for kw in ['linear', 'integrating factor', 'first order linear']):
+            # Check if nonhomogeneous
+            if any(kw in raw_input for kw in ['nonhomogeneous', 'non-homogeneous', 'q(x)', '= q', '= x', '= sin', '= cos', '= exp']):
+                return 'linear_nonhomogeneous'
+            return 'linear_nonhomogeneous'  # Default to nonhomogeneous for linear
+
+        if any(kw in raw_input for kw in ['bernoulli', 'y^n', 'y**n']):
+            return 'bernoulli'
+
+        if any(kw in raw_input for kw in ['exact', 'exactness', 'potential function', 'mdx', 'ndy']):
+            return 'exact'
+
+        if any(kw in raw_input for kw in ['riccati', 'y^2', 'y**2', 'particular solution']):
+            return 'riccati'
+
+        # Pattern-based detection (if no explicit keywords)
+        # Look for variable coefficients or products
+        if 'x*y' in raw_input.replace(' ', '') or 'y*x' in raw_input.replace(' ', ''):
+            # Could be separable: dy/dx = x*y
+            return 'separable'
+
+        # Look for y' + ... y = ... pattern (linear)
+        if ("y'" in raw_input or 'dy/dx' in raw_input) and '+' in raw_input and '=' in raw_input:
+            # Check if y appears in multiple terms (suggests linear)
+            y_count = raw_input.count('y')
+            if y_count >= 2:  # y' and y term
+                return 'linear_nonhomogeneous'
+
+        # Default: general
+        return 'general'
 
     def _find_specialists(self, service_type: str) -> List[Any]:
         """Query Directory Facilitator for specialists"""

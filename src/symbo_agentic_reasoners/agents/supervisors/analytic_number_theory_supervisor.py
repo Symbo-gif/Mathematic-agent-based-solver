@@ -39,6 +39,9 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
     - PrimeDistributionSpecialist: Prime counting, prime number theorem
     - ArithmeticFunctionsSpecialist: Euler phi, Mobius mu, divisor functions
     - AnalyticContinuationSpecialist: Functional equations, Euler products
+    - ExplicitFormulaSpecialist: Explicit formulas, von Mangoldt, prime-zero connections
+    - ZeroDensitySpecialist: Zero-density estimates, critical strip analysis
+    - LFunctionAdvancedSpecialist: Dedekind zeta, Hecke L-functions, class numbers
 
     This supervisor NEVER computes - only routes.
     """
@@ -52,6 +55,12 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
                           'multiplicative', 'additive', 'arithmetic function']
     CONTINUATION_KEYWORDS = ['analytic continuation', 'euler product', 'continuation',
                             'pole', 'residue', 'convergence', 'domain extension']
+    EXPLICIT_FORMULA_KEYWORDS = ['explicit formula', 'von mangoldt', 'chebyshev',
+                                 'mangoldt function', 'prime-zero connection', 'oscillatory term']
+    ZERO_DENSITY_KEYWORDS = ['zero density', 'zero-density', 'critical strip', 'zero count',
+                            'density estimate', 'zero-free region', 'n(t)', 'n(sigma, t)']
+    L_FUNCTION_ADVANCED_KEYWORDS = ['dedekind zeta', 'hecke l-function', 'artin l-function',
+                                   'class number', 'number field', 'kronecker symbol']
 
     def __init__(self, agent_id: str = 'analytic_number_theory_supervisor_001', df=None, blackboard=None):
         super().__init__(agent_id)
@@ -63,6 +72,9 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
         self._prime_specialist = None
         self._arithmetic_specialist = None
         self._continuation_specialist = None
+        self._explicit_formula_specialist = None
+        self._zero_density_specialist = None
+        self._l_function_advanced_specialist = None
 
         if self.df:
             from symbo_agentic_reasoners.infrastructure.directory_facilitator import create_service_registration
@@ -73,7 +85,7 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
                 cost='minimal',
                 instance=self,
                 tier='2',
-                capabilities='zeta_prime_arithmetic_continuation_routing'
+                capabilities='zeta_prime_arithmetic_continuation_explicit_zero_density_l_function_routing'
             ))
 
         logger.info(f"[{agent_id}] Analytic Number Theory Supervisor initialized")
@@ -125,6 +137,42 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
                 blackboard=self.blackboard
             )
         return self._continuation_specialist
+
+    @property
+    def explicit_formula_specialist(self):
+        """Lazy load explicit formula specialist."""
+        if self._explicit_formula_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.algebra.number_theory.analytic.explicit_formula import ExplicitFormulaSpecialist
+            self._explicit_formula_specialist = ExplicitFormulaSpecialist(
+                agent_id='explicit_formula_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._explicit_formula_specialist
+
+    @property
+    def zero_density_specialist(self):
+        """Lazy load zero-density specialist."""
+        if self._zero_density_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.algebra.number_theory.analytic.zero_density import ZeroDensitySpecialist
+            self._zero_density_specialist = ZeroDensitySpecialist(
+                agent_id='zero_density_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._zero_density_specialist
+
+    @property
+    def l_function_advanced_specialist(self):
+        """Lazy load L-function advanced specialist."""
+        if self._l_function_advanced_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.algebra.number_theory.analytic.l_function_advanced import LFunctionAdvancedSpecialist
+            self._l_function_advanced_specialist = LFunctionAdvancedSpecialist(
+                agent_id='l_function_advanced_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._l_function_advanced_specialist
 
     def update_beliefs(self):
         """PERCEIVE: Monitor for analytic number theory tasks."""
@@ -180,6 +228,9 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
         prime_ops = ['prime_count', 'pi_x', 'prime_gap', 'sieve']
         arithmetic_ops = ['euler_phi', 'mobius', 'divisor_function', 'tau', 'sigma']
         continuation_ops = ['continue', 'euler_product', 'functional_equation']
+        explicit_formula_ops = ['explicit_formula', 'von_mangoldt', 'chebyshev', 'prime_zero_connection']
+        zero_density_ops = ['zero_density', 'zero_count', 'critical_strip', 'density_estimate']
+        l_function_advanced_ops = ['dedekind_zeta', 'hecke_l', 'artin_l', 'class_number']
 
         if operation in zeta_ops:
             return 'zeta'
@@ -189,18 +240,30 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
             return 'arithmetic'
         if operation in continuation_ops:
             return 'continuation'
+        if operation in explicit_formula_ops:
+            return 'explicit_formula'
+        if operation in zero_density_ops:
+            return 'zero_density'
+        if operation in l_function_advanced_ops:
+            return 'l_function_advanced'
 
         # Check keywords
         zeta_score = sum(1 for kw in self.ZETA_KEYWORDS if kw in combined_text)
         prime_score = sum(1 for kw in self.PRIME_KEYWORDS if kw in combined_text)
         arithmetic_score = sum(1 for kw in self.ARITHMETIC_KEYWORDS if kw in combined_text)
         continuation_score = sum(1 for kw in self.CONTINUATION_KEYWORDS if kw in combined_text)
+        explicit_formula_score = sum(1 for kw in self.EXPLICIT_FORMULA_KEYWORDS if kw in combined_text)
+        zero_density_score = sum(1 for kw in self.ZERO_DENSITY_KEYWORDS if kw in combined_text)
+        l_function_advanced_score = sum(1 for kw in self.L_FUNCTION_ADVANCED_KEYWORDS if kw in combined_text)
 
         scores = {
             'zeta': zeta_score,
             'prime': prime_score,
             'arithmetic': arithmetic_score,
-            'continuation': continuation_score
+            'continuation': continuation_score,
+            'explicit_formula': explicit_formula_score,
+            'zero_density': zero_density_score,
+            'l_function_advanced': l_function_advanced_score
         }
 
         return max(scores, key=scores.get) if max(scores.values()) > 0 else 'zeta'
@@ -221,8 +284,16 @@ class AnalyticNumberTheorySupervisor(BDIAgent):
                 specialist = self.prime_specialist
             elif target == 'arithmetic':
                 specialist = self.arithmetic_specialist
-            else:
+            elif target == 'continuation':
                 specialist = self.continuation_specialist
+            elif target == 'explicit_formula':
+                specialist = self.explicit_formula_specialist
+            elif target == 'zero_density':
+                specialist = self.zero_density_specialist
+            elif target == 'l_function_advanced':
+                specialist = self.l_function_advanced_specialist
+            else:
+                specialist = self.zeta_specialist  # Default fallback
 
             logger.info(f"[{self.agent_id}] Routing task {task.entry_id} to {target} specialist")
 
