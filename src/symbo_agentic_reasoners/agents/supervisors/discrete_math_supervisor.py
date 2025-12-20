@@ -376,57 +376,7 @@ class DiscreteMathSupervisor(BDIAgent):
                 'reason': 'Detected recurrence relation keywords'
             }
 
-        # === SET THEORY ===
-        set_keywords = [
-            'set', 'union', 'intersection', 'difference', 'complement',
-            'power set', 'cartesian', 'product', 'relation',
-            'reflexive', 'symmetric', 'transitive', 'equivalence',
-            'partial order', 'antisymmetric', 'function', 'injective',
-            'surjective', 'bijective', 'domain', 'range', 'codomain',
-            'subset', 'superset', 'element', 'cardinality'
-        ]
-        if any(kw in raw_input for kw in set_keywords):
-            return {
-                'target': 'Set Theory Agent',
-                'service_type': 'math.discrete.sets',
-                'reason': 'Detected set theory keywords'
-            }
-
-        # === SPECTRAL GRAPH THEORY (BEFORE general graph theory) ===
-        spectral_graph_keywords = [
-            'spectral graph', 'laplacian matrix', 'graph laplacian',
-            'eigenvalue graph', 'adjacency spectrum', 'laplacian spectrum',
-            'algebraic connectivity', 'fiedler', 'cheeger',
-            'spectral clustering', 'expander graph', 'expansion',
-            'graph eigenvalue', 'spectral gap', 'spectral radius graph'
-        ]
-        if any(kw in raw_input for kw in spectral_graph_keywords):
-            return {
-                'target': 'Spectral Graph Theory Specialist',
-                'service_type': 'math.discrete.graphs.spectral',
-                'reason': 'Detected spectral graph theory keywords (eigenvalues/Laplacian/etc)'
-            }
-
-        # === GRAPH THEORY ===
-        graph_keywords = [
-            'graph', 'vertex', 'vertices', 'edge', 'node',
-            'path', 'cycle', 'tree', 'forest', 'spanning',
-            'shortest path', 'dijkstra', 'bellman', 'floyd',
-            'connected', 'component', 'degree', 'adjacency',
-            'hamiltonian', 'eulerian', 'bipartite', 'planar',
-            'coloring', 'chromatic', 'clique', 'independent set',
-            'network', 'flow', 'cut', 'matching', 'traverse',
-            'bfs', 'dfs', 'topological', 'strongly connected',
-            'mst', 'kruskal', 'prim', 'minimum spanning'
-        ]
-        if any(kw in raw_input for kw in graph_keywords):
-            return {
-                'target': 'Graph Theory Agent',
-                'service_type': 'math.discrete.graphs',
-                'reason': 'Detected graph theory keywords'
-            }
-
-        # === GENERATING FUNCTIONS (BEFORE general combinatorics - priority routing) ===
+        # === GENERATING FUNCTIONS (BEFORE set theory - "function" keyword conflict) ===
 
         # Priority 1: Asymptotic extraction (most specific)
         asymptotic_gf_keywords = [
@@ -517,6 +467,56 @@ class DiscreteMathSupervisor(BDIAgent):
                 'target': 'Ordinary GF Specialist',
                 'service_type': 'math.discrete.gf.ordinary',
                 'reason': 'Detected ordinary GF keywords'
+            }
+
+        # === SET THEORY ===
+        set_keywords = [
+            'set', 'union', 'intersection', 'difference', 'complement',
+            'power set', 'cartesian', 'product', 'relation',
+            'reflexive', 'symmetric', 'transitive', 'equivalence',
+            'partial order', 'antisymmetric', 'function', 'injective',
+            'surjective', 'bijective', 'domain', 'range', 'codomain',
+            'subset', 'superset', 'element', 'cardinality'
+        ]
+        if any(kw in raw_input for kw in set_keywords):
+            return {
+                'target': 'Set Theory Agent',
+                'service_type': 'math.discrete.sets',
+                'reason': 'Detected set theory keywords'
+            }
+
+        # === SPECTRAL GRAPH THEORY (BEFORE general graph theory) ===
+        spectral_graph_keywords = [
+            'spectral graph', 'laplacian matrix', 'graph laplacian',
+            'eigenvalue graph', 'adjacency spectrum', 'laplacian spectrum',
+            'algebraic connectivity', 'fiedler', 'cheeger',
+            'spectral clustering', 'expander graph', 'expansion',
+            'graph eigenvalue', 'spectral gap', 'spectral radius graph'
+        ]
+        if any(kw in raw_input for kw in spectral_graph_keywords):
+            return {
+                'target': 'Spectral Graph Theory Specialist',
+                'service_type': 'math.discrete.graphs.spectral',
+                'reason': 'Detected spectral graph theory keywords (eigenvalues/Laplacian/etc)'
+            }
+
+        # === GRAPH THEORY ===
+        graph_keywords = [
+            'graph', 'vertex', 'vertices', 'edge', 'node',
+            'path', 'cycle', 'tree', 'forest', 'spanning',
+            'shortest path', 'dijkstra', 'bellman', 'floyd',
+            'connected', 'component', 'degree', 'adjacency',
+            'hamiltonian', 'eulerian', 'bipartite', 'planar',
+            'coloring', 'chromatic', 'clique', 'independent set',
+            'network', 'flow', 'cut', 'matching', 'traverse',
+            'bfs', 'dfs', 'topological', 'strongly connected',
+            'mst', 'kruskal', 'prim', 'minimum spanning'
+        ]
+        if any(kw in raw_input for kw in graph_keywords):
+            return {
+                'target': 'Graph Theory Agent',
+                'service_type': 'math.discrete.graphs',
+                'reason': 'Detected graph theory keywords'
             }
 
         # === COMBINATORICS (default for counting) ===

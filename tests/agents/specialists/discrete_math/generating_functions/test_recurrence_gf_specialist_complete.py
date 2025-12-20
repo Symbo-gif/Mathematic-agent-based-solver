@@ -78,10 +78,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 4: Complex Problem - Custom Recurrence
     def test_complex_custom_recurrence(self, specialist):
         """Test custom recurrence: a_n = 2*a_{n-1} + a_{n-2}."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Custom recurrence",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Custom recurrence", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [2, 1],
                 'initial_values': [1, 1],
@@ -98,10 +95,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 5: Edge Case - n < k (Use Initial Values)
     def test_edge_case_n_less_than_k(self, specialist):
         """EDGE CASE: Request n=0 should return initial value."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Initial value",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Initial value", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [1, 1],
                 'initial_values': [0, 1],
@@ -117,10 +111,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 6: Edge Case - n = 1
     def test_edge_case_n_equals_one(self, specialist):
         """EDGE CASE: Request n=1 should return second initial value."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Second initial",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Second initial", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [1, 1],
                 'initial_values': [0, 1],
@@ -136,10 +127,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 7: Edge Case - Large Term
     def test_edge_case_large_term(self, specialist):
         """EDGE CASE: Compute large term F(50)."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Large term",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Large term", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'fibonacci_term',
                 'n': 50
             }
@@ -155,10 +143,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 8: Error Handling
     def test_invalid_input_handling(self, specialist):
         """Test graceful handling of mismatched initial values."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Invalid",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [1, 1, 1],  # Order 3
                 'initial_values': [0, 1],    # Only 2 initials - ERROR
@@ -172,11 +157,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 9: Blackboard Integration
     def test_blackboard_entry_creation(self, specialist, blackboard):
         """Test proper Blackboard result posting."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Test BB",
-            conversation_id="test_bb_001",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Test BB", author_agent="test", conversation_id="test_bb_001", metadata={
                 'operation': 'fibonacci_term',
                 'n': 5
             }
@@ -208,10 +189,7 @@ class TestRecurrenceGFSpecialist:
     @pytest.mark.parametrize("n", [5, 10, 15, 20])
     def test_multiple_fibonacci_terms(self, specialist, n):
         """Test specialist computes various Fibonacci terms."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content=f"F({n})",
-            metadata={'operation': 'fibonacci_term', 'n': n}
+        task = create_entry(entry_type=EntryType.TASK, content=f"F({n})", author_agent="test", conversation_id="test_multi", metadata={'operation': 'fibonacci_term', 'n': n}
         )
 
         result = specialist.process(task)
@@ -221,10 +199,7 @@ class TestRecurrenceGFSpecialist:
     # BONUS TEST 1: Lucas Numbers
     def test_bonus_lucas_numbers(self, specialist):
         """BONUS: Lucas recurrence L_n = L_{n-1} + L_{n-2}, L_0=2, L_1=1."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Lucas",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Lucas", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [1, 1],
                 'initial_values': [2, 1],
@@ -241,10 +216,7 @@ class TestRecurrenceGFSpecialist:
     # BONUS TEST 3: Order-3 Recurrence
     def test_bonus_order_three_recurrence(self, specialist):
         """BONUS: Third-order recurrence."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Order 3",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Order 3", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'solve_linear',
                 'coefficients': [1, 1, 1],
                 'initial_values': [0, 0, 1],

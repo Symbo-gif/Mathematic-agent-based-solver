@@ -82,10 +82,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 4: Complex Problem - Fibonacci Asymptotic
     def test_complex_fibonacci_asymptotic(self, specialist):
         """Test Fibonacci asymptotic formula."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Fibonacci asymptotic",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Fibonacci asymptotic", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [0, 1],
                 'denominator': [1, -1, -1],
                 'operation': 'full_asymptotic'
@@ -102,10 +99,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 5: Edge Case - Growth Rate Extraction
     def test_edge_case_growth_rate(self, specialist):
         """EDGE CASE: Extract only growth rate ρ."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Growth rate",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Growth rate", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1],
                 'denominator': [1, -3],
                 'operation': 'extract_growth'
@@ -122,10 +116,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 6: Edge Case - Multiple Dominant Poles
     def test_edge_case_multiple_dominant(self, specialist):
         """EDGE CASE: Multiple poles with same modulus."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Multiple dominant",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Multiple dominant", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1],
                 'denominator': [1, 0, -1],  # 1/(1-x²) poles at ±1
                 'operation': 'dominant_singularity'
@@ -140,10 +131,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 7: Edge Case - High Multiplicity Pole
     def test_edge_case_high_multiplicity(self, specialist):
         """EDGE CASE: Pole with high multiplicity."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="High multiplicity",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="High multiplicity", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1],
                 'denominator': [1, -3, 3, -1],  # 1/(1-x)³
                 'operation': 'full_asymptotic'
@@ -160,10 +148,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 8: Error Handling
     def test_invalid_input_handling(self, specialist):
         """Test graceful handling of zero denominator."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Invalid",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1],
                 'denominator': [0],
                 'operation': 'dominant_singularity'
@@ -176,11 +161,7 @@ class TestAsymptoticExtractionSpecialist:
     # TEST 9: Blackboard Integration
     def test_blackboard_entry_creation(self, specialist, blackboard):
         """Test proper Blackboard result posting."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Test BB",
-            conversation_id="test_bb_001",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Test BB", author_agent="test", conversation_id="test_bb_001", metadata={
                 'operation': 'dominant_singularity',
                 'numerator': [1],
                 'denominator': [1, -1]
@@ -213,10 +194,7 @@ class TestAsymptoticExtractionSpecialist:
     @pytest.mark.parametrize("r", [2, 3, 5, 10])
     def test_multiple_geometric_series(self, specialist, r):
         """Test specialist handles various geometric series."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content=f"Geometric r={r}",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content=f"Geometric r={r}", author_agent="test", conversation_id="test_multi", metadata={
                 'operation': 'dominant_singularity',
                 'numerator': [1],
                 'denominator': [1, -r]
@@ -232,10 +210,7 @@ class TestAsymptoticExtractionSpecialist:
     # BONUS TEST 1: Catalan Asymptotic
     def test_bonus_catalan_asymptotic(self, specialist):
         """BONUS: Catalan number asymptotic."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Catalan asymptotic",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Catalan asymptotic", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1, -1],
                 'denominator': [0, 2],  # Simplified, actual is complex
                 'operation': 'dominant_singularity'
@@ -250,10 +225,7 @@ class TestAsymptoticExtractionSpecialist:
     # BONUS TEST 2: Exponentially Decreasing
     def test_bonus_decreasing_sequence(self, specialist):
         """BONUS: Pole outside unit circle (decreasing sequence)."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Decreasing",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Decreasing", author_agent="test", conversation_id="test_001", metadata={
                 'numerator': [1],
                 'denominator': [1, -0.5],  # 1/(1-0.5x), pole at x=2
                 'operation': 'dominant_singularity'

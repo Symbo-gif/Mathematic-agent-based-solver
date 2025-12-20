@@ -79,10 +79,7 @@ class TestGFCompositionSpecialist:
     # TEST 4: Complex Problem - Multiplication (Convolution)
     def test_complex_multiplication(self, specialist):
         """Test (1+x) * (1+x²) = 1 + x + x² + x³."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Multiply GFs",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Multiply GFs", author_agent="test", conversation_id="test_001", metadata={
                 'gf_a': [1, 1],
                 'gf_b': [1, 0, 1],
                 'operation': 'multiply_gfs'
@@ -98,10 +95,7 @@ class TestGFCompositionSpecialist:
     # TEST 5: Edge Case - Add Zero GF
     def test_edge_case_add_zero(self, specialist):
         """EDGE CASE: A(x) + 0 = A(x)."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Add zero",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Add zero", author_agent="test", conversation_id="test_001", metadata={
                 'gf_a': [1, 2, 3],
                 'gf_b': [0],
                 'operation': 'add_gfs'
@@ -117,10 +111,7 @@ class TestGFCompositionSpecialist:
     # TEST 6: Edge Case - Multiply by Unit
     def test_edge_case_multiply_unit(self, specialist):
         """EDGE CASE: A(x) * 1 = A(x)."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Multiply by 1",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Multiply by 1", author_agent="test", conversation_id="test_001", metadata={
                 'gf_a': [5, 3, 2],
                 'gf_b': [1],
                 'operation': 'multiply_gfs'
@@ -136,10 +127,7 @@ class TestGFCompositionSpecialist:
     # TEST 7: Edge Case - Different Length GFs
     def test_edge_case_different_lengths(self, specialist):
         """EDGE CASE: Add GFs of different lengths."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Different lengths",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Different lengths", author_agent="test", conversation_id="test_001", metadata={
                 'gf_a': [1, 2],
                 'gf_b': [1, 2, 3, 4, 5],
                 'operation': 'add_gfs'
@@ -155,10 +143,7 @@ class TestGFCompositionSpecialist:
     # TEST 8: Error Handling
     def test_invalid_input_handling(self, specialist):
         """Test graceful handling of invalid operation."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Invalid",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={
                 'gf_a': [1, 2],
                 'operation': 'unknown_operation'
             }
@@ -170,11 +155,7 @@ class TestGFCompositionSpecialist:
     # TEST 9: Blackboard Integration
     def test_blackboard_entry_creation(self, specialist, blackboard):
         """Test proper Blackboard result posting."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Test BB",
-            conversation_id="test_bb_001",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Test BB", author_agent="test", conversation_id="test_bb_001", metadata={
                 'operation': 'add_gfs',
                 'gf_a': [1, 1],
                 'gf_b': [1, 1]
@@ -212,10 +193,7 @@ class TestGFCompositionSpecialist:
     ])
     def test_multiple_operations(self, specialist, operation, gf_a, gf_b):
         """Test specialist handles various operations."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content=f"{operation}",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content=f"{operation}", author_agent="test", conversation_id="test_multi", metadata={
                 'operation': operation,
                 'gf_a': gf_a,
                 'gf_b': gf_b
@@ -229,10 +207,7 @@ class TestGFCompositionSpecialist:
     # BONUS TEST 1: Self-Multiplication
     def test_bonus_self_multiplication(self, specialist):
         """BONUS: A(x) * A(x) = A(x)²."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Square",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Square", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'multiply_gfs',
                 'gf_a': [1, 1],
                 'gf_b': [1, 1]
@@ -249,19 +224,13 @@ class TestGFCompositionSpecialist:
     def test_bonus_associativity(self, specialist):
         """BONUS: Verify (A+B)+C = A+(B+C)."""
         # First: (A+B)
-        task1 = create_entry(
-            entry_type=EntryType.TASK,
-            content="A+B",
-            metadata={'operation': 'add_gfs', 'gf_a': [1], 'gf_b': [1]}
+        task1 = create_entry(entry_type=EntryType.TASK, content="A+B", author_agent="test", conversation_id="test_001", metadata={'operation': 'add_gfs', 'gf_a': [1], 'gf_b': [1]}
         )
         result1 = specialist.process(task1)
 
         # Then: (A+B)+C
         if 'coefficients' in result1:
-            task2 = create_entry(
-                entry_type=EntryType.TASK,
-                content="(A+B)+C",
-                metadata={'operation': 'add_gfs', 'gf_a': result1['coefficients'], 'gf_b': [1]}
+            task2 = create_entry(entry_type=EntryType.TASK, content="(A+B)+C", author_agent="test", conversation_id="test_001", metadata={'operation': 'add_gfs', 'gf_a': result1['coefficients'], 'gf_b': [1]}
             )
             result2 = specialist.process(task2)
             assert 'coefficients' in result2

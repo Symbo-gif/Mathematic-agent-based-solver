@@ -86,10 +86,7 @@ class TestBivariateGFSpecialist:
             [1, 4, 10, 20]
         ]
 
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Extract diagonal",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Extract diagonal", author_agent="test", conversation_id="test_001", metadata={
                 'coefficients_2d': matrix,
                 'operation': 'extract_diagonal'
             }
@@ -104,10 +101,7 @@ class TestBivariateGFSpecialist:
     # TEST 5: Edge Case - 1x1 Matrix
     def test_edge_case_single_element(self, specialist):
         """EDGE CASE: Single element matrix."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Single element",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Single element", author_agent="test", conversation_id="test_001", metadata={
                 'coefficients_2d': [[5]],
                 'operation': 'from_2d_array'
             }
@@ -121,10 +115,7 @@ class TestBivariateGFSpecialist:
     # TEST 6: Edge Case - Non-Square Matrix
     def test_edge_case_non_square(self, specialist):
         """EDGE CASE: Non-square matrix 2x3."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Non-square",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Non-square", author_agent="test", conversation_id="test_001", metadata={
                 'coefficients_2d': [[1, 2, 3], [4, 5, 6]],
                 'operation': 'from_2d_array'
             }
@@ -138,10 +129,7 @@ class TestBivariateGFSpecialist:
     # TEST 7: Edge Case - Zero Matrix
     def test_edge_case_zero_matrix(self, specialist):
         """EDGE CASE: All-zero coefficient matrix."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Zero matrix",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Zero matrix", author_agent="test", conversation_id="test_001", metadata={
                 'coefficients_2d': [[0, 0], [0, 0]],
                 'operation': 'from_2d_array'
             }
@@ -154,10 +142,7 @@ class TestBivariateGFSpecialist:
     # TEST 8: Error Handling
     def test_invalid_input_handling(self, specialist):
         """Test graceful handling of invalid matrix."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Invalid",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={
                 'coefficients_2d': "not_a_matrix",
                 'operation': 'from_2d_array'
             }
@@ -169,11 +154,7 @@ class TestBivariateGFSpecialist:
     # TEST 9: Blackboard Integration
     def test_blackboard_entry_creation(self, specialist, blackboard):
         """Test proper Blackboard result posting."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Test BB",
-            conversation_id="test_bb_001",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Test BB", author_agent="test", conversation_id="test_bb_001", metadata={
                 'operation': 'from_2d_array',
                 'coefficients_2d': [[1, 2], [3, 4]]
             }
@@ -210,10 +191,7 @@ class TestBivariateGFSpecialist:
     ])
     def test_multiple_matrices(self, specialist, matrix_size):
         """Test specialist handles various matrix sizes."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content=f"Matrix",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content=f"Matrix", author_agent="test", conversation_id="test_multi", metadata={
                 'operation': 'from_2d_array',
                 'coefficients_2d': matrix_size
             }
@@ -226,10 +204,7 @@ class TestBivariateGFSpecialist:
     # BONUS TEST 1: Lattice Paths
     def test_bonus_lattice_paths(self, specialist):
         """BONUS: Lattice paths F(x,y) = 1/(1-x-y)."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Lattice paths",
-            metadata={'operation': 'lattice_paths', 'max_degree': 3}
+        task = create_entry(entry_type=EntryType.TASK, content="Lattice paths", author_agent="test", conversation_id="test_001", metadata={'operation': 'lattice_paths', 'max_degree': 3}
         )
 
         result = specialist.process(task)
@@ -246,10 +221,7 @@ class TestBivariateGFSpecialist:
         """BONUS: Diagonal of identity matrix."""
         identity = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Identity diagonal",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Identity diagonal", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'extract_diagonal',
                 'coefficients_2d': identity
             }

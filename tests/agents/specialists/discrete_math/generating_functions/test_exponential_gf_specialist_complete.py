@@ -80,10 +80,7 @@ class TestExponentialGFSpecialist:
     # TEST 4: Complex Problem - Exponential Function
     def test_complex_exp_function(self, specialist):
         """Test exponential function e^x."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Exponential",
-            metadata={
+        task = create_entry(entry_type=EntryType.TASK, content="Exponential", author_agent="test", conversation_id="test_001", metadata={
                 'operation': 'exp_function',
                 'n_terms': 10
             }
@@ -99,10 +96,7 @@ class TestExponentialGFSpecialist:
     # TEST 5: Edge Case - D(0) = 1
     def test_edge_case_derangement_zero(self, specialist):
         """EDGE CASE: Derangement !0 = 1 by convention."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="D(0)",
-            metadata={'operation': 'derangements', 'n_terms': 1}
+        task = create_entry(entry_type=EntryType.TASK, content="D(0)", author_agent="test", conversation_id="test_001", metadata={'operation': 'derangements', 'n_terms': 1}
         )
 
         result = specialist.process(task)
@@ -113,10 +107,7 @@ class TestExponentialGFSpecialist:
     # TEST 6: Edge Case - D(1) = 0
     def test_edge_case_derangement_one(self, specialist):
         """EDGE CASE: Derangement !1 = 0."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="D(1)",
-            metadata={'operation': 'derangements', 'n_terms': 2}
+        task = create_entry(entry_type=EntryType.TASK, content="D(1)", author_agent="test", conversation_id="test_001", metadata={'operation': 'derangements', 'n_terms': 2}
         )
 
         result = specialist.process(task)
@@ -127,10 +118,7 @@ class TestExponentialGFSpecialist:
     # TEST 7: Edge Case - Large Derangement
     def test_edge_case_large_derangement(self, specialist):
         """EDGE CASE: Large derangement number !10."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="D(10)",
-            metadata={'operation': 'derangements', 'n_terms': 11}
+        task = create_entry(entry_type=EntryType.TASK, content="D(10)", author_agent="test", conversation_id="test_001", metadata={'operation': 'derangements', 'n_terms': 11}
         )
 
         result = specialist.process(task)
@@ -143,10 +131,7 @@ class TestExponentialGFSpecialist:
     # TEST 8: Error Handling
     def test_invalid_input_handling(self, specialist):
         """Test graceful handling of invalid operation."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Invalid",
-            metadata={'operation': 'unknown_op'}
+        task = create_entry(entry_type=EntryType.TASK, content="Invalid", author_agent="test", conversation_id="test_001", metadata={'operation': 'unknown_op'}
         )
 
         result = specialist.process(task)
@@ -155,11 +140,7 @@ class TestExponentialGFSpecialist:
     # TEST 9: Blackboard Integration
     def test_blackboard_entry_creation(self, specialist, blackboard):
         """Test proper Blackboard result posting."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Test BB",
-            conversation_id="test_bb_001",
-            metadata={'operation': 'exp_function', 'n_terms': 5}
+        task = create_entry(entry_type=EntryType.TASK, content="Test BB", author_agent="test", conversation_id="test_bb_001", metadata={'operation': 'exp_function', 'n_terms': 5}
         )
 
         specialist.process(task)
@@ -189,10 +170,7 @@ class TestExponentialGFSpecialist:
     @pytest.mark.parametrize("n_terms", [5, 10, 15, 20])
     def test_multiple_term_counts(self, specialist, n_terms):
         """Test specialist handles various term counts."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content=f"Derangements {n_terms}",
-            metadata={'operation': 'derangements', 'n_terms': n_terms}
+        task = create_entry(entry_type=EntryType.TASK, content=f"Derangements {n_terms}", author_agent="test", conversation_id="test_multi", metadata={'operation': 'derangements', 'n_terms': n_terms}
         )
 
         result = specialist.process(task)
@@ -204,10 +182,7 @@ class TestExponentialGFSpecialist:
     # BONUS TEST 1: From Sequence
     def test_bonus_from_sequence(self, specialist):
         """BONUS: Build EGF from sequence."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="From seq",
-            metadata={'operation': 'from_sequence', 'sequence': [1, 2, 3, 4]}
+        task = create_entry(entry_type=EntryType.TASK, content="From seq", author_agent="test", conversation_id="test_001", metadata={'operation': 'from_sequence', 'sequence': [1, 2, 3, 4]}
         )
 
         result = specialist.process(task)
@@ -216,10 +191,7 @@ class TestExponentialGFSpecialist:
     # BONUS TEST 2: Verify Derangement Formula
     def test_bonus_derangement_formula(self, specialist):
         """BONUS: Verify !n ≈ n!/e for large n."""
-        task = create_entry(
-            entry_type=EntryType.TASK,
-            content="Large derangement",
-            metadata={'operation': 'derangements', 'n_terms': 8}
+        task = create_entry(entry_type=EntryType.TASK, content="Large derangement", author_agent="test", conversation_id="test_001", metadata={'operation': 'derangements', 'n_terms': 8}
         )
 
         result = specialist.process(task)
