@@ -106,6 +106,24 @@ class DiscreteMathSupervisor(BDIAgent):
         self.boolean_algebra_routes = 0
         self.automata_routes = 0
 
+        # Generating Functions statistics
+        self.gf_ordinary_routes = 0
+        self.gf_exponential_routes = 0
+        self.gf_rational_routes = 0
+        self.gf_recurrence_routes = 0
+        self.gf_bivariate_routes = 0
+        self.gf_composition_routes = 0
+        self.gf_asymptotic_routes = 0
+
+        # Lazy-loaded GF specialists
+        self._ordinary_gf_specialist = None
+        self._exponential_gf_specialist = None
+        self._rational_gf_specialist = None
+        self._recurrence_gf_specialist = None
+        self._bivariate_gf_specialist = None
+        self._gf_composition_specialist = None
+        self._asymptotic_extraction_specialist = None
+
         # Register with Directory Facilitator
         if self.df:
             self._register_services()
@@ -128,6 +146,94 @@ class DiscreteMathSupervisor(BDIAgent):
         )
         self.df.register(registration)
         print(f"  [DF] Registered: math.discrete (supervisor)")
+
+    # ==========================================================================
+    # GENERATING FUNCTIONS SPECIALISTS (Lazy-Loaded Properties)
+    # ==========================================================================
+
+    @property
+    def ordinary_gf_specialist(self):
+        """Lazy load Ordinary GF Specialist."""
+        if self._ordinary_gf_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import OrdinaryGFSpecialist
+            self._ordinary_gf_specialist = OrdinaryGFSpecialist(
+                agent_id='ordinary_gf_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._ordinary_gf_specialist
+
+    @property
+    def exponential_gf_specialist(self):
+        """Lazy load Exponential GF Specialist."""
+        if self._exponential_gf_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import ExponentialGFSpecialist
+            self._exponential_gf_specialist = ExponentialGFSpecialist(
+                agent_id='exponential_gf_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._exponential_gf_specialist
+
+    @property
+    def rational_gf_specialist(self):
+        """Lazy load Rational GF Specialist."""
+        if self._rational_gf_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import RationalGFSpecialist
+            self._rational_gf_specialist = RationalGFSpecialist(
+                agent_id='rational_gf_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._rational_gf_specialist
+
+    @property
+    def recurrence_gf_specialist(self):
+        """Lazy load Recurrence GF Specialist."""
+        if self._recurrence_gf_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import RecurrenceGFSpecialist
+            self._recurrence_gf_specialist = RecurrenceGFSpecialist(
+                agent_id='recurrence_gf_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._recurrence_gf_specialist
+
+    @property
+    def bivariate_gf_specialist(self):
+        """Lazy load Bivariate GF Specialist."""
+        if self._bivariate_gf_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import BivariateGFSpecialist
+            self._bivariate_gf_specialist = BivariateGFSpecialist(
+                agent_id='bivariate_gf_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._bivariate_gf_specialist
+
+    @property
+    def gf_composition_specialist(self):
+        """Lazy load GF Composition Specialist."""
+        if self._gf_composition_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import GFCompositionSpecialist
+            self._gf_composition_specialist = GFCompositionSpecialist(
+                agent_id='gf_composition_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._gf_composition_specialist
+
+    @property
+    def asymptotic_extraction_specialist(self):
+        """Lazy load Asymptotic Extraction Specialist."""
+        if self._asymptotic_extraction_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import AsymptoticExtractionSpecialist
+            self._asymptotic_extraction_specialist = AsymptoticExtractionSpecialist(
+                agent_id='asymptotic_extraction_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._asymptotic_extraction_specialist
 
     def process(self, task_entry: Any) -> Any:
         """
@@ -155,7 +261,21 @@ class DiscreteMathSupervisor(BDIAgent):
 
         # Update category counters
         service_type = routing_decision['service_type']
-        if 'combinatorics' in service_type:
+        if 'gf.ordinary' in service_type:
+            self.gf_ordinary_routes += 1
+        elif 'gf.exponential' in service_type:
+            self.gf_exponential_routes += 1
+        elif 'gf.rational' in service_type:
+            self.gf_rational_routes += 1
+        elif 'gf.recurrence' in service_type:
+            self.gf_recurrence_routes += 1
+        elif 'gf.bivariate' in service_type:
+            self.gf_bivariate_routes += 1
+        elif 'gf.composition' in service_type:
+            self.gf_composition_routes += 1
+        elif 'gf.asymptotic' in service_type:
+            self.gf_asymptotic_routes += 1
+        elif 'combinatorics' in service_type:
             self.combinatorics_routes += 1
         elif 'graphs' in service_type:
             self.graph_theory_routes += 1
@@ -304,6 +424,99 @@ class DiscreteMathSupervisor(BDIAgent):
                 'target': 'Graph Theory Agent',
                 'service_type': 'math.discrete.graphs',
                 'reason': 'Detected graph theory keywords'
+            }
+
+        # === GENERATING FUNCTIONS (BEFORE general combinatorics - priority routing) ===
+
+        # Priority 1: Asymptotic extraction (most specific)
+        asymptotic_gf_keywords = [
+            'asymptotic', 'coefficient extraction', 'singularity analysis',
+            'dominant singularity', 'growth rate', '[x^n]', 'extract coefficient',
+            'flajolet', 'sedgewick', 'analytic combinatorics',
+            'asymptotic gf', 'coefficient asymptotic'
+        ]
+        if any(kw in raw_input for kw in asymptotic_gf_keywords):
+            return {
+                'target': 'Asymptotic Extraction Specialist',
+                'service_type': 'math.discrete.gf.asymptotic',
+                'reason': 'Detected asymptotic extraction keywords'
+            }
+
+        # Priority 2: GF composition operations
+        composition_gf_keywords = [
+            'composition gf', 'gf product', 'gf convolution', 'hadamard product',
+            'gf derivative', 'shift operator', 'gf operations',
+            'multiply generating', 'add generating'
+        ]
+        if any(kw in raw_input for kw in composition_gf_keywords):
+            return {
+                'target': 'GF Composition Specialist',
+                'service_type': 'math.discrete.gf.composition',
+                'reason': 'Detected GF composition keywords'
+            }
+
+        # Priority 3: Bivariate GFs
+        bivariate_gf_keywords = [
+            'bivariate', 'two variable', 'bgf', 'x and y variable',
+            'two-variable generating function', 'bivariate gf'
+        ]
+        if any(kw in raw_input for kw in bivariate_gf_keywords):
+            return {
+                'target': 'Bivariate GF Specialist',
+                'service_type': 'math.discrete.gf.bivariate',
+                'reason': 'Detected bivariate GF keywords'
+            }
+
+        # Priority 4: Recurrence solving via GF
+        recurrence_gf_keywords = [
+            'solve recurrence', 'recurrence via gf', 'characteristic gf',
+            'fibonacci gf', 'linear recurrence gf',
+            'recurrence generating function'
+        ]
+        if any(kw in raw_input for kw in recurrence_gf_keywords):
+            return {
+                'target': 'Recurrence GF Specialist',
+                'service_type': 'math.discrete.gf.recurrence',
+                'reason': 'Detected recurrence GF keywords'
+            }
+
+        # Priority 5: Rational GFs
+        rational_gf_keywords = [
+            'rational gf', 'partial fraction', 'p(x)/q(x)', 'poles',
+            'rational generating function', 'denominator', 'numerator polynomial',
+            'pole gf', 'rational function gf'
+        ]
+        if any(kw in raw_input for kw in rational_gf_keywords):
+            return {
+                'target': 'Rational GF Specialist',
+                'service_type': 'math.discrete.gf.rational',
+                'reason': 'Detected rational GF keywords'
+            }
+
+        # Priority 6: Exponential GFs
+        exponential_gf_keywords = [
+            'egf', 'exponential generating function', 'labeled structure',
+            'derangement', 'permutation counting', 'exponential gf',
+            'labeled combinatorics'
+        ]
+        if any(kw in raw_input for kw in exponential_gf_keywords):
+            return {
+                'target': 'Exponential GF Specialist',
+                'service_type': 'math.discrete.gf.exponential',
+                'reason': 'Detected exponential GF keywords'
+            }
+
+        # Priority 7: Ordinary GFs (default for GF tasks)
+        ordinary_gf_keywords = [
+            'ogf', 'ordinary generating function', 'generating function',
+            'gf', 'power series', 'coefficient sequence', 'catalan gf',
+            'generating series'
+        ]
+        if any(kw in raw_input for kw in ordinary_gf_keywords):
+            return {
+                'target': 'Ordinary GF Specialist',
+                'service_type': 'math.discrete.gf.ordinary',
+                'reason': 'Detected ordinary GF keywords'
             }
 
         # === COMBINATORICS (default for counting) ===
@@ -663,7 +876,14 @@ class DiscreteMathSupervisor(BDIAgent):
             'set_theory_routes': self.set_theory_routes,
             'recurrence_routes': self.recurrence_routes,
             'boolean_algebra_routes': self.boolean_algebra_routes,
-            'automata_routes': self.automata_routes
+            'automata_routes': self.automata_routes,
+            'gf_ordinary_routes': self.gf_ordinary_routes,
+            'gf_exponential_routes': self.gf_exponential_routes,
+            'gf_rational_routes': self.gf_rational_routes,
+            'gf_recurrence_routes': self.gf_recurrence_routes,
+            'gf_bivariate_routes': self.gf_bivariate_routes,
+            'gf_composition_routes': self.gf_composition_routes,
+            'gf_asymptotic_routes': self.gf_asymptotic_routes
         })
         return stats
 

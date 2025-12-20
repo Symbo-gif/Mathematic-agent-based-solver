@@ -242,6 +242,20 @@ class AlgebraSupervisor(BDIAgent):
                 'reason': 'Detected algebraic number theory keywords (number field/ideal/etc)'
             }
 
+        # ELEMENTARY Number Theory - congruences, Pell, CRT, Tonelli-Shanks (BEFORE general NT)
+        elementary_nt_keywords = ['congruence', 'chinese remainder', 'crt', 'pell equation',
+                                  'continued fraction', 'tonelli', 'shanks', 'lte',
+                                  'lifting the exponent', 'quadratic residue', 'legendre symbol',
+                                  'linear diophantine', 'bezout', 'p-adic valuation',
+                                  'fundamental solution pell', 'convergent', 'quadratic irrational',
+                                  'jacobi symbol', 'pythagorean triple']
+        if any(kw in raw_input for kw in elementary_nt_keywords):
+            return {
+                'target': 'Elementary Number Theory Specialist',
+                'service_type': 'math.algebra.elementary_nt',
+                'reason': 'Detected elementary number theory keywords (congruence/pell/crt/etc)'
+            }
+
         # Number Theory keywords - integer factorization, primes, modular arithmetic
         # "factor" without variables is integer factorization
         number_theory_keywords = ['prime', 'gcd', 'lcm', 'modulo', 'mod ', 'divisible', 'congruent']

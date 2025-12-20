@@ -107,6 +107,14 @@ class AgentFactory:
         except Exception as e:
             logger.warning(f"Failed to create DiscreteMathSupervisor: {e}")
 
+        # Elementary Number Theory Supervisor
+        try:
+            from symbo_agentic_reasoners.agents.supervisors.elementary_number_theory_supervisor import ElementaryNumberTheorySupervisor
+            agent = ElementaryNumberTheorySupervisor(df=self.df, blackboard=self.blackboard)
+            supervisors[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create ElementaryNumberTheorySupervisor: {e}")
+
         self.agents.update(supervisors)
         logger.info(f"Created {len(supervisors)} supervisors")
         return supervisors
@@ -167,11 +175,11 @@ class AgentFactory:
             logger.warning(f"Failed to create SeriesSpecialist: {e}")
 
         try:
-            from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import ODESolver
-            agent = ODESolver(df=self.df, blackboard=self.blackboard)
+            from symbo_agentic_reasoners.agents.specialists.calculus.ode_specialist import ODESolutionSpecialist
+            agent = ODESolutionSpecialist(df=self.df, blackboard=self.blackboard)
             specialists[agent.agent_id] = agent
         except Exception as e:
-            logger.warning(f"Failed to create ODESolver: {e}")
+            logger.warning(f"Failed to create ODESolutionSpecialist: {e}")
 
         # === GEOMETRY SPECIALISTS ===
         try:
@@ -239,6 +247,106 @@ class AgentFactory:
             specialists[agent.agent_id] = agent
         except Exception as e:
             logger.warning(f"Failed to create GraphTheoryAgent: {e}")
+
+        # === GENERATING FUNCTIONS SPECIALISTS ===
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import OrdinaryGFSpecialist
+            agent = OrdinaryGFSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create OrdinaryGFSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import ExponentialGFSpecialist
+            agent = ExponentialGFSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create ExponentialGFSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import RationalGFSpecialist
+            agent = RationalGFSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create RationalGFSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import RecurrenceGFSpecialist
+            agent = RecurrenceGFSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create RecurrenceGFSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import BivariateGFSpecialist
+            agent = BivariateGFSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create BivariateGFSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import GFCompositionSpecialist
+            agent = GFCompositionSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create GFCompositionSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions import AsymptoticExtractionSpecialist
+            agent = AsymptoticExtractionSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create AsymptoticExtractionSpecialist: {e}")
+
+        # === ELEMENTARY NUMBER THEORY SPECIALISTS ===
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import CongruenceSpecialist
+            agent = CongruenceSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create CongruenceSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import ContinuedFractionsSpecialist
+            agent = ContinuedFractionsSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create ContinuedFractionsSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import PellEquationSpecialist
+            agent = PellEquationSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create PellEquationSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import TonelliShanksSpecialist
+            agent = TonelliShanksSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create TonelliShanksSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import LiftingTheExponentSpecialist
+            agent = LiftingTheExponentSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create LiftingTheExponentSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import DiophantineBasicSpecialist
+            agent = DiophantineBasicSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create DiophantineBasicSpecialist: {e}")
+
+        try:
+            from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory import QuadraticResidueSpecialist
+            agent = QuadraticResidueSpecialist(df=self.df, blackboard=self.blackboard)
+            specialists[agent.agent_id] = agent
+        except Exception as e:
+            logger.warning(f"Failed to create QuadraticResidueSpecialist: {e}")
 
         self.agents.update(specialists)
         logger.info(f"Created {len(specialists)} specialists")

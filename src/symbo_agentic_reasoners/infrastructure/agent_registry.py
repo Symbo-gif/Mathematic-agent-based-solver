@@ -104,14 +104,34 @@ def _get_limit_evaluator() -> Type:
     return LimitEvaluator
 
 def _get_ode_solver() -> Type:
-    """Lazy import ODESolver class."""
-    from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import ODESolver
-    return ODESolver
+    """Lazy import ODESolutionSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.calculus.ode_specialist import ODESolutionSpecialist
+    return ODESolutionSpecialist
 
 def _get_series_specialist() -> Type:
     """Lazy import SeriesSpecialist class."""
     from symbo_agentic_reasoners.agents.specialists.calculus.series_specialist import SeriesSpecialist
     return SeriesSpecialist
+
+def _get_exp_trig_integration_specialist() -> Type:
+    """Lazy import ExponentialTrigIntegrationSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.calculus.exp_trig_integration_specialist import ExponentialTrigIntegrationSpecialist
+    return ExponentialTrigIntegrationSpecialist
+
+def _get_advanced_integration_specialist() -> Type:
+    """Lazy import AdvancedIntegrationSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.calculus.advanced_integration_specialist import AdvancedIntegrationSpecialist
+    return AdvancedIntegrationSpecialist
+
+def _get_tabular_integration_specialist() -> Type:
+    """Lazy import TabularIntegrationSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.calculus.tabular_integration_specialist import TabularIntegrationSpecialist
+    return TabularIntegrationSpecialist
+
+def _get_substitution_specialist() -> Type:
+    """Lazy import SubstitutionSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.calculus.substitution_specialist import SubstitutionSpecialist
+    return SubstitutionSpecialist
 
 # Linear algebra specialists
 def _get_matrix_ops_specialist() -> Type:
@@ -288,6 +308,85 @@ def _get_proof_specialist() -> Type:
     from symbo_agentic_reasoners.agents.specialists.logic.proof_specialist import ProofSpecialist
     return ProofSpecialist
 
+# =============================================================================
+# PHASE 3-4 EXPANSION: GENERATING FUNCTIONS & ELEMENTARY NUMBER THEORY
+# =============================================================================
+
+def _get_ordinary_gf_specialist() -> Type:
+    """Lazy import OrdinaryGFSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.ordinary_gf_specialist import OrdinaryGFSpecialist
+    return OrdinaryGFSpecialist
+
+def _get_exponential_gf_specialist() -> Type:
+    """Lazy import ExponentialGFSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.exponential_gf_specialist import ExponentialGFSpecialist
+    return ExponentialGFSpecialist
+
+def _get_rational_gf_specialist() -> Type:
+    """Lazy import RationalGFSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.rational_gf_specialist import RationalGFSpecialist
+    return RationalGFSpecialist
+
+def _get_recurrence_gf_specialist() -> Type:
+    """Lazy import RecurrenceGFSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.recurrence_gf_specialist import RecurrenceGFSpecialist
+    return RecurrenceGFSpecialist
+
+def _get_bivariate_gf_specialist() -> Type:
+    """Lazy import BivariateGFSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.bivariate_gf_specialist import BivariateGFSpecialist
+    return BivariateGFSpecialist
+
+def _get_gf_composition_specialist() -> Type:
+    """Lazy import GFCompositionSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.gf_composition_specialist import GFCompositionSpecialist
+    return GFCompositionSpecialist
+
+def _get_asymptotic_extraction_specialist() -> Type:
+    """Lazy import AsymptoticExtractionSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.discrete_math.generating_functions.asymptotic_extraction_specialist import AsymptoticExtractionSpecialist
+    return AsymptoticExtractionSpecialist
+
+def _get_elementary_nt_supervisor() -> Type:
+    """Lazy import ElementaryNumberTheorySupervisor class."""
+    from symbo_agentic_reasoners.agents.supervisors.elementary_number_theory_supervisor import ElementaryNumberTheorySupervisor
+    return ElementaryNumberTheorySupervisor
+
+def _get_congruence_specialist() -> Type:
+    """Lazy import CongruenceSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.congruence_specialist import CongruenceSpecialist
+    return CongruenceSpecialist
+
+def _get_continued_fractions_specialist() -> Type:
+    """Lazy import ContinuedFractionsSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.continued_fractions_specialist import ContinuedFractionsSpecialist
+    return ContinuedFractionsSpecialist
+
+def _get_pell_equation_specialist() -> Type:
+    """Lazy import PellEquationSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.pell_equation_specialist import PellEquationSpecialist
+    return PellEquationSpecialist
+
+def _get_tonelli_shanks_specialist() -> Type:
+    """Lazy import TonelliShanksSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.tonelli_shanks_specialist import TonelliShanksSpecialist
+    return TonelliShanksSpecialist
+
+def _get_lte_specialist() -> Type:
+    """Lazy import LiftingTheExponentSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.lifting_the_exponent_specialist import LiftingTheExponentSpecialist
+    return LiftingTheExponentSpecialist
+
+def _get_diophantine_basic_specialist() -> Type:
+    """Lazy import DiophantineBasicSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.diophantine_basic_specialist import DiophantineBasicSpecialist
+    return DiophantineBasicSpecialist
+
+def _get_quadratic_residue_specialist() -> Type:
+    """Lazy import QuadraticResidueSpecialist class."""
+    from symbo_agentic_reasoners.agents.specialists.algebra.elementary_number_theory.quadratic_residue_specialist import QuadraticResidueSpecialist
+    return QuadraticResidueSpecialist
+
 
 class LazyAgentClass:
     """
@@ -405,6 +504,38 @@ AGENT_SPECS: Dict[str, List[AgentSpec]] = {
             agent_type=AgentType.INFRASTRUCTURAL,
             services=['math.calculus.series'],
         ),
+        AgentSpec(
+            agent_id='exp_trig_integration_specialist',
+            agent_class=LazyAgentClass(_get_exp_trig_integration_specialist),
+            domain='calculus',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.calculus.integration.exp_trig'],
+        ),
+        AgentSpec(
+            agent_id='advanced_integration_specialist',
+            agent_class=LazyAgentClass(_get_advanced_integration_specialist),
+            domain='calculus',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.calculus.integration.advanced'],
+        ),
+        AgentSpec(
+            agent_id='tabular_integration_specialist',
+            agent_class=LazyAgentClass(_get_tabular_integration_specialist),
+            domain='calculus',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.calculus.integration.tabular'],
+        ),
+        AgentSpec(
+            agent_id='substitution_specialist',
+            agent_class=LazyAgentClass(_get_substitution_specialist),
+            domain='calculus',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.calculus.integration.substitution'],
+        ),
     ],
     'linear_algebra': [
         AgentSpec(
@@ -501,6 +632,132 @@ AGENT_SPECS: Dict[str, List[AgentSpec]] = {
             tier=3,
             agent_type=AgentType.INFRASTRUCTURAL,
             services=['math.discrete.graphs'],
+        ),
+        # Generating Functions Specialists
+        AgentSpec(
+            agent_id='ordinary_gf_specialist_001',
+            agent_class=LazyAgentClass(_get_ordinary_gf_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.ordinary'],
+        ),
+        AgentSpec(
+            agent_id='exponential_gf_specialist_001',
+            agent_class=LazyAgentClass(_get_exponential_gf_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.exponential'],
+        ),
+        AgentSpec(
+            agent_id='rational_gf_specialist_001',
+            agent_class=LazyAgentClass(_get_rational_gf_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.rational'],
+        ),
+        AgentSpec(
+            agent_id='recurrence_gf_specialist_001',
+            agent_class=LazyAgentClass(_get_recurrence_gf_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.recurrence'],
+        ),
+        AgentSpec(
+            agent_id='bivariate_gf_specialist_001',
+            agent_class=LazyAgentClass(_get_bivariate_gf_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.bivariate'],
+        ),
+        AgentSpec(
+            agent_id='gf_composition_specialist_001',
+            agent_class=LazyAgentClass(_get_gf_composition_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.composition'],
+        ),
+        AgentSpec(
+            agent_id='asymptotic_extraction_specialist_001',
+            agent_class=LazyAgentClass(_get_asymptotic_extraction_specialist),
+            domain='discrete_math',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.discrete.gf.asymptotic'],
+        ),
+    ],
+    'elementary_number_theory': [
+        # Supervisor
+        AgentSpec(
+            agent_id='elementary_nt_supervisor_001',
+            agent_class=LazyAgentClass(_get_elementary_nt_supervisor),
+            domain='elementary_number_theory',
+            tier=2,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt'],
+            standby_timeout_seconds=600,
+        ),
+        # Specialists
+        AgentSpec(
+            agent_id='congruence_specialist_001',
+            agent_class=LazyAgentClass(_get_congruence_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.congruence'],
+        ),
+        AgentSpec(
+            agent_id='continued_fractions_specialist_001',
+            agent_class=LazyAgentClass(_get_continued_fractions_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.continued_fractions'],
+        ),
+        AgentSpec(
+            agent_id='pell_equation_specialist_001',
+            agent_class=LazyAgentClass(_get_pell_equation_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.pell'],
+        ),
+        AgentSpec(
+            agent_id='tonelli_shanks_specialist_001',
+            agent_class=LazyAgentClass(_get_tonelli_shanks_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.tonelli_shanks'],
+        ),
+        AgentSpec(
+            agent_id='lte_specialist_001',
+            agent_class=LazyAgentClass(_get_lte_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.lte'],
+        ),
+        AgentSpec(
+            agent_id='diophantine_basic_specialist_001',
+            agent_class=LazyAgentClass(_get_diophantine_basic_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.diophantine'],
+        ),
+        AgentSpec(
+            agent_id='quadratic_residue_specialist_001',
+            agent_class=LazyAgentClass(_get_quadratic_residue_specialist),
+            domain='elementary_number_theory',
+            tier=3,
+            agent_type=AgentType.INFRASTRUCTURAL,
+            services=['math.algebra.elementary_nt.quadratic_residue'],
         ),
     ],
     'geometry': [
