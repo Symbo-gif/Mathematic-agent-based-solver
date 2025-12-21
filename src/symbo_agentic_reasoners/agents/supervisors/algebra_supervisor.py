@@ -256,6 +256,22 @@ class AlgebraSupervisor(BDIAgent):
                 'reason': 'Detected elementary number theory keywords (congruence/pell/crt/etc)'
             }
 
+        # FINITE FIELDS - GF(p), GF(p^n), irreducible polynomials, Galois theory
+        finite_field_keywords = ['gf(', 'galois field', 'prime field', 'extension field',
+                                 'field extension', 'irreducible polynomial', 'primitive polynomial',
+                                 'field inverse', 'field multiplication', 'minimal polynomial',
+                                 'frobenius', 'field isomorphism', 'automorphism group',
+                                 'splitting field', 'galois correspondence', 'fixed field',
+                                 'finite field', 'field of order', 'field arithmetic',
+                                 'normal basis', 'field element', 'trace of element',
+                                 'norm of element', 'rabin test', 'aes field']
+        if any(kw in raw_input for kw in finite_field_keywords):
+            return {
+                'target': 'Finite Fields Supervisor',
+                'service_type': 'math.algebra.finite_fields',
+                'reason': 'Detected finite field keywords (GF/galois/irreducible/frobenius/etc)'
+            }
+
         # Number Theory keywords - integer factorization, primes, modular arithmetic
         # "factor" without variables is integer factorization
         number_theory_keywords = ['prime', 'gcd', 'lcm', 'modulo', 'mod ', 'divisible', 'congruent']

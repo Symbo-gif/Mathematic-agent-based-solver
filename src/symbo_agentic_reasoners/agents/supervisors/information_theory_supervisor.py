@@ -59,6 +59,16 @@ class InformationTheorySupervisor(BDIAgent):
         'binary symmetric', 'erasure', 'gaussian', 'rate distortion'
     ]
 
+    # Error correcting code keywords for the 6 new specialists
+    ERROR_CORRECTING_KEYWORDS = [
+        'linear code', 'generator matrix', 'parity check', 'parity-check',
+        'hamming distance', 'minimum distance', 'dual code', 'self-dual',
+        'macwilliams', 'weight distribution', 'systematic form', 'codeword',
+        '[n,k,d]', 'singleton bound', 'plotkin bound', 'griesmer bound',
+        'gilbert-varshamov', 'sphere packing', 'perfect code', 'golay',
+        'doubly-even', 'hull dimension', 'lcd code', 'error correct'
+    ]
+
     def __init__(self, agent_id: str = 'information_theory_supervisor_001', df=None, blackboard=None):
         super().__init__(agent_id)
         self.df = df
@@ -68,6 +78,14 @@ class InformationTheorySupervisor(BDIAgent):
         self._entropy_specialist = None
         self._coding_specialist = None
         self._channel_specialist = None
+
+        # Error correcting code specialists (lazy-loaded)
+        self._linear_code_specialist = None
+        self._hamming_distance_specialist = None
+        self._generator_matrix_specialist = None
+        self._parity_check_specialist = None
+        self._minimum_distance_specialist = None
+        self._dual_code_specialist = None
 
         if self.df:
             from symbo_agentic_reasoners.infrastructure.directory_facilitator import create_service_registration
@@ -118,6 +136,82 @@ class InformationTheorySupervisor(BDIAgent):
                 blackboard=self.blackboard
             )
         return self._channel_specialist
+
+    # ========================================
+    # Error Correcting Code Specialists
+    # ========================================
+
+    @property
+    def linear_code_specialist(self):
+        """Lazy load linear code specialist."""
+        if self._linear_code_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import LinearCodeSpecialist
+            self._linear_code_specialist = LinearCodeSpecialist(
+                agent_id='linear_code_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._linear_code_specialist
+
+    @property
+    def hamming_distance_specialist(self):
+        """Lazy load Hamming distance specialist."""
+        if self._hamming_distance_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import HammingDistanceSpecialist
+            self._hamming_distance_specialist = HammingDistanceSpecialist(
+                agent_id='hamming_distance_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._hamming_distance_specialist
+
+    @property
+    def generator_matrix_specialist(self):
+        """Lazy load generator matrix specialist."""
+        if self._generator_matrix_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import GeneratorMatrixSpecialist
+            self._generator_matrix_specialist = GeneratorMatrixSpecialist(
+                agent_id='generator_matrix_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._generator_matrix_specialist
+
+    @property
+    def parity_check_specialist(self):
+        """Lazy load parity check specialist."""
+        if self._parity_check_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import ParityCheckSpecialist
+            self._parity_check_specialist = ParityCheckSpecialist(
+                agent_id='parity_check_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._parity_check_specialist
+
+    @property
+    def minimum_distance_specialist(self):
+        """Lazy load minimum distance specialist."""
+        if self._minimum_distance_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import MinimumDistanceSpecialist
+            self._minimum_distance_specialist = MinimumDistanceSpecialist(
+                agent_id='minimum_distance_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._minimum_distance_specialist
+
+    @property
+    def dual_code_specialist(self):
+        """Lazy load dual code specialist."""
+        if self._dual_code_specialist is None:
+            from symbo_agentic_reasoners.agents.specialists.information_theory.error_correcting import DualCodeSpecialist
+            self._dual_code_specialist = DualCodeSpecialist(
+                agent_id='dual_code_specialist_001',
+                df=self.df,
+                blackboard=self.blackboard
+            )
+        return self._dual_code_specialist
 
     def update_beliefs(self):
         """PERCEIVE: Monitor for information theory tasks."""
@@ -181,6 +275,23 @@ class InformationTheorySupervisor(BDIAgent):
         # Check content keywords
         combined_text = f"{content} {operation}"
 
+        # Check for specific error correcting code operations FIRST (more specific)
+        ec_specific_keywords = {
+            'linear_code': ['linear code', 'construct code', 'validate parameters', '[n,k,d]'],
+            'generator_matrix': ['generator matrix', 'encode', 'systematic form', 'codeword generation'],
+            'parity_check': ['parity check', 'syndrome', 'syndrome decode', 'standard array'],
+            'hamming_distance': ['hamming distance', 'hamming weight', 'sphere volume', 'error capability'],
+            'minimum_distance': ['minimum distance', 'weight distribution', 'perfect code', 'bounds'],
+            'dual_code': ['dual code', 'self-dual', 'macwilliams', 'doubly-even', 'hull']
+        }
+
+        for specialist, keywords in ec_specific_keywords.items():
+            if any(kw in combined_text for kw in keywords):
+                return specialist
+
+        # Broader error correcting score
+        ec_score = sum(1 for kw in self.ERROR_CORRECTING_KEYWORDS if kw in combined_text)
+
         entropy_score = sum(1 for kw in self.ENTROPY_KEYWORDS if kw in combined_text)
         coding_score = sum(1 for kw in self.CODING_KEYWORDS if kw in combined_text)
         channel_score = sum(1 for kw in self.CHANNEL_KEYWORDS if kw in combined_text)
@@ -188,11 +299,13 @@ class InformationTheorySupervisor(BDIAgent):
         scores = {
             'entropy': entropy_score,
             'coding': coding_score,
-            'channel': channel_score
+            'channel': channel_score,
+            'linear_code': ec_score  # Route to linear code for general EC tasks
         }
 
         # Return highest scoring, default to entropy
-        return max(scores, key=scores.get) if max(scores.values()) > 0 else 'entropy'
+        best = max(scores, key=scores.get) if max(scores.values()) > 0 else 'entropy'
+        return best
 
     def execute_step(self, intention: Intention):
         """EXECUTE: Route to appropriate specialist."""
@@ -206,12 +319,20 @@ class InformationTheorySupervisor(BDIAgent):
             self.add_belief(f'routed_task_{task.entry_id}', True, confidence=1.0)
 
             # Get the appropriate specialist
-            if target == 'entropy':
-                specialist = self.entropy_specialist
-            elif target == 'coding':
-                specialist = self.coding_specialist
-            else:
-                specialist = self.channel_specialist
+            specialist_map = {
+                'entropy': self.entropy_specialist,
+                'coding': self.coding_specialist,
+                'channel': self.channel_specialist,
+                # Error correcting code specialists
+                'linear_code': self.linear_code_specialist,
+                'hamming_distance': self.hamming_distance_specialist,
+                'generator_matrix': self.generator_matrix_specialist,
+                'parity_check': self.parity_check_specialist,
+                'minimum_distance': self.minimum_distance_specialist,
+                'dual_code': self.dual_code_specialist,
+            }
+
+            specialist = specialist_map.get(target, self.entropy_specialist)
 
             logger.info(f"[{self.agent_id}] Routing task {task.entry_id} to {target} specialist")
 
@@ -316,7 +437,11 @@ class InformationTheorySupervisor(BDIAgent):
             'agent_id': self.agent_id,
             'tier': 2,
             'role': 'supervisor',
-            'specialists': ['entropy', 'coding', 'channel']
+            'specialists': [
+                'entropy', 'coding', 'channel',
+                'linear_code', 'hamming_distance', 'generator_matrix',
+                'parity_check', 'minimum_distance', 'dual_code'
+            ]
         }
 
         # Add specialist stats if loaded
@@ -326,5 +451,19 @@ class InformationTheorySupervisor(BDIAgent):
             stats['coding_tasks'] = self._coding_specialist.tasks_executed
         if self._channel_specialist:
             stats['channel_tasks'] = self._channel_specialist.tasks_executed
+
+        # Error correcting code specialists stats
+        if self._linear_code_specialist:
+            stats['linear_code_tasks'] = self._linear_code_specialist.tasks_executed
+        if self._hamming_distance_specialist:
+            stats['hamming_distance_tasks'] = self._hamming_distance_specialist.tasks_executed
+        if self._generator_matrix_specialist:
+            stats['generator_matrix_tasks'] = self._generator_matrix_specialist.tasks_executed
+        if self._parity_check_specialist:
+            stats['parity_check_tasks'] = self._parity_check_specialist.tasks_executed
+        if self._minimum_distance_specialist:
+            stats['minimum_distance_tasks'] = self._minimum_distance_specialist.tasks_executed
+        if self._dual_code_specialist:
+            stats['dual_code_tasks'] = self._dual_code_specialist.tasks_executed
 
         return stats
