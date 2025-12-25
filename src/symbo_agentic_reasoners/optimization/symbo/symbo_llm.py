@@ -111,13 +111,12 @@ class SymboLLMAdapter:
             self.device = "cpu"
             self.logger.info("PyTorch not available - using symbolic fallback mode")
 
-        # Set checkpoint directory
+        # Set checkpoint directory (default: data/symbo_llm/checkpoints for persistence)
         if checkpoint_dir is None:
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            project_root = os.path.dirname(os.path.dirname(os.path.dirname(script_dir)))
-            checkpoint_dir = os.path.join(project_root, "training", "symbo")
+            checkpoint_dir = "data/symbo_llm/checkpoints"
 
         self.checkpoint_dir = checkpoint_dir
+        self.checkpoint_path = os.path.join(checkpoint_dir, "symbo_llm_latest.pt")
         os.makedirs(checkpoint_dir, exist_ok=True)
 
         # Initialize tokenizer
@@ -156,6 +155,10 @@ class SymboLLMAdapter:
         # Statistics
         self.total_queries = 0
         self.successful_generations = 0
+
+        # Learning Enhancement Team (lazy-loaded)
+        self._learning_supervisor = None
+        self._enhancement_enabled = False
 
         # Initialize mathematical response patterns
         self._init_math_patterns()
@@ -554,14 +557,21 @@ class SymboLLMAdapter:
             response: System's response/solution
             category: Category for the interaction
         """
-        # Add to knowledge store
-        key = f"{category}_{len(self.model.knowledge_store)}"
-        self.model.add_to_knowledge_store(key, {
+        # Add to knowledge store with both indexed key and normalized prompt key
+        # The indexed key preserves all metadata
+        indexed_key = f"{category}_{len(self.model.knowledge_store)}"
+        entry_data = {
             'prompt': user_input,
             'response': response,
             'category': category,
             'timestamp': datetime.now().isoformat()
-        })
+        }
+        self.model.add_to_knowledge_store(indexed_key, entry_data)
+
+        # Also add with normalized prompt as key for fast lookup by solver
+        # This enables O(1) lookup when solver queries with the same problem text
+        normalized_prompt = self._normalize_for_lookup(user_input)
+        self.model.add_to_knowledge_store(normalized_prompt, entry_data)
 
         if not TORCH_AVAILABLE:
             return
@@ -624,6 +634,15 @@ class SymboLLMAdapter:
         except Exception as e:
             self.logger.error(f"Failed to save checkpoint: {e}")
             return False
+
+    def save_checkpoint(self, filepath: str = None):
+        """Alias for save() for API compatibility."""
+        return self.save(filepath)
+
+    @property
+    def knowledge_store(self) -> Dict[str, Any]:
+        """Access to the underlying knowledge store for direct lookups."""
+        return self.model.knowledge_store
 
     def load(self, filepath: str = None):
         """
@@ -723,3 +742,808 @@ class SymboLLMAdapter:
             'problem_type': problem_type,
             'stats': self.get_stats()
         }
+
+    def clear_knowledge_store(self, reset_model: bool = False):
+        """
+        Clear all learned knowledge from the knowledge store.
+
+        This is used to reset the system before a fresh learning run.
+
+        Args:
+            reset_model: If True, also reinitialize the neural model weights.
+                         If False, only clears the knowledge store.
+        """
+        # Clear the knowledge store
+        self.model.knowledge_store.clear()
+        self.logger.info("Knowledge store cleared")
+
+        # Reset statistics
+        self.total_queries = 0
+        self.successful_generations = 0
+
+        if reset_model and TORCH_AVAILABLE:
+            # Reinitialize model weights
+            self.model = SymboLLMCore(
+                vocab_size=self.vocab_size,
+                embed_dim=self.embed_dim,
+                num_heads=4,
+                num_layers=3,
+                ff_dim=512,
+                max_seq_len=512,
+                dropout=0.1,
+                device=self.device
+            )
+            self.optimizer = optim.AdamW(self.model.parameters(), lr=0.0001)
+            self.logger.info("Model weights reinitialized")
+
+        # Delete checkpoint files
+        checkpoint_path = os.path.join(self.checkpoint_dir, "symbo_llm_latest.pt")
+        tokenizer_path = os.path.join(self.checkpoint_dir, "tokenizer.json")
+
+        if os.path.exists(checkpoint_path):
+            os.remove(checkpoint_path)
+            self.logger.info(f"Deleted checkpoint: {checkpoint_path}")
+
+        if os.path.exists(tokenizer_path):
+            os.remove(tokenizer_path)
+            self.logger.info(f"Deleted tokenizer: {tokenizer_path}")
+
+    def learn_batch(
+        self,
+        problems: List[Dict[str, str]],
+        save_every: int = 100,
+        progress_callback: callable = None
+    ) -> Dict[str, Any]:
+        """
+        Learn from a batch of problems efficiently.
+
+        This is optimized for bulk learning during the training phase.
+        Only stores in knowledge base (no gradient updates for speed).
+
+        Args:
+            problems: List of dicts with keys:
+                - 'problem_id': Unique identifier
+                - 'problem_text': The problem statement
+                - 'answer': The verified correct answer
+                - 'domain': Problem domain (optional)
+            save_every: Save checkpoint every N problems
+            progress_callback: Optional callback(current, total) for progress updates
+
+        Returns:
+            Dict with learning statistics
+        """
+        if not problems:
+            return {'learned': 0, 'errors': 0}
+
+        learned = 0
+        errors = 0
+        total = len(problems)
+
+        for i, problem in enumerate(problems):
+            try:
+                problem_id = problem.get('problem_id', f'batch_{i}')
+                problem_text = problem.get('problem_text', '')
+                answer = problem.get('answer', '')
+                domain = problem.get('domain', 'general')
+
+                if not problem_text or not answer:
+                    errors += 1
+                    continue
+
+                # Store in knowledge base with problem_text as lookup key
+                # Use normalized problem text as key for exact matching
+                normalized_key = self._normalize_for_lookup(problem_text)
+
+                self.model.add_to_knowledge_store(normalized_key, {
+                    'prompt': problem_text,
+                    'response': answer,
+                    'category': domain,
+                    'problem_id': problem_id,
+                    'timestamp': datetime.now().isoformat()
+                })
+
+                learned += 1
+
+                # Progress callback
+                if progress_callback and (i + 1) % 10 == 0:
+                    progress_callback(i + 1, total)
+
+                # Periodic save
+                if save_every > 0 and (i + 1) % save_every == 0:
+                    self.save()
+                    self.logger.info(f"Checkpoint saved at {i + 1}/{total} problems")
+
+            except Exception as e:
+                self.logger.error(f"Error learning problem {i}: {e}")
+                errors += 1
+
+        # Final save
+        self.save()
+
+        result = {
+            'learned': learned,
+            'errors': errors,
+            'total_in_store': len(self.model.knowledge_store),
+            'save_path': self.checkpoint_dir
+        }
+
+        self.logger.info(f"Batch learning complete: {learned} learned, {errors} errors")
+        return result
+
+    def learn_batch_with_gatekeeper(
+        self,
+        problems: List[Dict[str, str]],
+        gatekeeper=None,
+        review_queue=None,
+        save_every: int = 100,
+        progress_callback: callable = None
+    ) -> Dict[str, Any]:
+        """
+        Learn from a batch of problems with gatekeeper verification.
+
+        Applies verification before learning:
+        - ACCEPT (confidence >= 0.95): Learn immediately
+        - REJECT (confidence < 0.5 or validation failed): Skip
+        - REVIEW (0.5-0.95): Queue for manual review
+        - DUPLICATE: Skip (already learned)
+
+        Args:
+            problems: List of dicts with keys:
+                - 'problem_id': Unique identifier
+                - 'problem_text': The problem statement
+                - 'answer': The verified correct answer
+                - 'domain': Problem domain (optional)
+            gatekeeper: GatekeeperSupervisor instance (or None to skip verification)
+            review_queue: ReviewQueue instance for uncertain cases
+            save_every: Save checkpoint every N problems
+            progress_callback: Optional callback(current, total) for progress updates
+
+        Returns:
+            Dict with learning statistics including gatekeeper results
+        """
+        if not problems:
+            return {
+                'learned': 0, 'errors': 0, 'rejected': 0,
+                'queued': 0, 'duplicates': 0
+            }
+
+        # If no gatekeeper, use legacy method
+        if gatekeeper is None:
+            legacy_result = self.learn_batch(problems, save_every, progress_callback)
+            return {
+                **legacy_result,
+                'rejected': 0,
+                'queued': 0,
+                'duplicates': 0
+            }
+
+        # Update gatekeeper's knowledge store reference
+        gatekeeper.update_knowledge_store(self.model.knowledge_store)
+
+        learned = 0
+        errors = 0
+        rejected = 0
+        queued = 0
+        duplicates = 0
+        total = len(problems)
+
+        for i, problem in enumerate(problems):
+            try:
+                problem_id = problem.get('problem_id', f'batch_{i}')
+                problem_text = problem.get('problem_text', '')
+                answer = problem.get('answer', '')
+                domain = problem.get('domain', 'general')
+
+                if not problem_text or not answer:
+                    errors += 1
+                    continue
+
+                # Verify through gatekeeper
+                decision = gatekeeper.verify(
+                    problem_text=problem_text,
+                    answer=answer,
+                    domain=domain
+                )
+
+                # Handle decision
+                if decision.status.value == 'duplicate':
+                    duplicates += 1
+                    continue
+
+                elif decision.status.value == 'accept':
+                    # Learn the problem
+                    normalized_key = self._normalize_for_lookup(problem_text)
+                    self.model.add_to_knowledge_store(normalized_key, {
+                        'prompt': problem_text,
+                        'response': answer,
+                        'category': domain,
+                        'problem_id': problem_id,
+                        'timestamp': datetime.now().isoformat(),
+                        'gatekeeper_confidence': decision.confidence
+                    })
+                    learned += 1
+
+                elif decision.status.value == 'reject':
+                    rejected += 1
+                    self.logger.debug(
+                        f"Rejected problem {problem_id}: {decision.reason}"
+                    )
+
+                else:  # 'review'
+                    queued += 1
+                    if review_queue:
+                        review_queue.add(
+                            problem_id=problem_id,
+                            problem_text=problem_text,
+                            proposed_answer=answer,
+                            domain=domain,
+                            confidence=decision.confidence,
+                            reason=decision.reason,
+                            validation_details=decision.to_dict()
+                        )
+
+                # Progress callback
+                if progress_callback and (i + 1) % 10 == 0:
+                    progress_callback(i + 1, total)
+
+                # Periodic save
+                if save_every > 0 and (i + 1) % save_every == 0:
+                    self.save()
+                    self.logger.info(
+                        f"Checkpoint saved at {i + 1}/{total} "
+                        f"(learned: {learned}, rejected: {rejected}, queued: {queued})"
+                    )
+
+            except Exception as e:
+                self.logger.error(f"Error processing problem {i}: {e}")
+                errors += 1
+
+        # Final save
+        self.save()
+
+        result = {
+            'learned': learned,
+            'errors': errors,
+            'rejected': rejected,
+            'queued': queued,
+            'duplicates': duplicates,
+            'total_in_store': len(self.model.knowledge_store),
+            'save_path': self.checkpoint_dir,
+            'gatekeeper_stats': gatekeeper.get_stats() if gatekeeper else None
+        }
+
+        self.logger.info(
+            f"Batch learning with gatekeeper complete: "
+            f"{learned} learned, {rejected} rejected, "
+            f"{queued} queued for review, {duplicates} duplicates, {errors} errors"
+        )
+        return result
+
+    def learn_with_enhancement(
+        self,
+        problems: List[Dict[str, str]],
+        enhancement_supervisor=None,
+        save_every: int = 100,
+        progress_callback: callable = None
+    ) -> Dict[str, Any]:
+        """
+        Learn from problems with Learning Enhancement Team optimization.
+
+        Uses the full Learning Enhancement Team for:
+        - Complexity-weighted learning (harder problems = stronger signals)
+        - Negative example detection (skip known bad patterns)
+        - Curriculum learning (progressive difficulty)
+        - Knowledge graph integration (relationship-aware storage)
+
+        Args:
+            problems: List of dicts with keys:
+                - 'problem_id': Unique identifier
+                - 'problem_text': The problem statement
+                - 'answer': The verified correct answer
+                - 'domain': Problem domain (optional)
+            enhancement_supervisor: LearningEnhancementSupervisor instance
+            save_every: Save checkpoint every N problems
+            progress_callback: Optional callback(current, total) for progress updates
+
+        Returns:
+            Dict with learning statistics including enhancement metrics
+        """
+        if not problems:
+            return {'learned': 0, 'errors': 0, 'skipped_bad': 0, 'graph_nodes': 0}
+
+        # If no enhancement supervisor, use legacy method
+        if enhancement_supervisor is None:
+            legacy_result = self.learn_batch(problems, save_every, progress_callback)
+            return {
+                **legacy_result,
+                'skipped_bad': 0,
+                'graph_nodes': 0,
+                'avg_complexity': 0.0
+            }
+
+        learned = 0
+        errors = 0
+        skipped_bad = 0
+        graph_nodes = 0
+        total_complexity = 0.0
+        total = len(problems)
+
+        for i, problem in enumerate(problems):
+            try:
+                problem_id = problem.get('problem_id', f'batch_{i}')
+                problem_text = problem.get('problem_text', '')
+                answer = problem.get('answer', '')
+                domain = problem.get('domain', 'general')
+
+                if not problem_text or not answer:
+                    errors += 1
+                    continue
+
+                # Run full optimization through enhancement supervisor
+                optimization_result = enhancement_supervisor.optimize_learning({
+                    'problem': problem_text,
+                    'answer': answer,
+                    'domain': domain
+                })
+
+                results = optimization_result.get('results', {})
+
+                # Check for bad patterns
+                negative_check = results.get('negative_check', {})
+                if negative_check.get('is_bad', False):
+                    skipped_bad += 1
+                    self.logger.debug(
+                        f"Skipped bad pattern for {problem_id}: {negative_check.get('reason')}"
+                    )
+                    continue
+
+                # Get complexity score for weighted learning
+                complexity = results.get('complexity', {})
+                complexity_score = complexity.get('score', 0.5)
+                learning_weight = complexity.get('learning_weight', 1.0)
+                total_complexity += complexity_score
+
+                # Store in knowledge base
+                normalized_key = self._normalize_for_lookup(problem_text)
+                self.model.add_to_knowledge_store(normalized_key, {
+                    'prompt': problem_text,
+                    'response': answer,
+                    'category': domain,
+                    'problem_id': problem_id,
+                    'timestamp': datetime.now().isoformat(),
+                    'complexity_score': complexity_score,
+                    'learning_weight': learning_weight
+                })
+                learned += 1
+
+                # Track knowledge graph nodes
+                kg_result = results.get('knowledge_graph', {})
+                if kg_result.get('node_id'):
+                    graph_nodes += 1
+
+                # Perform weighted gradient update if PyTorch available
+                if TORCH_AVAILABLE and hasattr(self, 'optimizer') and self.optimizer:
+                    self._weighted_gradient_update(
+                        problem_text, answer, learning_weight
+                    )
+
+                # Progress callback
+                if progress_callback and (i + 1) % 10 == 0:
+                    progress_callback(i + 1, total)
+
+                # Periodic save
+                if save_every > 0 and (i + 1) % save_every == 0:
+                    self.save()
+                    self.logger.info(
+                        f"Enhanced checkpoint saved at {i + 1}/{total} "
+                        f"(learned: {learned}, skipped_bad: {skipped_bad})"
+                    )
+
+            except Exception as e:
+                self.logger.error(f"Error in enhanced learning for problem {i}: {e}")
+                errors += 1
+
+        # Final save
+        self.save()
+
+        avg_complexity = total_complexity / learned if learned > 0 else 0.0
+
+        result = {
+            'learned': learned,
+            'errors': errors,
+            'skipped_bad': skipped_bad,
+            'graph_nodes': graph_nodes,
+            'avg_complexity': avg_complexity,
+            'total_in_store': len(self.model.knowledge_store),
+            'save_path': self.checkpoint_dir,
+            'enhancement_stats': enhancement_supervisor.get_stats() if enhancement_supervisor else None
+        }
+
+        self.logger.info(
+            f"Enhanced batch learning complete: "
+            f"{learned} learned, {skipped_bad} skipped (bad patterns), "
+            f"avg complexity: {avg_complexity:.3f}"
+        )
+        return result
+
+    def _weighted_gradient_update(
+        self,
+        problem_text: str,
+        answer: str,
+        learning_weight: float
+    ) -> None:
+        """
+        Perform a weighted gradient update for enhanced learning.
+
+        Higher complexity problems receive stronger gradient signals.
+
+        Args:
+            problem_text: The problem text
+            answer: The answer
+            learning_weight: Weight multiplier for gradient (1.0 + complexity)
+        """
+        if not TORCH_AVAILABLE:
+            return
+
+        try:
+            self.model.train()
+
+            # Create training text
+            full_text = f"Q: {problem_text}\nA: {answer}"
+            tokens = self.tokenizer.encode(full_text)
+
+            # Truncate if needed
+            if len(tokens) > self.model.max_seq_len:
+                tokens = tokens[:self.model.max_seq_len]
+
+            # Convert to tensor
+            input_ids = torch.tensor([tokens], dtype=torch.long, device=self.device)
+            target_ids = input_ids.clone()
+
+            # Compute loss and apply weight
+            loss = self.model.compute_loss(input_ids, target_ids)
+            weighted_loss = loss * learning_weight
+
+            self.optimizer.zero_grad()
+            weighted_loss.backward()
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
+            self.optimizer.step()
+
+            self.logger.debug(
+                f"Weighted gradient update - Loss: {loss.item():.4f}, "
+                f"Weight: {learning_weight:.2f}"
+            )
+
+        except Exception as e:
+            self.logger.error(f"Weighted gradient update failed: {e}")
+
+    def _normalize_for_lookup(self, text: str) -> str:
+        """
+        Normalize text for knowledge store lookup.
+
+        Creates a consistent key for storing and retrieving problems.
+        """
+        # Lowercase and strip
+        normalized = text.lower().strip()
+        # Remove extra whitespace
+        normalized = ' '.join(normalized.split())
+        # Remove common punctuation that doesn't affect meaning
+        normalized = normalized.replace('?', '').replace('.', '').replace('!', '')
+        return normalized
+
+    def query_exact(self, problem_text: str) -> Optional[str]:
+        """
+        Query for an exact match in the knowledge store.
+
+        Args:
+            problem_text: The problem to look up.
+
+        Returns:
+            The stored answer if found, None otherwise.
+        """
+        normalized = self._normalize_for_lookup(problem_text)
+
+        # Direct lookup
+        if normalized in self.model.knowledge_store:
+            entry = self.model.knowledge_store[normalized]
+            if isinstance(entry, dict) and 'response' in entry:
+                return entry['response']
+
+        return None
+
+    def get_knowledge_count(self) -> int:
+        """Get the number of entries in the knowledge store."""
+        return len(self.model.knowledge_store)
+
+    # =========================================================================
+    # LEARNING ENHANCEMENT TEAM INTEGRATION
+    # =========================================================================
+
+    @property
+    def learning_supervisor(self):
+        """
+        Get or create the Learning Enhancement Supervisor.
+
+        The supervisor is lazy-loaded on first access to avoid import overhead.
+        Once created, it's cached for reuse.
+
+        Returns:
+            LearningEnhancementSupervisor instance
+        """
+        if self._learning_supervisor is None:
+            try:
+                from symbo_agentic_reasoners.agents.supervisors.learning_enhancement_supervisor import (
+                    LearningEnhancementSupervisor
+                )
+                self._learning_supervisor = LearningEnhancementSupervisor()
+                self._enhancement_enabled = True
+                self.logger.info("Learning Enhancement Supervisor initialized")
+            except ImportError as e:
+                self.logger.warning(f"Could not load Learning Enhancement Team: {e}")
+                self._enhancement_enabled = False
+        return self._learning_supervisor
+
+    def enable_enhancement(self, enabled: bool = True) -> None:
+        """
+        Enable or disable Learning Enhancement Team integration.
+
+        When enabled, learn_from_interaction and train methods will use:
+        - Complexity scoring for weighted learning
+        - Negative pattern detection
+        - Curriculum learning
+        - Knowledge graph integration
+
+        Args:
+            enabled: Whether to enable enhancement
+        """
+        self._enhancement_enabled = enabled
+        if enabled and self._learning_supervisor is None:
+            # Trigger lazy loading
+            _ = self.learning_supervisor
+        self.logger.info(f"Learning enhancement {'enabled' if enabled else 'disabled'}")
+
+    def learn_from_interaction_enhanced(
+        self,
+        user_input: str,
+        response: str,
+        category: str = "interaction",
+        domain: str = None
+    ) -> Dict[str, Any]:
+        """
+        Learn from an interaction with Learning Enhancement Team optimization.
+
+        This method applies the full Learning Enhancement pipeline:
+        1. Check for bad patterns (skip if detected)
+        2. Score complexity for weighted learning
+        3. Apply weighted gradient update
+        4. Store in knowledge graph with relationships
+
+        Args:
+            user_input: User's mathematical query
+            response: System's response/solution
+            category: Category for the interaction
+            domain: Problem domain (algebra, calculus, etc.)
+
+        Returns:
+            Dict with learning results including enhancement metrics
+        """
+        domain = domain or category
+
+        # If enhancement not available, fall back to regular learning
+        if not self._enhancement_enabled or self.learning_supervisor is None:
+            self.learn_from_interaction(user_input, response, category)
+            return {'learned': True, 'enhanced': False}
+
+        try:
+            # Run full optimization through enhancement supervisor
+            optimization_result = self.learning_supervisor.optimize_learning({
+                'problem': user_input,
+                'answer': response,
+                'domain': domain
+            })
+
+            results = optimization_result.get('results', {})
+
+            # Check for bad patterns
+            negative_check = results.get('negative_check', {})
+            if negative_check.get('is_bad', False):
+                self.logger.debug(
+                    f"Skipped bad pattern: {negative_check.get('reason')}"
+                )
+                return {
+                    'learned': False,
+                    'enhanced': True,
+                    'skipped_reason': negative_check.get('reason'),
+                    'complexity': 0.0
+                }
+
+            # Get complexity score
+            complexity = results.get('complexity', {})
+            complexity_score = complexity.get('score', 0.5)
+            learning_weight = complexity.get('learning_weight', 1.0)
+
+            # Store in knowledge base
+            indexed_key = f"{category}_{len(self.model.knowledge_store)}"
+            entry_data = {
+                'prompt': user_input,
+                'response': response,
+                'category': category,
+                'domain': domain,
+                'timestamp': datetime.now().isoformat(),
+                'complexity_score': complexity_score,
+                'learning_weight': learning_weight
+            }
+            self.model.add_to_knowledge_store(indexed_key, entry_data)
+
+            # Also add with normalized prompt for fast lookup
+            normalized_prompt = self._normalize_for_lookup(user_input)
+            self.model.add_to_knowledge_store(normalized_prompt, entry_data)
+
+            # Perform weighted gradient update
+            if TORCH_AVAILABLE and self.optimizer:
+                self._weighted_gradient_update(user_input, response, learning_weight)
+
+            # Periodically save
+            if len(self.model.knowledge_store) % 10 == 0:
+                self.save()
+
+            return {
+                'learned': True,
+                'enhanced': True,
+                'complexity_score': complexity_score,
+                'learning_weight': learning_weight,
+                'graph_node': results.get('knowledge_graph', {}).get('node_id')
+            }
+
+        except Exception as e:
+            self.logger.error(f"Enhanced learning failed: {e}")
+            # Fall back to regular learning
+            self.learn_from_interaction(user_input, response, category)
+            return {'learned': True, 'enhanced': False, 'error': str(e)}
+
+    def train_with_curriculum(
+        self,
+        dataset: List[Dict[str, Any]],
+        epochs: int = 50,
+        batch_size: int = 32,
+        use_enhancement: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Train with curriculum learning (progressive difficulty).
+
+        Uses the CurriculumSpecialist to select problems at appropriate
+        difficulty levels, gradually increasing as the model improves.
+
+        Args:
+            dataset: List of training examples with:
+                - 'prompt': Problem text
+                - 'response': Answer
+                - 'category': Domain/category
+                - 'complexity': Optional pre-computed complexity (0.0-1.0)
+            epochs: Number of training epochs
+            batch_size: Batch size
+            use_enhancement: Whether to use full enhancement pipeline
+
+        Returns:
+            Training statistics including curriculum progression
+        """
+        if not dataset:
+            return {'learned': 0, 'epochs': 0}
+
+        # If enhancement not available or disabled, use regular training
+        if not use_enhancement or not self._enhancement_enabled:
+            self.train(dataset, epochs, batch_size)
+            return {
+                'learned': len(dataset),
+                'epochs': epochs,
+                'curriculum': False
+            }
+
+        supervisor = self.learning_supervisor
+        if supervisor is None:
+            self.train(dataset, epochs, batch_size)
+            return {'learned': len(dataset), 'epochs': epochs, 'curriculum': False}
+
+        try:
+            # Get curriculum specialist
+            curriculum = supervisor._get_specialist('curriculum')
+            complexity_scorer = supervisor._get_specialist('complexity_scorer')
+
+            # Pre-compute complexity scores if not provided
+            for item in dataset:
+                if 'complexity' not in item:
+                    score_result = complexity_scorer.score(
+                        problem=item.get('prompt', ''),
+                        answer=item.get('response', ''),
+                        domain=item.get('category', 'general')
+                    )
+                    item['complexity'] = score_result.score
+
+            total_learned = 0
+            difficulty_history = []
+
+            for epoch in range(epochs):
+                # Get curriculum-selected batch
+                batch_result = curriculum.next_batch(dataset, batch_size)
+                batch = batch_result.get('batch', [])
+                current_difficulty = batch_result.get('current_difficulty', 0.5)
+                difficulty_history.append(current_difficulty)
+
+                if not batch:
+                    continue
+
+                epoch_successes = 0
+                for item in batch:
+                    # Learn with enhancement
+                    result = self.learn_from_interaction_enhanced(
+                        user_input=item.get('prompt', ''),
+                        response=item.get('response', ''),
+                        category=item.get('category', 'general'),
+                        domain=item.get('category', 'general')
+                    )
+
+                    if result.get('learned', False):
+                        epoch_successes += 1
+                        total_learned += 1
+
+                # Update curriculum based on success rate
+                success_rate = epoch_successes / len(batch) if batch else 0
+                curriculum.update(success_rate >= 0.8)
+
+                if (epoch + 1) % 10 == 0:
+                    self.logger.info(
+                        f"Curriculum epoch {epoch + 1}/{epochs}: "
+                        f"difficulty={current_difficulty:.2f}, "
+                        f"success_rate={success_rate:.2%}"
+                    )
+
+            # Final save
+            self.save()
+
+            return {
+                'learned': total_learned,
+                'epochs': epochs,
+                'curriculum': True,
+                'final_difficulty': curriculum.get_state().get('current_difficulty', 0.5),
+                'difficulty_history': difficulty_history,
+                'curriculum_stats': curriculum.get_stats()
+            }
+
+        except Exception as e:
+            self.logger.error(f"Curriculum training failed: {e}")
+            self.train(dataset, epochs, batch_size)
+            return {
+                'learned': len(dataset),
+                'epochs': epochs,
+                'curriculum': False,
+                'error': str(e)
+            }
+
+    def get_enhancement_stats(self) -> Dict[str, Any]:
+        """
+        Get statistics from the Learning Enhancement Team.
+
+        Returns:
+            Dict with enhancement team statistics including:
+            - supervisor_stats: Supervisor-level metrics
+            - specialist_stats: Per-specialist metrics
+            - enhancement_enabled: Whether enhancement is active
+        """
+        if not self._enhancement_enabled or self._learning_supervisor is None:
+            return {
+                'enhancement_enabled': False,
+                'supervisor_stats': None,
+                'specialist_stats': None
+            }
+
+        try:
+            return {
+                'enhancement_enabled': True,
+                'supervisor_stats': self._learning_supervisor.get_stats(),
+                'specialist_stats': self._learning_supervisor.get_specialist_stats()
+            }
+        except Exception as e:
+            return {
+                'enhancement_enabled': True,
+                'error': str(e)
+            }
