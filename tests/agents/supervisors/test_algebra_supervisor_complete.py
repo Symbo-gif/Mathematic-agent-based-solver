@@ -111,7 +111,10 @@ class TestAlgebraSupervisorComplete:
 
     def test_bdi_interface(self, supervisor):
         """Test BDI methods."""
-        supervisor.update_beliefs()
+        try:
+            supervisor.update_beliefs({})
+        except TypeError:
+            supervisor.update_beliefs()  # Some supervisors don't take args
         intentions = supervisor.deliberate()
         assert isinstance(intentions, list)
 

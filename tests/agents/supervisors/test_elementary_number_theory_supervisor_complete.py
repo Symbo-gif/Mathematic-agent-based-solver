@@ -57,6 +57,8 @@ class TestElementaryNumberTheorySupervisor:
         task = create_entry(
             entry_type=EntryType.TASK,
             content="Solve 3x ≡ 5 mod 7",
+            author_agent='test_ent_sup_001',
+            conversation_id='test_001',
             metadata={'raw_input': 'solve 3x ≡ 5 mod 7', 'operation': 'solve_linear', 'a': 3, 'b': 5, 'm': 7}
         )
 
@@ -69,6 +71,8 @@ class TestElementaryNumberTheorySupervisor:
         task = create_entry(
             entry_type=EntryType.TASK,
             content="Solve x² - 2y² = 1",
+            author_agent='test_ent_sup_001',
+            conversation_id='test_001',
             metadata={'raw_input': 'pell equation x² - 2y² = 1', 'operation': 'fundamental_solution', 'D': 2}
         )
 
@@ -93,6 +97,8 @@ class TestElementaryNumberTheorySupervisor:
         task = create_entry(
             entry_type=EntryType.TASK,
             content="Unknown operation",
+            author_agent='test_ent_sup_001',
+            conversation_id='test_001',
             metadata={'raw_input': 'compute xyz', 'operation': 'unknown_xyz'}
         )
 
@@ -127,6 +133,8 @@ class TestElementaryNumberTheorySupervisor:
         task = create_entry(
             entry_type=EntryType.TASK,
             content="Invalid congruence",
+            author_agent='test_ent_sup_001',
+            conversation_id='test_001',
             metadata={'raw_input': 'congruence', 'a': 0, 'b': 0, 'm': 0}
         )
 
@@ -150,7 +158,10 @@ class TestElementaryNumberTheorySupervisor:
     # TEST 10: BDI Interface
     def test_bdi_interface(self, supervisor):
         """Test BDI methods work correctly."""
-        supervisor.update_beliefs()
+        try:
+            supervisor.update_beliefs({})
+        except TypeError:
+            supervisor.update_beliefs()  # Some supervisors don't take args
         intentions = supervisor.deliberate()
         assert isinstance(intentions, list)
 

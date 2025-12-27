@@ -473,21 +473,24 @@ class SubstitutionSpecialist(BDIAgent):
         Returns:
             Coefficient 'a' or None
         """
-        # Pattern: ax+b or ax-b
-        pattern = rf'([\-\d\.]*){var}'
+        # Pattern: ax+b or ax-b or a*x+b (handle both implicit and explicit multiplication)
+        # Also handles -x (coefficient -1) and just x (coefficient 1)
+        pattern = rf'(-?[\d\.]+)\*?{var}|(-){var}|({var})'
         match = re.search(pattern, expr)
 
         if match:
-            coeff_str = match.group(1)
-            if not coeff_str or coeff_str == '':
-                return 1.0
-            elif coeff_str == '-':
-                return -1.0
-            else:
+            # Group 1: numeric coefficient with optional sign (e.g., "2", "-3", "2.5")
+            if match.group(1):
                 try:
-                    return float(coeff_str)
-                except:
-                    pass
+                    return float(match.group(1))
+                except (ValueError, TypeError):
+                    return 1.0
+            # Group 2: explicit negative sign before var (e.g., "-x")
+            elif match.group(2):
+                return -1.0
+            # Group 3: just the variable (e.g., "x")
+            else:
+                return 1.0
 
         return None
 
@@ -537,7 +540,7 @@ class SubstitutionSpecialist(BDIAgent):
     # BDI IMPLEMENTATION
     # ==========================================================================
 
-    def update_beliefs(self):
+    def update_beliefs(self, observation=None):
         """
         PERCEIVE: Monitor Blackboard for substitution integration tasks
 
