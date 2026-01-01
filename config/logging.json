@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "json": {
+      "()": "symbo_agentic_reasoners.utils.logging.SYMBO_AGENTIC_REASONERSFormatter",
+      "json_format": true
+    },
+    "console": {
+      "()": "symbo_agentic_reasoners.utils.logging.SYMBO_AGENTIC_REASONERSFormatter",
+      "json_format": false
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "console",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "data/logs/symbo_agentic_reasoners.log",
+      "maxBytes": 10485760,
+      "backupCount": 5,
+      "encoding": "utf8"
+    }
+  },
+  "root": {
+    "level": "INFO",
+    "handlers": ["console", "file"]
+  }
+}
