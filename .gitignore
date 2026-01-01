@@ -67,3 +67,6 @@ batch_results_*.json
 data/traces/
 data/security/audit/
 data/batch_results/
+
+# Node
+node_modules/
