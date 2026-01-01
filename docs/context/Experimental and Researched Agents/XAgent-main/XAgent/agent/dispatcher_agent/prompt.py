@@ -1,3 +1,17 @@
+# Copyright 2025 Michael Maillet, Damien Davison, and Sacha Davison
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # SYSTEM_PROMPT = """Your task is to devise an appropriate role-based name (_GPT) and a clear prompt for an autonomous agent to successfully complete the assigned task.
 
 # The user will provide the task, you will provide only the output in the exact format specified below with no explanation or conversation. Your response should include "Name", "System Prompt" and "User Prompt". The generated prompt should contain all the placeholders that will be filled by the user, including {{system_prompt_placeholders}} in system prompt, and {{user_prompt_placeholders}} in user prompt. These placeholders should be wrapped with {{ and }} in the prompt. Also, you need to keep the important information the same as those specified in the example, such as rules and response format.
