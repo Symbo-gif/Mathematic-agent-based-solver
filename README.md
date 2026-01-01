@@ -52,9 +52,9 @@ print(result.solution)
 Structured logging:
 
 ```python
-from symbo_agentic_reasoners.utils.logging import configure_logging
+from symbo_agentic_reasoners.utils.logging import setup_logging
 
-configure_logging(json_format=True, level="INFO")
+setup_logging(json_format=True, level="INFO")
 ```
 
 ## Architecture Overview
