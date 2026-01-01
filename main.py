@@ -50,7 +50,10 @@ if src_path not in sys.path:
 
 def main():
     """Main entry point - launches the CLI."""
-    from symbo_agentic_reasoners.cli import main as cli_main
+    try:
+        from mathematic_solver.cli import main as cli_main
+    except ImportError:  # Backwards compatibility during refactor
+        from symbo_agentic_reasoners.cli import main as cli_main
     cli_main()
 
 

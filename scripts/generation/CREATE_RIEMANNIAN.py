@@ -48,12 +48,15 @@ class {NAME}(BDIAgent):
     def get_statistics(self): return {{**super().get_statistics(), 'tasks_executed': self.tasks_executed}}
 '''
 
-import os
-os.makedirs('src/symbo_agentic_reasoners/agents/specialists/riemannian', exist_ok=True)
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+target_dir = ROOT / 'src' / 'symbo_agentic_reasoners' / 'agents' / 'specialists' / 'riemannian'
+target_dir.mkdir(parents=True, exist_ok=True)
 
 for name, file, desc in SPECIALISTS:
     content = template.format(NAME=name, FILE=file, DESC=desc, AGENT_ID=f'{file}_specialist_001')
-    with open(f'src/symbo_agentic_reasoners/agents/specialists/riemannian/{file}.py', 'w') as f:
+    with open(target_dir / f'{file}.py', 'w') as f:
         f.write(content)
     print(f'Created: {name}')
 
