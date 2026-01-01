@@ -29,7 +29,8 @@ def test_logging_config_applies(tmp_path):
     with config_path.open() as f:
         config = json.load(f)
 
-    config["handlers"]["file"]["filename"] = str(tmp_path / "symbo_agentic_reasoners.log")
+    file_name = Path(config["handlers"]["file"]["filename"]).name
+    config["handlers"]["file"]["filename"] = str(tmp_path / file_name)
 
     logging.config.dictConfig(config)
     logger = logging.getLogger("symbo.test")
