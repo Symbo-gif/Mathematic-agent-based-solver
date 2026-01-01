@@ -33,7 +33,6 @@ SPECIALISTS = [
     ('NonlinearTimeSeriesSpecialist', 'statistics/timeseries', 'nonlinear_timeseries', 'GARCH, threshold models'),
 ]
 
-import os
 from pathlib import Path
 
 template = '''# Copyright 2025 Damien Davison & Michael Maillet, Recursive AI Devs
@@ -65,9 +64,11 @@ class {SPECIALIST_NAME}(BDIAgent):
     def get_statistics(self): return {{**super().get_statistics(), 'tasks_executed': self.tasks_executed}}
 '''
 
+ROOT = Path(__file__).resolve().parents[2]
+
 for spec_name, domain, file_name, description in SPECIALISTS:
     # Create directory
-    dir_path = Path(f'src/symbo_agentic_reasoners/agents/specialists/{domain}')
+    dir_path = ROOT / 'src' / 'symbo_agentic_reasoners' / 'agents' / 'specialists' / domain
     dir_path.mkdir(parents=True, exist_ok=True)
 
     # Generate file

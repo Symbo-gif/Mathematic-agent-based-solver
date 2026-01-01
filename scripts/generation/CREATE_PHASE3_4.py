@@ -116,12 +116,17 @@ class {NAME}(BDIAgent):
     def get_statistics(self): return {{**super().get_statistics(), 'tasks_executed': self.tasks_executed}}
 """
 
-import os
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sup_dir = ROOT / 'src' / 'symbo_agentic_reasoners' / 'agents' / 'supervisors'
+spec_root = ROOT / 'src' / 'symbo_agentic_reasoners' / 'agents' / 'specialists'
 
 # Create supervisors
 for name, domain, service in SUPERVISORS:
     content = sup_template.format(NAME=name, DOMAIN=domain, SERVICE=service, AGENT_ID=f'{domain}_supervisor_001')
-    path = f'src/symbo_agentic_reasoners/agents/supervisors/{domain}_supervisor.py'
+    path = sup_dir / f'{domain}_supervisor.py'
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'w') as f:
         f.write(content)
     print(f'[SUP] {name}')
@@ -129,14 +134,15 @@ for name, domain, service in SUPERVISORS:
 # Create specialists
 total = 0
 for domain, specs in SPECIALISTS.items():
-    os.makedirs(f'src/symbo_agentic_reasoners/agents/specialists/{domain}', exist_ok=True)
+    domain_dir = spec_root / domain
+    domain_dir.mkdir(parents=True, exist_ok=True)
     for name, file, desc in specs:
         service = domain.replace('/', '.') + '.' + file
         content = spec_template.format(
             NAME=name, DESC=desc, AGENT_ID=f'{file}_specialist_001',
             SERVICE=service, ALGO=file, OPERATION=file.replace('_', ' ')
         )
-        with open(f'src/symbo_agentic_reasoners/agents/specialists/{domain}/{file}.py', 'w') as f:
+        with open(domain_dir / f'{file}.py', 'w') as f:
             f.write(content)
         total += 1
     print(f'[{domain.upper()}] {len(specs)} specialists')

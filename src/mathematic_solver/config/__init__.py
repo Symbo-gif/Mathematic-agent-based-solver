@@ -1,5 +1,6 @@
 """Configuration exposure for mathematic_solver."""
 
-from symbo_agentic_reasoners.config import *  # noqa: F403,F401
+from symbo_agentic_reasoners import config as _config
 
-__all__ = [name for name in globals() if not name.startswith("_")]
+__all__ = list(getattr(_config, "__all__", []))
+globals().update({name: getattr(_config, name) for name in __all__})
