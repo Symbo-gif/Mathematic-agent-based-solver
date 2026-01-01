@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copyright 2025 Damien Davison & Michael Maillet, Recursive AI Devs
 # Tests for structural_synthesizer.py to achieve 70%+ coverage
 
 """
