@@ -140,17 +140,7 @@ class Counterexample:
     loop_start: Optional[int] = None  # For lasso-shaped counterexamples
     
     def to_dict(self) -> Dict[str, Any]:
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
+        """Convert counterexample to dictionary representation."""
         return {
             'length': len(self.path),
             'path': self.path[:10],  # Truncate for display
@@ -169,17 +159,7 @@ class CheckResult:
     time_ms: int = 0
     
     def to_dict(self) -> Dict[str, Any]:
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
+        """Convert check result to dictionary representation."""
         return {
             'property': self.property_checked,
             'type': self.property_type.value,
