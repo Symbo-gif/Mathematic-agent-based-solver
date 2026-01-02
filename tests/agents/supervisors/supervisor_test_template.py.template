@@ -33,12 +33,14 @@ Tests:
 import pytest
 from unittest.mock import Mock, MagicMock, patch
 
-try:
-    from symbo_agentic_reasoners.agents.supervisors.{{MODULE_PATH}} import {{SUPERVISOR_NAME}}
-    SUPERVISOR_AVAILABLE = True
-except ImportError:
-    SUPERVISOR_AVAILABLE = False
-    pytest.skip("{{SUPERVISOR_NAME}} not available", allow_module_level=True)
+# This is a template file - skip linting and testing
+# Use string formatting to fill in {{MODULE_PATH}} and {{SUPERVISOR_NAME}}
+# flake8: noqa: E999
+pytestmark = pytest.mark.skip(reason="Template file - not a real test")
+
+# Template placeholder for dynamic import
+# Replace {{MODULE_PATH}} and {{SUPERVISOR_NAME}} when generating actual test files
+SUPERVISOR_AVAILABLE = False
 
 from symbo_agentic_reasoners.core.blackboard import create_entry, EntryType, EntryStatus
 from symbo_agentic_reasoners.infrastructure.directory_facilitator import DirectoryFacilitator

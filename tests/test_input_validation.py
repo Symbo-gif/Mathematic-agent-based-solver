@@ -340,8 +340,8 @@ class TestSafeParse:
         """safe_parse should return a SymPy object."""
         result = safe_parse("x + 1")
         assert result is not None
-        # Should be a SymPy expression
-        assert hasattr(result, 'subs') or isinstance(result, (int, float, sp.Basic))
+        # Should be a SymPy expression - check for subs attribute or basic types
+        assert hasattr(result, 'subs') or isinstance(result, (int, float))
 
 
 # =============================================================================
