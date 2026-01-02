@@ -140,17 +140,6 @@ class TestResult:
         status: Test outcome
         recovery_time_ms: Time to recover
         observations: Observed behaviors
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         timestamp: When test was run
     """
     test_id: str

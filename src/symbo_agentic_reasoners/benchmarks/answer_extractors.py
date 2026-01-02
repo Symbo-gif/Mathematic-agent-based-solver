@@ -184,7 +184,7 @@ def extract_aime_answer(answer: any) -> str:
 
 
 def extract_latex_expression(text: str) -> str:
-    """
+    r"""
     Extract mathematical expression from LaTeX formatting.
 
     Normalizes LaTeX by removing display formatting while preserving

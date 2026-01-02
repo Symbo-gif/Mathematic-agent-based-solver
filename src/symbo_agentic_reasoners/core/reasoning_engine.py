@@ -33,7 +33,7 @@ class FormalProofSystem:
         # Using native Symbol and Eq classes
         return {
             'peano_1': Symbol('0') != Symbol('S(n)'),
-            'peano_2': Implies(Eq(Symbol('S(m)'), Symbol('S(n)')), Eq(Symbol('m'), Symbol('n')')),
+            'peano_2': Implies(Eq(Symbol('S(m)'), Symbol('S(n)')), Eq(Symbol('m'), Symbol('n)'))),
             # Additional axioms...
         }
 
