@@ -145,43 +145,20 @@ class SeriesSpecialist(BDIAgent):
         return None
     
     def _create_result_entry(self, task_entry, result):
-        """Perform  create result entry operation.
+        """Perform create result entry operation.
 
         Args:
-        task_entry: Description needed
-        result: Description needed
+            task_entry: The task entry to create a result for
+            result: The result value
 
         Returns:
-        Result of the operation
+            Result of the operation
 
         Example:
-        >>> result = obj._create_result_entry(...)
+            >>> result = obj._create_result_entry(...)
         """
-        """Perform  create result entry operation.
-
-        Args:
-        task_entry: Description needed
-        result: Description needed
-
-        Returns:
-        """Perform  create error entry operation.
-
-        Args:
-        task_entry: Description needed
-        error: Description needed
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj._create_error_entry(...)
-        """
-        Result of the operation
-
-        Example:
-        >>> result = obj._create_result_entry(...)
-        """
-        if not self.blackboard: return result
+        if not self.blackboard:
+            return result
         return create_entry(EntryType.PARTIAL_RESULT, create_variable(str(result)),
             self.agent_id, task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'result',
             ['series'], EntryStatus.PENDING, {'result_str': str(result)})
