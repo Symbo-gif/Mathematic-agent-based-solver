@@ -140,17 +140,6 @@ class SynthesizedStructure:
         spec: Original specification
         construction: How it was constructed
         verified_axioms: Axioms verified to hold
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         counterexamples: Any counterexamples found
     """
     structure_id: str

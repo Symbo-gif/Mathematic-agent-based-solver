@@ -119,17 +119,6 @@ class TransformationResult:
         original_code: Original code
         optimized_code: Transformed code
         status: Transformation status
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         optimizations_applied: List of applied optimizations
         estimated_speedup: Overall estimated speedup
     """

@@ -129,17 +129,6 @@ class Conjecture:
             'domain': self.domain,
             'status': self.status.value,
             'confidence': round(self.confidence, 2)
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         }
 
 

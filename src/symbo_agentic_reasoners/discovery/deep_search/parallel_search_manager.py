@@ -120,17 +120,6 @@ class SearchResult:
         task_id: Associated task ID
         status: Execution status
         result: The actual result
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         error: Error message if failed
         execution_time_ms: Time taken
     """
@@ -151,17 +140,6 @@ class SearchResult:
         Result of the operation
 
         Example:
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         >>> result = obj.to_dict(...)
         """
         return {

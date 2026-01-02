@@ -157,30 +157,6 @@ class SeriesSpecialist(BDIAgent):
         Example:
         >>> result = obj._create_result_entry(...)
         """
-        """Perform  create result entry operation.
-
-        Args:
-        task_entry: Description needed
-        result: Description needed
-
-        Returns:
-        """Perform  create error entry operation.
-
-        Args:
-        task_entry: Description needed
-        error: Description needed
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj._create_error_entry(...)
-        """
-        Result of the operation
-
-        Example:
-        >>> result = obj._create_result_entry(...)
-        """
         if not self.blackboard: return result
         return create_entry(EntryType.PARTIAL_RESULT, create_variable(str(result)),
             self.agent_id, task_entry.conversation_id if hasattr(task_entry, 'conversation_id') else 'result',

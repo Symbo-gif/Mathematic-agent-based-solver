@@ -143,17 +143,6 @@ class Transition:
             'source': self.source,
             'target': self.target,
             'action': self.action
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         }
 
 
