@@ -118,17 +118,6 @@ class SolutionPattern:
         Example:
         >>> result = obj.to_dict(...)
         """
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         return {
             'pattern_id': self.pattern_id,
             'name': self.name,

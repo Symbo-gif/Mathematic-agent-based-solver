@@ -168,7 +168,7 @@ class EllipticFunctionsSpecialist(BDIAgent):
         lattice: Lattice,
         n_terms: int = 20
     ) -> Dict[str, Any]:
-        """
+        r"""
         Compute Weierstrass ℘-function at z.
 
         ℘(z) = 1/z² + Σ'_{ω∈Λ\{0}} [1/(z-ω)² - 1/ω²]
