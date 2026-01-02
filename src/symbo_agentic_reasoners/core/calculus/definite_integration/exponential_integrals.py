@@ -50,7 +50,10 @@ from ..calculus_utils import _simplify_output, _try_evaluate_const
 from ..integration_specialist import IntegrationEngine
 
 # Cross-module imports
-from .extraction_utils import _extract_quadratic_coeff, _try_evaluate_const_times_var_squared
+from .extraction_utils import (
+    _extract_quadratic_coeff, _try_evaluate_const_times_var_squared,
+    _get_linear_coeff_from_mul
+)
 
 logger = logging.getLogger(__name__)
 

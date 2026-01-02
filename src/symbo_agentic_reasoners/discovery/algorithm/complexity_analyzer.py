@@ -109,17 +109,6 @@ class ComplexityResult:
             'space': self.space_complexity.value,
             'confidence': round(self.confidence, 2),
             'method': self.method.value
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         }
 
 

@@ -143,17 +143,6 @@ class Transition:
             'source': self.source,
             'target': self.target,
             'action': self.action
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         }
 
 
@@ -170,17 +159,6 @@ class Model:
         atomic_props: Atomic propositions
     """
     name: str
-    """Perform to dict operation.
-
-    Args:
-    No arguments
-
-    Returns:
-    Result of the operation
-
-    Example:
-    >>> result = obj.to_dict(...)
-    """
     states: Dict[str, State]
     transitions: List[Transition]
     initial_states: Set[str]

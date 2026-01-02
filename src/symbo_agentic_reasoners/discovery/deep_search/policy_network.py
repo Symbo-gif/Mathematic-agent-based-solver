@@ -32,9 +32,12 @@ Reference: Phase_6_Build_Order_Breakdown.md, Step 2
 import logging
 import numpy as np
 from dataclasses import dataclass, field
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Tuple, TYPE_CHECKING
 from datetime import datetime
 from enum import Enum
+
+if TYPE_CHECKING:
+    from .types import ProofState
 
 # Initialize module logger
 try:

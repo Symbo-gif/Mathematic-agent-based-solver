@@ -124,17 +124,6 @@ class ExplorationResult:
         status: Exploration outcome
         edge_cases: Discovered edge cases
         counterexamples: Found counterexamples
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         boundary_values: Critical boundary values
     """
     condition: BoundaryCondition

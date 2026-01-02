@@ -24,8 +24,11 @@ NO SYMPY DEPENDENCY - Pure Python implementation.
 
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Set, Union, Any, Optional
+from typing import Set, Union, Any, Optional, TYPE_CHECKING
 import logging
+
+if TYPE_CHECKING:
+    from .type_system import Symbol
 
 logger = logging.getLogger('symbo_agentic_reasoners.symbolic.expr_types')
 

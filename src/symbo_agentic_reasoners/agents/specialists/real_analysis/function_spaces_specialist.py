@@ -390,12 +390,18 @@ class FunctionSpacesSpecialist(BDIAgent):
 
         except Exception as e:
             logger.error(f"Lp membership test failed: {e}")
+            return FunctionSpaceInfo(
+                space_name=f'L^{p}',
+                in_space=False,
+                norm=np.inf,
+                parameters={'p': p, 'domain': domain, 'error': str(e)}
+            )
 
         return FunctionSpaceInfo(
             space_name=f'L^{p}',
             in_space=False,
             norm=np.inf,
-            parameters={'p': p, 'domain': domain, 'error': str(e)}
+            parameters={'p': p, 'domain': domain}
         )
 
     def compute_weak_derivative(

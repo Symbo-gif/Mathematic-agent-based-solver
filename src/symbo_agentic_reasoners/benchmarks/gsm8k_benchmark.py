@@ -21,11 +21,11 @@ Contains 8,792 grade school math word problems (7,473 train + 1,319 test).
 Dataset: https://huggingface.co/datasets/openai/gsm8k
 """
 
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from pathlib import Path
 import logging
 
-from .base_benchmark import BaseBenchmark
+from .base_benchmark import BaseBenchmark, BenchmarkResult
 from .answer_extractors import extract_gsm8k_answer
 from .answer_comparators import compare_numeric_answers
 

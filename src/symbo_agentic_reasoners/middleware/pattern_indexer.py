@@ -136,17 +136,6 @@ class SolutionPattern:
             'structure': self.structure[:100] + '...' if len(self.structure) > 100 else self.structure,
             'usage_count': self.usage_count,
             'success_rate': self.success_rate
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         }
 
 

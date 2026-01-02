@@ -121,17 +121,6 @@ class EnumerationResult:
         items_generated: Total items generated
         items_accepted: Items passing constraints
         matches_found: Items matching target condition
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         sample: Sample of generated items
     """
     space: EnumerationSpace

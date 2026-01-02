@@ -115,17 +115,6 @@ class SearchResult:
         states_explored: Number of states explored
         max_depth_reached: Maximum depth reached
         time_elapsed_ms: Time taken in milliseconds
-        """Perform to dict operation.
-
-        Args:
-        No arguments
-
-        Returns:
-        Result of the operation
-
-        Example:
-        >>> result = obj.to_dict(...)
-        """
         status: Search status
     """
     success: bool

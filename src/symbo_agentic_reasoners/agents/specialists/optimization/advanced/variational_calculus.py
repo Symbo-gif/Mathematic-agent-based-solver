@@ -51,7 +51,7 @@ import logging
 import numpy as np
 from typing import Dict, Any, List, Optional, Callable, Tuple
 from scipy.integrate import solve_ivp, quad
-from scipy.optimize import minimize, root
+from scipy.optimize import minimize, root, brentq
 
 from symbo_agentic_reasoners.core.bdi_agent import BDIAgent, Intention
 from symbo_agentic_reasoners.infrastructure.directory_facilitator import create_service_registration

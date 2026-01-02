@@ -57,10 +57,13 @@ EXAMPLE USE CASE:
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, TYPE_CHECKING
 import threading
 import logging
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from symbo_agentic_reasoners.infrastructure.security.agent_auth import AgentCredential
 
 # Setup logging
 logger = logging.getLogger('symbo_agentic_reasoners.directory_facilitator')
