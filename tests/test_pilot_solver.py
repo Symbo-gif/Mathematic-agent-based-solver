@@ -33,8 +33,8 @@ import pytest
 pytestmark = pytest.mark.skip(reason="pilot_solver module has been archived - solvers/ moved to _archived_originals")
 
 # Keep imports below for reference but they won't be executed
-# import sympy as sp
-# from sympy import Symbol, symbols, sin, cos, exp, sqrt
+import sympy as sp
+from sympy import Symbol, symbols, sin, cos, exp, sqrt
 from unittest.mock import Mock, patch, MagicMock
 
 from symbo_agentic_reasoners.core.blackboard import (

@@ -21,6 +21,12 @@ from symbo_agentic_reasoners.core.orchestrator import MainOrchestrator as Orches
 # Consider updating this test to use current architecture
 
 
+class VerificationSpecialist:
+    """Mock VerificationSpecialist for legacy tests."""
+    def validate_solution(self, problem, solution):
+        return {'valid': True, 'confidence': 0.99}
+
+
 class TestMultiAgentIntegration:
     @pytest.fixture
     def orchestrator(self):

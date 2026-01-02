@@ -24,6 +24,24 @@ from src.symbo_agentic_reasoners.core.orchestrator import MainOrchestrator as Or
 # Consider updating this test to use current architecture
 
 
+# Mock classes for deprecated specialists
+class CalculusSpecialist:
+    """Mock CalculusSpecialist for legacy tests."""
+    _last_problem = None
+    _last_result = None
+
+
+class SymbolicSpecialist:
+    """Mock SymbolicSpecialist for legacy tests."""
+    pass
+
+
+class VerificationSpecialist:
+    """Mock VerificationSpecialist for legacy tests."""
+    def validate_solution(self, problem, solution):
+        return {'valid': True, 'confidence': 0.99}
+
+
 def setup_test_environment():
     """Set up a test environment with mock agents"""
     # Clear existing handlers
