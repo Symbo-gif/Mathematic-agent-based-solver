@@ -143,13 +143,13 @@ class ProofStep:
         """Perform to dict operation.
 
         Args:
-        No arguments
+            No arguments
 
         Returns:
-        Result of the operation
+            Result of the operation
 
         Example:
-        >>> result = obj.to_dict(...)
+            >>> result = obj.to_dict(...)
         """
         return {
             'step': self.step_number,

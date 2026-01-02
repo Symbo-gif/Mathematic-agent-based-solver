@@ -86,6 +86,7 @@ logger = logging.getLogger('symbo_agentic_reasoners.phase2.integration')
 
 # Native calculus engine - NO SymPy dependency
 from symbo_agentic_reasoners.core.calculus import integrate as native_integrate
+from symbo_agentic_reasoners.core.calculus import integrate  # Also alias for testing
 from symbo_agentic_reasoners.core.calculus import definite_integrate as native_definite_integrate
 from symbo_agentic_reasoners.core.fallback_tracker import track_computation, get_tracker
 

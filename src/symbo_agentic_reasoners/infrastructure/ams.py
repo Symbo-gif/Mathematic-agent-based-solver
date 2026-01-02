@@ -68,7 +68,7 @@ and system crashes. AMS is the silent guardian that keeps the system alive.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional, List, Set, Callable, Any
+from typing import Dict, Optional, List, Set, Callable, Any, TYPE_CHECKING
 from enum import Enum
 import subprocess
 import threading
@@ -78,6 +78,9 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
+
+if TYPE_CHECKING:
+    from symbo_agentic_reasoners.infrastructure.security.agent_auth import AgentCredential
 
 # Try to import psutil for system monitoring
 try:

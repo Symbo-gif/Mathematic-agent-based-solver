@@ -28,6 +28,20 @@ from ..differentiation_specialist import DifferentiationEngine
 from ..expression_parser import ExprParser
 from ..validation import check_expression_safety as _check_expression_safety
 from ..calculus_utils import _evaluate_at_numeric as _evaluate_at
+from ..calculus_utils import _get_symbols, _evaluate_expr_numerically
+
+logger = logging.getLogger(__name__)
+
+# Module-level parser instance
+_parser = ExprParser()
+
+# Forward declaration for native_limit (will be imported later to avoid circular imports)
+native_limit = None
+
+def _set_native_limit(limit_func):
+    """Set native_limit function (called from __init__.py to avoid circular imports)."""
+    global native_limit
+    native_limit = limit_func
 
 KNOWN_LIMIT_PATTERNS = {
     # Pattern: x^n/exp(x) as x→∞ = 0 (exponential dominates polynomial)

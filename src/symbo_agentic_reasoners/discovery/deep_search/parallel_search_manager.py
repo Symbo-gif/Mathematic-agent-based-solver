@@ -37,10 +37,14 @@ import threading
 import queue
 import time
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Callable, Tuple
+from typing import Any, Dict, List, Optional, Callable, Tuple, TYPE_CHECKING
 from datetime import datetime
 from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, Future, as_completed
+
+if TYPE_CHECKING:
+    from .search_tree_manager import SearchTreeManager
+    from .spectral_partitioner import PartitionStrategy
 
 logger = logging.getLogger('symbo_agentic_reasoners.phase6.parallel_search')
 
@@ -134,13 +138,13 @@ class SearchResult:
         """Perform to dict operation.
 
         Args:
-        No arguments
+            No arguments
 
         Returns:
-        Result of the operation
+            Result of the operation
 
         Example:
-        >>> result = obj.to_dict(...)
+            >>> result = obj.to_dict(...)
         """
         return {
             'task_id': self.task_id,

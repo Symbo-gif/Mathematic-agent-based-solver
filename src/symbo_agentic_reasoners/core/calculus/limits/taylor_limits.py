@@ -28,6 +28,10 @@ from ..differentiation_specialist import DifferentiationEngine
 from ..expression_parser import ExprParser
 from ..validation import check_expression_safety as _check_expression_safety
 from ..calculus_utils import _evaluate_at_numeric as _evaluate_at
+from ..calculus_supervisor import differentiate
+from .algebra_utilities import _eval_at_point
+
+logger = logging.getLogger(__name__)
 
 def _try_taylor_expansion_limit(expr_str: str, var: str) -> Optional[str]:
     """

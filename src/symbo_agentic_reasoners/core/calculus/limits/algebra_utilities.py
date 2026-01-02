@@ -28,6 +28,9 @@ from ..differentiation_specialist import DifferentiationEngine
 from ..expression_parser import ExprParser
 from ..validation import check_expression_safety as _check_expression_safety
 from ..calculus_utils import _evaluate_at_numeric as _evaluate_at
+from ..calculus_supervisor import integrate
+
+logger = logging.getLogger(__name__)
 
 def solve_polynomial(expr_str: str, var: str = 'x') -> list:
     """

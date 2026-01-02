@@ -23,7 +23,7 @@ NO SYMPY DEPENDENCY - Pure Python implementation.
 from __future__ import annotations
 import math
 from typing import Set, Union
-from .type_system import Expr, Symbol, Integer, _ensure_expr
+from .type_system import Expr, Symbol, Integer, Float, _ensure_expr
 
 
 # =============================================================================

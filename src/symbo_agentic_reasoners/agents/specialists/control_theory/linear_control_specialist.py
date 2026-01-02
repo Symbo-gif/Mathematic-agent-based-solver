@@ -29,7 +29,7 @@ NO SYMPY - Pure Python/NumPy implementation.
 """
 
 import numpy as np
-from typing import Dict, Any, Optional, List, Tuple, Union
+from typing import Dict, Any, Optional, List, Tuple, Union, Callable
 from dataclasses import dataclass, field
 
 

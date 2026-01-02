@@ -52,7 +52,7 @@ REFERENCE:
 
 import sys
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import uuid
 
 # Native symbolic module - NO SYMPY

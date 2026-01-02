@@ -358,7 +358,6 @@ def initialize_logging(
 
 def ensure_initialized() -> None:
     """Ensure logging is initialized."""
-    global _initialized
     if not _initialized:
         initialize_logging()
 

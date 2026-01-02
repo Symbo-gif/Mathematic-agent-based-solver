@@ -28,6 +28,13 @@ from ..differentiation_specialist import DifferentiationEngine
 from ..expression_parser import ExprParser
 from ..validation import check_expression_safety as _check_expression_safety
 from ..calculus_utils import _evaluate_at_numeric as _evaluate_at
+from ..calculus_utils import _get_symbols, _evaluate_expr_numerically
+from ..definite_integration import definite_integrate
+
+logger = logging.getLogger(__name__)
+
+# Module-level parser instance
+_parser = ExprParser()
 
 def _try_2d_gaussian_integral(expr_str: str, var1: str, var2: str,
                                a1: float, b1: float, a2: float, b2: float) -> Optional[str]:

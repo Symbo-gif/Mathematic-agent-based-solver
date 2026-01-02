@@ -53,8 +53,9 @@ from symbo_agentic_reasoners.core.native_symbolic import (
     Symbol, sympify, parse_expr, Integer, Float
 )
 from symbo_agentic_reasoners.core.calculus import (
-    native_limit, differentiate, _try_limit_with_assumptions
+    native_limit, differentiate, _try_limit_with_assumptions, limit
 )
+from symbo_agentic_reasoners.core.calculus.series_specialist import series
 
 # Define infinity constants
 class _Infinity:
