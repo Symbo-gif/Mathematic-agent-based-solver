@@ -458,7 +458,7 @@ class BDIAgent(ABC):
           - Advance intention to next step
 
         CRITICAL: Agents NEVER compute directly. They delegate to:
-          - SymPy for symbolic math
+          - Native symbolic module for symbolic math
           - NumPy for numerical computation
           - Other specialist agents via FIPA-ACL messages
 
@@ -468,10 +468,10 @@ class BDIAgent(ABC):
             action = intention.get_current_action()
 
             if action == 'analyze_integrand':
-                # Delegate to SymPy to parse integrand
+                # Delegate to native symbolic to parse integrand
                 integrand = self.get_belief('integration_request').content
-                sympy_result = sympy.parse_expr(integrand)
-                self.add_belief('parsed_integrand', sympy_result)
+                parsed_result = parse_expr(integrand)
+                self.add_belief('parsed_integrand', parsed_result)
                 intention.advance()
 
             elif action == 'select_method':
@@ -482,17 +482,17 @@ class BDIAgent(ABC):
                 intention.advance()
 
             elif action == 'execute_integration':
-                # Delegate to SymPy to compute integral
+                # Delegate to native engine to compute integral
                 method = self.get_belief('integration_method')
                 integrand = self.get_belief('parsed_integrand')
-                result = sympy.integrate(integrand, method=method)
+                result = integrate(integrand, method=method)
                 self.add_belief('integration_result', result)
                 intention.advance()
 
             elif action == 'verify':
                 # Verify result by differentiation
                 result = self.get_belief('integration_result')
-                derivative = sympy.diff(result)
+                derivative = diff(result)
                 # Post result to Blackboard
                 blackboard.post(create_entry('result', derivative, self.agent_id))
                 intention.advance()
