@@ -193,8 +193,8 @@ class TestPreconditionValidationTeam(unittest.TestCase):
         self.assertEqual(domain, MathematicalDomain.REAL_ARITHMETIC)
 
         # Complex problem (has imaginary unit)
-        import sympy as sp
-        complex_problem = MockOMDoc(sp.I * sp.Symbol('x'))
+        from symbo_agentic_reasoners.core.symbolic import I, Symbol
+        complex_problem = MockOMDoc(I * Symbol('x'))
         domain = checker.classify_domain(complex_problem)
         self.assertEqual(domain, MathematicalDomain.COMPLEX_ARITHMETIC)
 
@@ -234,10 +234,10 @@ class TestAssumptionValidator(unittest.TestCase):
 
     def test_implicit_constraint_extraction(self):
         """Test extraction of implicit constraints from functions"""
-        import sympy as sp
+        from symbo_agentic_reasoners.core.symbolic import log, Symbol
 
         # ln(x) implies x > 0
-        expr = sp.log(sp.Symbol('x'))
+        expr = log(Symbol('x'))
         constraints = self.validator.extract_implicit_constraints(expr)
 
         self.assertTrue(len(constraints) > 0)
@@ -245,10 +245,10 @@ class TestAssumptionValidator(unittest.TestCase):
 
     def test_sqrt_constraint(self):
         """Test constraint extraction for square root"""
-        import sympy as sp
+        from symbo_agentic_reasoners.core.symbolic import sqrt, Symbol
 
         # sqrt(x) implies x >= 0
-        expr = sp.sqrt(sp.Symbol('x'))
+        expr = sqrt(Symbol('x'))
         constraints = self.validator.extract_implicit_constraints(expr)
 
         self.assertTrue(len(constraints) > 0)
@@ -263,8 +263,8 @@ class TestEdgeCaseDetector(unittest.TestCase):
 
     def test_singularity_detection(self):
         """Test detection of singularities"""
-        import sympy as sp
-        x = sp.Symbol('x')
+        from symbo_agentic_reasoners.core.symbolic import Symbol
+        x = Symbol('x')
 
         # 1/x has singularity at x=0
         edge_cases = self.detector.detect_singularities(1/x)

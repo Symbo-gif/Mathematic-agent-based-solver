@@ -31,7 +31,7 @@ import pytest
 import tempfile
 from pathlib import Path
 from unittest.mock import Mock, MagicMock, patch
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol, Integer, pi, sympify
 
 
 # =============================================================================
@@ -691,9 +691,8 @@ class TestE2EWhitebox:
         assert isinstance(structured.omdoc_content, OMObject)
 
     def test_sympy_expression_created(self):
-        """Test that SymPy expressions are created during parsing."""
+        """Test that native symbolic expressions are created during parsing."""
         from symbo_agentic_reasoners.agents.base.problem_analysis import ProblemAnalysisTeam
-        import sympy as sp
 
         team = ProblemAnalysisTeam()
 
@@ -972,7 +971,7 @@ class TestCuriosityEngineComprehensive:
         solver = Mock()
         mock_result = Mock()
         mock_result.status.value = 'success'
-        mock_result.result = sp.sympify('x + 1')
+        mock_result.result = sympify('x + 1')
         solver.solve.return_value = mock_result
         return solver
 
@@ -1037,7 +1036,7 @@ class TestCuriosityEngineComprehensive:
 
         scorer = InterestScorer()
 
-        level, notes = scorer.score("simple problem", sp.Symbol('x')**2 + 1, 50.0)
+        level, notes = scorer.score("simple problem", Symbol('x')**2 + 1, 50.0)
         assert isinstance(level, InterestLevel)
 
     def test_interest_scoring_zero(self):
@@ -1050,7 +1049,7 @@ class TestCuriosityEngineComprehensive:
 
         level, notes = scorer.score(
             "simplify(sin(x)**2 + cos(x)**2 - 1)",
-            sp.Integer(0),
+            Integer(0),
             10.0
         )
         assert level.value >= InterestLevel.NOTABLE.value
@@ -1065,7 +1064,7 @@ class TestCuriosityEngineComprehensive:
 
         scorer = InterestScorer()
 
-        level, notes = scorer.score("some_problem", sp.pi, 10.0)
+        level, notes = scorer.score("some_problem", pi, 10.0)
         assert level.value >= InterestLevel.NOTABLE.value
         assert 'pi' in notes.lower()
 

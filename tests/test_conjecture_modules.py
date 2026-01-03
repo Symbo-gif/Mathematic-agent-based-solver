@@ -25,7 +25,7 @@ Comprehensive tests for conjecture generation components:
 """
 
 import pytest
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol, Integer, symbols
 from unittest.mock import Mock, MagicMock, patch
 from datetime import datetime
 
@@ -44,7 +44,7 @@ class TestSyntheticTheorem:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id='test_001',
             premises=[x > 0],
@@ -66,11 +66,11 @@ class TestSyntheticTheorem:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id='test_002',
             premises=[],
-            conclusion=sp.S(1),
+            conclusion=Integer(1),
             derivation_steps=[],
             domain='geometry',
             complexity_score=0.0
@@ -85,7 +85,7 @@ class TestSyntheticTheorem:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id='test_003',
             premises=[x > 0],
@@ -104,7 +104,7 @@ class TestSyntheticTheorem:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id='test_004',
             premises=[x > 0],
@@ -125,7 +125,7 @@ class TestSyntheticTheorem:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id='test_005',
             premises=[x > 0],
@@ -268,7 +268,7 @@ class TestCandidateConjecture:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         source = SyntheticTheorem(
             theorem_id='src_001',
             premises=[x > 0],
@@ -304,7 +304,7 @@ class TestCandidateConjecture:
         source = SyntheticTheorem(
             theorem_id='src_002',
             premises=[],
-            conclusion=sp.S(1),
+            conclusion=Integer(1),
             derivation_steps=[],
             domain='geometry',
             complexity_score=0.1
@@ -346,7 +346,7 @@ class TestPatternRecognizer:
             SyntheticTheorem
         )
 
-        x, y = sp.symbols('x y')
+        x, y = symbols('x y')
         return SyntheticTheorem(
             theorem_id='test_thm',
             premises=[x > 0, y > 0],
@@ -498,7 +498,7 @@ class TestConjectureFormalizer:
             SyntheticTheorem
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         source = SyntheticTheorem(
             theorem_id='thm_001',
             premises=[x > 0],
@@ -581,7 +581,7 @@ class TestConjectureFormalizer:
     def test_format_lean_var_declarations(self, formalizer):
         """Should format variable declarations."""
         if hasattr(formalizer, '_format_lean_var_declarations'):
-            x = sp.Symbol('x')
+            x = Symbol('x')
             var_types = {x: 'ℝ'}
 
             result = formalizer._format_lean_var_declarations(var_types)
@@ -596,7 +596,7 @@ class TestConjectureFormalizer:
     def test_sympy_to_lean(self, formalizer):
         """Should convert SymPy to Lean4."""
         if hasattr(formalizer, '_sympy_to_lean'):
-            x = sp.Symbol('x')
+            x = Symbol('x')
             expr = x**2 + 1
 
             result = formalizer._sympy_to_lean(expr)
@@ -704,7 +704,7 @@ class TestConjecturePipeline:
         )
 
         # Step 1: Create synthetic theorem
-        x, y = sp.symbols('x y')
+        x, y = symbols('x y')
         theorem = SyntheticTheorem(
             theorem_id='pipeline_test',
             premises=[x > 0, y > 0],

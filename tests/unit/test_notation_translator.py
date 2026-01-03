@@ -322,10 +322,10 @@ class TestRoundTrip:
         assert back_to_sympy.success
 
         # Should be equivalent expressions
-        import sympy as sp
-        original_expr = sp.sympify(original)
-        roundtrip_expr = sp.sympify(back_to_sympy.translated_text)
-        assert sp.simplify(original_expr - roundtrip_expr) == 0
+        from symbo_agentic_reasoners.core.symbolic import sympify, simplify
+        original_expr = sympify(original)
+        roundtrip_expr = sympify(back_to_sympy.translated_text)
+        assert simplify(original_expr - roundtrip_expr) == 0
 
 
 class TestProcessMethod:

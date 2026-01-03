@@ -28,7 +28,6 @@ Tests for deep_search modules to achieve 75%+ coverage:
 """
 
 import pytest
-import sympy as sp
 
 
 # =============================================================================

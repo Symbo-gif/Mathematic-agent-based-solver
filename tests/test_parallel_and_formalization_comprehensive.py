@@ -21,7 +21,7 @@ Tests to bring both modules to 70%+ coverage.
 
 import pytest
 import time
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol, symbols, sin, cos, Eq
 from unittest.mock import Mock, MagicMock, patch
 from dataclasses import dataclass
 from typing import List
@@ -247,7 +247,7 @@ class TestAutoFormalizationPipelineComplete:
         mock.lean4_statement = None  # Set to None, not a Mock
 
         # Mock source theorem
-        x = sp.Symbol('x')
+        x = Symbol('x')
         mock.source_theorem = Mock()
         mock.source_theorem.conclusion = x**2 >= 0
         mock.source_theorem.premises = [x > 0]
@@ -320,8 +320,8 @@ class TestAutoFormalizationPipelineComplete:
 
     def test_formalize_identity(self, pipeline):
         """Test identity formalization."""
-        x = sp.Symbol('x')
-        expression = sp.Eq(sp.sin(x)**2 + sp.cos(x)**2, 1)
+        x = Symbol('x')
+        expression = Eq(sin(x)**2 + cos(x)**2, 1)
 
         result = pipeline.formalize_identity(expression, domain='trigonometry')
 
@@ -397,7 +397,7 @@ class TestAutoFormalizationPipelineComplete:
 
     def test_generate_omdoc_identity(self, pipeline):
         """Test OMDoc identity generation."""
-        x = sp.Symbol('x')
+        x = Symbol('x')
         expression = x**2 - x**2
 
         result = pipeline._generate_omdoc_identity(expression, 'algebra')
@@ -664,9 +664,9 @@ class TestFormalizationIntegration:
         mock_conjecture.cross_domain_applicability = ["geometry", "algebra"]
         mock_conjecture.lean4_statement = None
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         mock_conjecture.source_theorem = Mock()
-        mock_conjecture.source_theorem.conclusion = sp.Eq(x**2, x * x)
+        mock_conjecture.source_theorem.conclusion = Eq(x**2, x * x)
         mock_conjecture.source_theorem.premises = []
         mock_conjecture.source_theorem.domain = "algebra"
         mock_conjecture.source_theorem.to_natural_language.return_value = "x squared equals x times x"

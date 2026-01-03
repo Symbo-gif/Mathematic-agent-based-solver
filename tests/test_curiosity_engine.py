@@ -35,7 +35,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 from unittest.mock import Mock, MagicMock, patch
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol, Integer, pi
 
 # Import the modules under test
 from symbo_agentic_reasoners.discovery.curiosity_engine import (
@@ -332,7 +332,7 @@ class TestInterestScorer:
     def test_special_value_detection(self, interest_scorer):
         """Special values should be detected."""
         # Test pi detection
-        level, notes = interest_scorer.score("complex calculation", sp.pi, 10.0)
+        level, notes = interest_scorer.score("complex calculation", pi, 10.0)
         assert "pi" in notes.lower()
 
         # Test zero detection
@@ -349,7 +349,7 @@ class TestInterestScorer:
     def test_fast_complex_solution_notable(self, interest_scorer):
         """Fast solutions to complex problems should be notable."""
         complex_problem = "a" * 60  # Long problem string
-        level, notes = interest_scorer.score(complex_problem, sp.Symbol('x'), 5.0)
+        level, notes = interest_scorer.score(complex_problem, Symbol('x'), 5.0)
         # Should be at least notable for speed
         if "quickly" in notes.lower():
             assert level.value >= InterestLevel.NOTABLE.value

@@ -371,14 +371,13 @@ def run_simple_test():
     results = []
     stats = {"total": 0, "parsed": 0, "error": 0}
 
-    # Try to import sympy for basic parsing
+    # Use native symbolic module for parsing
     try:
-        import sympy as sp
-        from sympy.parsing.sympy_parser import parse_expr
-        has_sympy = True
+        from symbo_agentic_reasoners.core.symbolic import parse_expr
+        has_parser = True
     except ImportError:
-        has_sympy = False
-        print("SymPy not available - running pattern analysis only")
+        has_parser = False
+        print("Native symbolic not available - running pattern analysis only")
 
     start_time = time.time()
 
@@ -411,8 +410,8 @@ def run_simple_test():
         else:
             result["type"] = "other"
 
-        # Try to parse if SymPy available
-        if has_sympy:
+        # Try to parse if native parser available
+        if has_parser:
             try:
                 # Basic syntax check
                 expr_part = eq.split("(", 1)[1].rsplit(")", 1)[0] if "(" in eq else eq

@@ -23,8 +23,7 @@ Comprehensive tests for the verification system:
 """
 
 import pytest
-import sympy as sp
-from sympy import Symbol, symbols, sin, cos, exp, sqrt, log
+from symbo_agentic_reasoners.core.symbolic import Symbol, symbols, sin, cos, exp, sqrt, log
 from unittest.mock import Mock, patch, MagicMock
 
 # Import the modules under test

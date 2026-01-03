@@ -30,8 +30,9 @@ from symbo_agentic_reasoners.core.native_symbolic import (
     Sin, Cos, pi as native_pi
 )
 # Provide sp namespace for backward compatibility in tests
-class sp:
-    """Mock SymPy namespace using native types."""
+# Provide native_compat namespace for backward compatibility in tests
+class native_compat:
+    """Native symbolic compatibility namespace for tests."""
     Integer = Integer
     Float = Float
     Symbol = Symbol
@@ -40,6 +41,9 @@ class sp:
     @staticmethod
     def sympify(expr):
         return parse_expr(str(expr)) if isinstance(expr, str) else expr
+
+# Alias for backward compatibility (to be removed)
+sp = native_compat
 
 from symbo_agentic_reasoners.discovery.curiosity_engine import (
     CuriosityEngine,
