@@ -24,7 +24,6 @@ Comprehensive tests for geometry specialist agents:
 """
 
 import pytest
-import sympy as sp
 from unittest.mock import Mock, MagicMock
 
 

@@ -25,7 +25,6 @@ Comprehensive tests for algebra specialist agents:
 """
 
 import pytest
-import sympy as sp
 
 
 # =============================================================================

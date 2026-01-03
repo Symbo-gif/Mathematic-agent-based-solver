@@ -24,7 +24,6 @@ Comprehensive tests for linear algebra specialist agents:
 """
 
 import pytest
-import sympy as sp
 
 
 # =============================================================================

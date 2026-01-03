@@ -26,7 +26,6 @@ Comprehensive tests for algorithm synthesis components:
 """
 
 import pytest
-import sympy as sp
 from unittest.mock import Mock, MagicMock, patch
 
 

@@ -338,33 +338,33 @@ def capture_logs():
 
 
 # =============================================================================
-# SYMPY FIXTURES
+# SYMBOLIC FIXTURES (using native symbolic module)
 # =============================================================================
 
 @pytest.fixture
 def sympy_symbols():
-    """Provide commonly used SymPy symbols."""
-    import sympy as sp
+    """Provide commonly used native symbolic symbols."""
+    from symbo_agentic_reasoners.core.symbolic import Symbol
     return {
-        'x': sp.Symbol('x'),
-        'y': sp.Symbol('y'),
-        'z': sp.Symbol('z'),
-        'n': sp.Symbol('n', integer=True, positive=True),
-        't': sp.Symbol('t'),
+        'x': Symbol('x'),
+        'y': Symbol('y'),
+        'z': Symbol('z'),
+        'n': Symbol('n'),
+        't': Symbol('t'),
     }
 
 
 @pytest.fixture
 def sympy_expressions(sympy_symbols):
-    """Provide commonly used SymPy expressions."""
-    import sympy as sp
+    """Provide commonly used native symbolic expressions."""
+    from symbo_agentic_reasoners.core.symbolic import sin, cos, exp, log
     x = sympy_symbols['x']
     return {
         'quadratic': x**2 + 2*x + 1,
         'cubic': x**3 - x,
-        'trig': sp.sin(x) + sp.cos(x),
-        'exponential': sp.exp(x),
-        'logarithmic': sp.log(x),
+        'trig': sin(x) + cos(x),
+        'exponential': exp(x),
+        'logarithmic': log(x),
         'rational': (x**2 - 1)/(x - 1),
     }
 
