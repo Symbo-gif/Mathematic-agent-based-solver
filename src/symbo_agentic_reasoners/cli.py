@@ -24,6 +24,11 @@ Features:
 - System status monitoring (CPU, GPU, RAM)
 - Emergency shutdown controls
 
+Architecture:
+- 38 Domain Supervisors (Tier 2)
+- 220+ Task Specialists (Tier 3) across 30 domains
+- BDI cognitive framework with Blackboard coordination
+
 Color Theme:
 - Gold: Primary text, highlights, success
 - Teal: Info, system messages, prompts
@@ -68,7 +73,8 @@ class MathSolverCLI:
     Command Line Interface for the Mathematical Agent-Based Solver.
 
     Provides interactive and batch modes for solving mathematical problems
-    using the 65-agent multi-phase architecture.
+    using the multi-agent architecture with 38 supervisors and 220+ specialists
+    across 30 mathematical domains.
 
     Color Theme:
     - Gold: Primary text, highlights, results

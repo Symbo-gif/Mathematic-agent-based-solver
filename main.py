@@ -18,7 +18,7 @@ SYMBO AGENTIC REASONERS - Main Entry Point
 ==========================================
 
 Mathematical Agent-Based Solver System
-65 Agents | 24 Teams | 6 Phases
+260+ Agents | 38 Supervisors | 220+ Specialists | 6 Phases
 
 This is the main entry point for the system. Run this file to start
 the interactive CLI or process batch problems.
@@ -30,13 +30,13 @@ Usage:
     python main.py status                  # System status
 
 Architecture:
-    Phase 0: Infrastructure (AMS, DF, ACC) - 3 agents
-    Phase 1: Cognition (Orchestrator, Pilot, Verifier) - 6 agents
-    Phase 2: Mathematical Workforce - 18 agents
-    Phase 3: Meta-Cognition (Validation, Knowledge) - 10 agents
-    Phase 4: Governance (Conflict, Failure, Meta-Learning) - 9 agents
-    Phase 5: Optimization (Distillation, Hardening) - 6 agents
-    Phase 6: Discovery (Conjecture, Deep Search) - 13 agents
+    Phase 0: Infrastructure (AMS, DF, ACC, Watchdog, Resource Governor)
+    Phase 1: Cognition (Orchestrator, BDI Framework, Blackboard)
+    Phase 2: Mathematical Workforce (38 Supervisors, 220+ Specialists across 30 domains)
+    Phase 3: Meta-Cognition (Knowledge Management, Meta-Learning, Pattern Indexer)
+    Phase 4: Governance (Conflict Resolution, Failure Analysis, Strategy Learning)
+    Phase 5: Optimization (Distillation, Evolutionary Flywheel, Hardening)
+    Phase 6: Discovery (Conjecture, Deep Search, Algorithm Synthesis)
 """
 
 import sys

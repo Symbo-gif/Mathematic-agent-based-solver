@@ -19,12 +19,12 @@ SYMBO_AGENTIC_REASONERS - Agent-based Mathematical Deduction Engine
 A multi-agent system for autonomous mathematical discovery and verification.
 
 Architecture:
-- core/: Core components (orchestrator, blackboard, BDI framework)
-- agents/: Agent hierarchy (supervisors, specialists)
+- core/: Core components (orchestrator, blackboard, BDI framework, solver engine)
+- agents/: Agent hierarchy (38 supervisors, 220+ specialists across 30 domains)
 - verification/: Formal verification and logic checking
 - middleware/: Meta-cognitive capabilities (hypothesis, knowledge, conflict resolution)
 - protocols/: Communication protocols (FIPA-ACL, OMDoc)
-- solvers/: Mathematical computation wrappers
+- infrastructure/: Agent management (AMS, Directory Facilitator, Watchdog)
 - discovery/: Advanced discovery capabilities (Phase 6)
 - optimization/: Performance optimization (Phase 5)
 - utils/: Utilities and configuration
