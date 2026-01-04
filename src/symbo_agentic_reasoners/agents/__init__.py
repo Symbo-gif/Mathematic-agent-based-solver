@@ -16,10 +16,13 @@
 SYMBO_AGENTIC_REASONERS Agent Hierarchy
 ====================
 
-Multi-tier agent architecture:
+Multi-tier agent architecture with 260+ cognitive agents:
 - base/: Base agent classes and problem analysis
-- supervisors/: Tier 2 domain supervisors
-- specialists/: Tier 3 task specialists
+- supervisors/: Tier 2 domain supervisors (38 domains)
+- specialists/: Tier 3 task specialists (220+ across 30 specialized domains)
+- synthesis/: Result synthesis and proof construction
+- provers/: Formal verification agents
+- coordinators/: Cross-domain coordination agents
 """
 
 __all__ = [

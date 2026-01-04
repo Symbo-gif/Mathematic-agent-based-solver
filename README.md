@@ -78,9 +78,9 @@ results = solve_batch(["2+2", "3*3", "diff(x**2, x)"])
 ## Architecture Overview
 
 - **Tier 1 Orchestrator:** Delegates problems, synthesizes results.
-- **Tier 2 Supervisors (12 domains):** Calculus, Algebra, Linear Algebra, Geometry, Logic, Discrete Math, Statistics, Physics (4), Unknown Domain.
-- **Tier 3 Specialists (45+):** Domain task executors (integration, limits, matrix ops, proofs, etc.).
-- **Core:** BDI framework, blackboard, native calculus/ algebra engines, safe parser, solver engine.
+- **Tier 2 Supervisors (38 domains):** Calculus, Algebra, Linear Algebra, Geometry, Logic, Discrete Math, Statistics, Physics (4), Complex Analysis, Category Theory, Cryptography, Real Analysis, Functional Analysis, Differential Geometry, Algebraic Topology, Information Theory, Control Theory, Optimization, Stochastic Processes, and more.
+- **Tier 3 Specialists (220+):** Domain task executors across 30 specialized domains (integration, limits, matrix ops, proofs, cryptographic protocols, topological data analysis, etc.).
+- **Core:** BDI framework, blackboard, native calculus/algebra engines, safe parser, solver engine.
 - **Middleware:** Knowledge management, meta-learning, conflict resolution, theorem library.
 - **Infrastructure:** AMS, Directory Facilitator, Watchdog, Resource Governor, monitoring.
 - **Discovery & Optimization:** Deep search, conjecture, evolutionary synthesis, student/teacher learning.
