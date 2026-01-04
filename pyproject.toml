@@ -71,6 +71,9 @@ Documentation = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reason
 Repository = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reasoners"
 Issues = "https://github.com/symbo_agentic_reasoners/symbo_agentic_reasoners/issues"
 
+[project.scripts]
+math-agent-solver = "symbo_agentic_reasoners.cli:main"
+
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
