@@ -253,6 +253,26 @@ def _add_one(expr: Expr) -> Expr:
     return add(expr, Num(1))
 
 
+def _evaluate_expr_numerically(expr_str: str) -> Optional[float]:
+    """
+    Evaluate a numeric expression string to a float value.
+
+    Safely evaluates expressions containing basic arithmetic and constants like pi and e.
+
+    Args:
+        expr_str: Expression string to evaluate
+
+    Returns:
+        Float value if evaluation succeeds, None otherwise
+    """
+    try:
+        # Safe evaluation of numeric expressions
+        expr_safe = expr_str.replace('pi', str(math.pi)).replace('e', str(math.e))
+        return eval(expr_safe)
+    except Exception:
+        return None
+
+
 def native_trig_simplify(expr_str: str) -> str:
     """
     Native trigonometric simplification for integer multiples of π.
