@@ -33,6 +33,10 @@ from .result import SolveResult
 logger = logging.getLogger(__name__)
 
 
+# Timeout buffer multiplier for batch operations (accounts for thread overhead)
+_BATCH_TIMEOUT_BUFFER = 2.0
+
+
 def _get_engine():
     """Get the solver engine singleton."""
     from symbo_agentic_reasoners.core.solver import get_solver_engine
@@ -211,7 +215,7 @@ def solve_batch(
         # Collect results in order
         for future in futures:
             try:
-                result = future.result(timeout=config.timeout_sec * 2)  # Extra buffer for overhead
+                result = future.result(timeout=config.timeout_sec * _BATCH_TIMEOUT_BUFFER)
                 results.append(result)
             except FuturesTimeoutError:
                 results.append(SolveResult.timeout(timeout_sec=config.timeout_sec))

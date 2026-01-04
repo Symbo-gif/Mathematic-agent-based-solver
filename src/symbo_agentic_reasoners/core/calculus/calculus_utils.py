@@ -258,6 +258,7 @@ def _evaluate_expr_numerically(expr_str: str) -> Optional[float]:
     Evaluate a numeric expression string to a float value.
 
     Safely evaluates expressions containing basic arithmetic and constants like pi and e.
+    Uses ast.literal_eval for simple literals and a restricted evaluator for expressions.
 
     Args:
         expr_str: Expression string to evaluate
@@ -265,10 +266,62 @@ def _evaluate_expr_numerically(expr_str: str) -> Optional[float]:
     Returns:
         Float value if evaluation succeeds, None otherwise
     """
+    import ast
+    import operator
+
     try:
-        # Safe evaluation of numeric expressions
+        # Replace constants
         expr_safe = expr_str.replace('pi', str(math.pi)).replace('e', str(math.e))
-        return eval(expr_safe)
+
+        # Try ast.literal_eval first for simple literals
+        try:
+            result = ast.literal_eval(expr_safe)
+            return float(result)
+        except (ValueError, SyntaxError):
+            pass
+
+        # Parse the expression as an AST
+        tree = ast.parse(expr_safe, mode='eval')
+
+        # Define allowed operators
+        operators = {
+            ast.Add: operator.add,
+            ast.Sub: operator.sub,
+            ast.Mult: operator.mul,
+            ast.Div: operator.truediv,
+            ast.Pow: operator.pow,
+            ast.USub: operator.neg,
+            ast.UAdd: operator.pos,
+        }
+
+        def _eval_node(node: ast.AST) -> float:
+            """Safely evaluate an AST node."""
+            if isinstance(node, ast.Expression):
+                return _eval_node(node.body)
+            elif isinstance(node, ast.Constant):
+                if isinstance(node.value, (int, float)):
+                    return float(node.value)
+                raise ValueError(f"Unsupported constant type: {type(node.value)}")
+            elif isinstance(node, ast.Num):  # Python 3.7 compatibility
+                return float(node.n)
+            elif isinstance(node, ast.BinOp):
+                left = _eval_node(node.left)
+                right = _eval_node(node.right)
+                op_type = type(node.op)
+                if op_type not in operators:
+                    raise ValueError(f"Unsupported operator: {op_type}")
+                return operators[op_type](left, right)
+            elif isinstance(node, ast.UnaryOp):
+                operand = _eval_node(node.operand)
+                op_type = type(node.op)
+                if op_type not in operators:
+                    raise ValueError(f"Unsupported unary operator: {op_type}")
+                return operators[op_type](operand)
+            else:
+                raise ValueError(f"Unsupported AST node: {type(node)}")
+
+        return _eval_node(tree)
+
     except Exception:
         return None
 
