@@ -25,7 +25,6 @@ Comprehensive tests for calculus specialist agents:
 """
 
 import pytest
-import sympy as sp
 
 
 # =============================================================================

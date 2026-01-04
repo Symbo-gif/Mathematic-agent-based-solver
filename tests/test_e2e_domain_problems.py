@@ -30,12 +30,13 @@ Test Domains:
 """
 
 import pytest
-import sympy as sp
-from sympy import (
+from symbo_agentic_reasoners.core.symbolic import (
     Symbol, symbols, sqrt, sin, cos, exp, log, pi, E, I, oo,
-    Rational, Integer, factorial, binomial, Matrix, simplify, expand,
-    diff, integrate, limit, solve, dsolve, factor, gcd, lcm, Abs
+    Rational, Integer, Float, simplify, expand, diff, solve, factor, Eq, sympify
 )
+from symbo_agentic_reasoners.core.symbolic.sympy_compatibility import Implies
+import math
+import numpy as np
 
 # Import the solver engine
 from symbo_agentic_reasoners.core.solver_engine import SolverEngine, SolveStatus
@@ -69,14 +70,14 @@ def parse_result(result):
             return False
         try:
             # Try to parse as SymPy expression
-            return sp.sympify(result)
+            return sympify(result)
         except Exception:
             # Return as-is if can't parse
             return result
     # Handle numeric 1/0 as boolean
-    if result == 1 or result == sp.Integer(1) or result == sp.true:
+    if result == 1 or result == Integer(1) or result == True:
         return True
-    if result == 0 or result == sp.Integer(0) or result == sp.false:
+    if result == 0 or result == Integer(0) or result == False:
         return False
     return result
 
@@ -99,7 +100,7 @@ def assert_equals(result, expected, msg="", tol=1e-9):
             # Multiple results - check if any matches
             for p in parsed:
                 try:
-                    if sp.simplify(p - expected) == 0:
+                    if simplify(p - expected) == 0:
                         return  # Success
                     # Try numerical comparison
                     if abs(complex(p) - complex(expected)) < tol:
@@ -115,14 +116,14 @@ def assert_equals(result, expected, msg="", tol=1e-9):
             assert abs(parsed - expected) < tol or parsed == expected, f"{msg}: {parsed} != {expected}"
         else:
             try:
-                diff = sp.simplify(parsed - expected)
+                diff = simplify(parsed - expected)
                 assert diff == 0 or abs(complex(diff)) < tol, f"{msg}: {parsed} != {expected}"
             except:
                 # Try numerical comparison
                 assert abs(float(parsed) - float(expected)) < tol, f"{msg}: {parsed} != {expected}"
     else:
         try:
-            diff = sp.simplify(parsed - expected)
+            diff = simplify(parsed - expected)
             # Accept if exactly 0 or numerically very close
             assert diff == 0 or abs(complex(diff)) < tol, f"{msg}: {parsed} != {expected}"
         except (TypeError, ValueError):
@@ -138,7 +139,7 @@ def assert_expands_to(result, expected, msg=""):
     parsed = parse_result(result)
     if parsed is None:
         pytest.fail(f"{msg}: Result is None")
-    assert sp.simplify(sp.expand(parsed) - expected) == 0, f"{msg}: {sp.expand(parsed)} != {expected}"
+    assert simplify(expand(parsed) - expected) == 0, f"{msg}: {expand(parsed)} != {expected}"
 
 
 def contains_solutions(result, expected_solutions, msg=""):
@@ -148,7 +149,7 @@ def contains_solutions(result, expected_solutions, msg=""):
         parsed = [parsed]
 
     for exp in expected_solutions:
-        found = any(sp.simplify(exp - sol) == 0 for sol in parsed)
+        found = any(simplify(exp - sol) == 0 for sol in parsed)
         if not found:
             pytest.fail(f"{msg}: Expected solution {exp} not found in {parsed}")
 
@@ -275,7 +276,7 @@ class TestCalculusDomain:
         x = Symbol('x')
         # Check derivative of result equals integrand
         parsed = parse_result(result.result)
-        assert sp.simplify(diff(parsed, x) - x**2) == 0
+        assert simplify(diff(parsed, x) - x**2) == 0
 
     def test_integral_trig(self, solver):
         """∫sin(x) dx = -cos(x)"""
@@ -283,7 +284,7 @@ class TestCalculusDomain:
         assert result.status == SolveStatus.SUCCESS
         x = Symbol('x')
         parsed = parse_result(result.result)
-        assert sp.simplify(diff(parsed, x) - sin(x)) == 0
+        assert simplify(diff(parsed, x) - sin(x)) == 0
 
     def test_integral_definite(self, solver):
         """∫[0,1] x^2 dx = 1/3"""
@@ -310,7 +311,7 @@ class TestCalculusDomain:
         assert result.status == SolveStatus.SUCCESS
         # The solver returns numerical approximation
         parsed = parse_result(result.result)
-        if isinstance(parsed, sp.Float) or isinstance(parsed, float):
+        if isinstance(parsed, Float) or isinstance(parsed, float):
             # Check it's approximately e
             assert abs(float(parsed) - float(E)) < 1e-10
         else:
@@ -465,7 +466,7 @@ class TestComplexDomain:
         result = solver.solve("exp(I*pi)")
         assert result.status == SolveStatus.SUCCESS
         parsed = parse_result(result.result)
-        assert sp.simplify(parsed + 1) == 0
+        assert simplify(parsed + 1) == 0
 
 
 # =============================================================================
@@ -489,7 +490,7 @@ class TestAnalysisDomain:
         # The solver may return numerical approximation
         parsed = parse_result(result.result)
         expected_value = float(pi**2 / 6)
-        if isinstance(parsed, (sp.Float, float)):
+        if isinstance(parsed, (Float, float)):
             assert abs(float(parsed) - expected_value) < 1e-10
         else:
             assert_equals(result.result, pi**2 / 6)

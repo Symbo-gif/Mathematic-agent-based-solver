@@ -29,18 +29,18 @@ from unittest.mock import Mock, patch
 
 # Native symbolic types - NO SYMPY
 from symbo_agentic_reasoners.core.native_symbolic import (
-    Symbol, Integer, parse_expr, sympify
+    Symbol, Integer, parse_expr, sympify, sin
 )
 
-# Provide sp namespace for backward compatibility in tests
+# Provide native_compat namespace for backward compatibility in tests
 from symbo_agentic_reasoners.core.native_symbolic import simplify as native_simplify
 
 def symbols(names):
     """Create multiple symbols from space-separated string."""
     return tuple(Symbol(n.strip()) for n in names.replace(',', ' ').split())
 
-class sp:
-    """Mock SymPy namespace using native types."""
+class native_compat:
+    """Native symbolic compatibility namespace for tests."""
     @staticmethod
     def S(val):
         return Integer(val) if isinstance(val, int) else val
@@ -60,6 +60,13 @@ class sp:
     @staticmethod
     def simplify(expr):
         return native_simplify(expr)
+
+    @staticmethod
+    def sin(x):
+        return sin(x)
+
+# Alias for backward compatibility (to be removed)
+sp = native_compat
 
 from symbo_agentic_reasoners.optimization.symbo.nano_tensor import (
     NanoTensor,

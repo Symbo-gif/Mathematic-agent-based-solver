@@ -23,7 +23,6 @@ Comprehensive tests for logic specialist agents:
 """
 
 import pytest
-import sympy as sp
 from unittest.mock import Mock, MagicMock
 
 

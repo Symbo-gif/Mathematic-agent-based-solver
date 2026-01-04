@@ -841,7 +841,7 @@ class CrackFinderAgent:
 
         try:
             from symbo_agentic_reasoners.core.input_normalizer import normalize_input
-            import sympy as sp
+            from symbo_agentic_reasoners.core.symbolic import sympify
 
             # Test boundary numeric values
             boundary_inputs = [
@@ -859,7 +859,7 @@ class CrackFinderAgent:
                     result = normalize_input(inp)
                     # Try to parse
                     if result:
-                        expr = sp.sympify(result)
+                        expr = sympify(result)
                 except Exception as e:
                     # Some failures are expected, just ensure no crashes
                     pass
@@ -1035,7 +1035,7 @@ class CrackFinderAgent:
 
         try:
             from symbo_agentic_reasoners.core.input_normalizer import normalize_input
-            import sympy as sp
+            from symbo_agentic_reasoners.core.symbolic import sympify
 
             valid_exprs = [
                 ('x + 1', None),
@@ -1052,8 +1052,8 @@ class CrackFinderAgent:
                         errors.append(f"Empty result for '{inp}'")
                         continue
 
-                    # Should be valid SymPy expression
-                    expr = sp.sympify(result)
+                    # Should be valid native symbolic expression
+                    expr = sympify(result)
 
                 except Exception as e:
                     errors.append(f"Failed on '{inp}': {type(e).__name__}: {e}")
@@ -1158,7 +1158,7 @@ class CrackFinderAgent:
             from symbo_agentic_reasoners.infrastructure import (
                 AgentPool, AgentManagementSystem, register_all_agents
             )
-            import sympy as sp
+            from symbo_agentic_reasoners.core.symbolic import sympify
 
             # Setup
             ams = AgentManagementSystem()
@@ -1176,7 +1176,7 @@ class CrackFinderAgent:
 
             # Step 2: Parse
             try:
-                expr = sp.sympify(normalized)
+                expr = sympify(normalized)
             except Exception as e:
                 errors.append(f"Parse failed: {e}")
 
@@ -1201,13 +1201,13 @@ class CrackFinderAgent:
         )
 
     def _test_input_pipeline(self) -> TestResult:
-        """Test input -> normalizer -> sympy pipeline"""
+        """Test input -> normalizer -> native symbolic pipeline"""
         start = time.time()
         errors = []
 
         try:
             from symbo_agentic_reasoners.core.input_normalizer import normalize_input
-            import sympy as sp
+            from symbo_agentic_reasoners.core.symbolic import sympify
 
             pipeline_tests = [
                 ('differentiate x^2', 'diff'),

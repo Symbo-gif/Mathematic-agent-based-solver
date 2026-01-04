@@ -25,9 +25,8 @@ Comprehensive tests for the core reasoning and inference components:
 """
 
 import pytest
-import sympy as sp
-from sympy import Symbol, symbols, And, Or, Not, Implies, Equivalent
-from sympy.logic.boolalg import to_cnf, to_dnf
+from symbo_agentic_reasoners.core.symbolic import Symbol, symbols
+from symbo_agentic_reasoners.core.symbolic.sympy_compatibility import Implies
 from unittest.mock import Mock, patch, MagicMock
 
 # Import the modules under test
@@ -464,7 +463,7 @@ class TestEdgeCases:
     def test_empty_formula(self, logical_prover):
         """Handle empty/trivial cases."""
         # True is trivially valid
-        result = logical_prover.prove(sp.true)
+        result = logical_prover.prove(True)
         assert result is not None
 
     def test_single_variable(self, logical_prover, simple_symbols):

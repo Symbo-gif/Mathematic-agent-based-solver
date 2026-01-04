@@ -40,7 +40,12 @@ import json
 from pathlib import Path
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import (
+    Symbol, symbols, sin, cos, exp, log, diff, simplify, factor, solve, Integer,
+    expand, Eq, Function, sympify
+)
+from symbo_agentic_reasoners.core.calculus import integrate
+import numpy as np
 
 
 # =============================================================================
@@ -276,11 +281,11 @@ class TestPhase2Specialists:
             # Should handle without crashing
             try:
                 if op == "factor":
-                    result = sp.factor(sp.sympify(expr))
+                    result = factor(sympify(expr))
                 elif op == "expand":
-                    result = sp.expand(sp.sympify(expr))
+                    result = expand(sympify(expr))
                 elif op == "roots":
-                    result = sp.solve(sp.sympify(expr))
+                    result = solve(sympify(expr))
                 assert result is not None
             except Exception as e:
                 pytest.fail(f"Polynomial {op} failed on '{expr}': {e}")
@@ -292,19 +297,19 @@ class TestPhase2Specialists:
         )
 
         spec = DifferentiationSpecialist("diff_test")
-        x = sp.Symbol('x')
+        x = Symbol('x')
 
         test_cases = [
             (x**2, 2*x),
-            (sp.sin(x), sp.cos(x)),
-            (sp.exp(x), sp.exp(x)),
-            (sp.log(x), 1/x),
+            (sin(x), cos(x)),
+            (exp(x), exp(x)),
+            (log(x), 1/x),
             (x**3 + 2*x**2 - x + 1, 3*x**2 + 4*x - 1),
         ]
 
         for expr, expected in test_cases:
-            result = sp.diff(expr, x)
-            assert sp.simplify(result - expected) == 0, f"diff({expr}) != {expected}"
+            result = diff(expr, x)
+            assert simplify(result - expected) == 0, f"diff({expr}) != {expected}"
 
     def test_integration_specialist(self):
         """Test integration specialist."""
@@ -313,21 +318,21 @@ class TestPhase2Specialists:
         )
 
         spec = IntegrationSpecialist("int_test")
-        x = sp.Symbol('x')
+        x = Symbol('x')
 
         test_cases = [
             x**2,
-            sp.sin(x),
-            sp.exp(x),
+            sin(x),
+            exp(x),
             1/x,
-            sp.cos(x)**2,
+            cos(x)**2,
         ]
 
         for expr in test_cases:
-            result = sp.integrate(expr, x)
+            result = integrate(expr, x)
             # Verify by differentiating back
-            derivative = sp.diff(result, x)
-            diff = sp.simplify(derivative - expr)
+            derivative = diff(result, x)
+            diff = simplify(derivative - expr)
             assert diff == 0, f"Integration of {expr} failed verification"
 
     def test_matrix_operations(self):
@@ -339,8 +344,8 @@ class TestPhase2Specialists:
         spec = MatrixOperationsSpecialist("matrix_test")
 
         # Test various matrix operations
-        A = sp.Matrix([[1, 2], [3, 4]])
-        B = sp.Matrix([[5, 6], [7, 8]])
+        A = np.array([[1, 2], [3, 4]])
+        B = np.array([[5, 6], [7, 8]])
 
         # Determinant
         det_A = A.det()
@@ -349,7 +354,7 @@ class TestPhase2Specialists:
         # Inverse
         A_inv = A.inv()
         identity = A * A_inv
-        assert identity == sp.eye(2)
+        assert identity == np.eye(2)
 
         # Multiplication
         C = A * B
@@ -382,12 +387,12 @@ class TestPhase2Specialists:
         from symbo_agentic_reasoners.agents.specialists.calculus.ode_solver import ODESolver
 
         solver = ODESolver("ode_test")
-        x = sp.Symbol('x')
-        f = sp.Function('f')
+        x = Symbol('x')
+        f = Function('f')
 
         # Simple ODE: f'(x) = f(x)
-        ode = sp.Eq(f(x).diff(x), f(x))
-        solution = sp.dsolve(ode, f(x))
+        ode = Eq(f(x).diff(x), f(x))
+        solution = dsolve(ode, f(x))
         assert solution is not None
 
         # Verify solution contains exp

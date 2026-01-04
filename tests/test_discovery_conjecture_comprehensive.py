@@ -24,7 +24,7 @@ Tests for discovery/conjecture modules to achieve 75%+ coverage:
 """
 
 import pytest
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol
 
 
 # =============================================================================
@@ -40,7 +40,7 @@ class TestSyntheticTheorem:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id="thm_001",
             premises=[x > 0],
@@ -57,7 +57,7 @@ class TestSyntheticTheorem:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id="thm_002",
             premises=[x > 0, x < 10],
@@ -75,7 +75,7 @@ class TestSyntheticTheorem:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id="thm_003",
             premises=[],
@@ -92,7 +92,7 @@ class TestSyntheticTheorem:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id="thm_004",
             premises=[x > 0],
@@ -111,7 +111,7 @@ class TestSyntheticTheorem:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         theorem = SyntheticTheorem(
             theorem_id="thm_005",
             premises=[x > 0],
@@ -241,7 +241,7 @@ class TestCandidateConjecture:
         from symbo_agentic_reasoners.discovery.conjecture.synthetic_data_generator import (
             SyntheticTheorem
         )
-        x = sp.Symbol('x')
+        x = Symbol('x')
         return SyntheticTheorem(
             theorem_id="thm_001",
             premises=[x > 0],

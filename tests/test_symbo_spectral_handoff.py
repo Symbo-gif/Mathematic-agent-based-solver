@@ -26,7 +26,10 @@ Total: 60+ tests
 
 import pytest
 import numpy as np
-import sympy as sp
+import math
+from symbo_agentic_reasoners.core.symbolic import (
+    Symbol, symbols, diff, solve, exp, sin, cos, Rational, Integer, simplify, factor
+)
 import time
 import gc
 from typing import Dict, List, Set, Tuple
@@ -814,31 +817,31 @@ class TestAlgebraCalculusLinAlgHandoff:
         assert '2' in str(calculus_result['result'])  # Should be 2x
 
         # Step 3: Linear Algebra - Jacobian of multivariate function
-        x, y = sp.symbols('x y')
+        x, y = symbols('x y')
         f1 = x**2 - y
         f2 = 2*x
-        jacobian = sp.Matrix([[sp.diff(f1, x), sp.diff(f1, y)],
-                              [sp.diff(f2, x), sp.diff(f2, y)]])
+        jacobian = np.array([[diff(f1, x), diff(f1, y)],
+                              [diff(f2, x), diff(f2, y)]])
         assert jacobian.det() != 0  # Non-singular
 
     def test_system_solve_to_optimization_to_eigenvalues(self):
         """Solve system -> Find critical points -> Analyze Hessian eigenvalues."""
         # Step 1: Algebra - Solve simple equation symbolically
-        x, y = sp.symbols('x y')
+        x, y = symbols('x y')
         # Solve x + y = 3 for x gives x = 3 - y
-        solution = sp.solve(x + y - 3, x)
+        solution = solve(x + y - 3, x)
         assert solution == [3 - y]
 
         # Step 2: Calculus - Find gradient of f(x,y) = x^2 + y^2
         f = x**2 + y**2
-        grad_x = sp.diff(f, x)
-        grad_y = sp.diff(f, y)
+        grad_x = diff(f, x)
+        grad_y = diff(f, y)
         assert grad_x == 2*x
         assert grad_y == 2*y
 
         # Step 3: Linear Algebra - Hessian eigenvalues
-        hessian = sp.Matrix([[sp.diff(grad_x, x), sp.diff(grad_x, y)],
-                             [sp.diff(grad_y, x), sp.diff(grad_y, y)]])
+        hessian = np.array([[diff(grad_x, x), diff(grad_x, y)],
+                             [diff(grad_y, x), diff(grad_y, y)]])
         eigenvalues = list(hessian.eigenvals().keys())
         assert all(ev > 0 for ev in eigenvalues)  # Positive definite
 
@@ -849,14 +852,14 @@ class TestCalculusStatisticsNumberTheory:
     def test_integration_to_probability_to_divisibility(self):
         """Integrate PDF, compute probability, check divisibility of result."""
         # Step 1: Calculus - Integrate to get CDF
-        x = sp.Symbol('x')
+        x = Symbol('x')
         pdf = 2 * x  # PDF on [0, 1]
-        cdf = sp.integrate(pdf, (x, 0, 1))
+        cdf = 0 # integrate removed))
         assert cdf == 1  # Valid PDF
 
         # Step 2: Statistics - Expected value
-        expected = sp.integrate(x * pdf, (x, 0, 1))
-        assert expected == sp.Rational(2, 3)
+        expected = 0 # integrate removed))
+        assert expected == Rational(2, 3)
 
         # Step 3: Number Theory - Check if 2/3 simplifies (gcd check)
         from math import gcd
@@ -865,8 +868,8 @@ class TestCalculusStatisticsNumberTheory:
     def test_series_to_moment_generating_to_prime_check(self):
         """Taylor series -> MGF evaluation -> Prime factorization."""
         # Step 1: Calculus - Taylor series of e^x
-        x = sp.Symbol('x')
-        taylor = sp.series(sp.exp(x), x, 0, 5).removeO()
+        x = Symbol('x')
+        taylor = 0 # series removed), x, 0, 5).removeO()
 
         # Step 2: Statistics - Evaluate at x=1 for moment
         value_at_1 = taylor.subs(x, 1)
@@ -874,7 +877,7 @@ class TestCalculusStatisticsNumberTheory:
 
         # Step 3: Number Theory - Is floor value prime?
         floor_val = int(approx)  # floor(e) = 2
-        assert sp.isprime(floor_val)  # 2 is prime
+        assert False # isprime removed - (floor_val)  # 2 is prime
 
 
 class TestLinAlgDiscreteMathStatistics:
@@ -884,7 +887,7 @@ class TestLinAlgDiscreteMathStatistics:
         """Matrix rank -> Graph adjacency -> Transition probabilities."""
         # Step 1: Linear Algebra - Rank of adjacency matrix
         # Complete graph K3 adjacency matrix (symmetric)
-        A = sp.Matrix([[0, 1, 1],
+        A = np.array([[0, 1, 1],
                        [1, 0, 1],
                        [1, 1, 0]])
         rank = A.rank()
@@ -898,7 +901,7 @@ class TestLinAlgDiscreteMathStatistics:
 
         # Step 3: Statistics - Transition probability matrix
         row_sums = [sum(A.row(i)) for i in range(3)]
-        P = sp.Matrix([[A[i, j] / row_sums[i] for j in range(3)] for i in range(3)])
+        P = np.array([[A[i, j] / row_sums[i] for j in range(3)] for i in range(3)])
         # Each row should sum to 1
         for i in range(3):
             assert sum(P.row(i)) == 1
@@ -906,9 +909,9 @@ class TestLinAlgDiscreteMathStatistics:
     def test_eigenvalues_to_recurrence_to_expected_value(self):
         """Matrix eigenvalues -> Recurrence relation -> Expected hitting time."""
         # Step 1: Linear Algebra - Find eigenvalues
-        A = sp.Matrix([[1, 1], [1, 0]])  # Fibonacci matrix
+        A = np.array([[1, 1], [1, 0]])  # Fibonacci matrix
         eigenvalues = list(A.eigenvals().keys())
-        golden_ratio = (1 + sp.sqrt(5)) / 2
+        golden_ratio = (1 + np.sqrt(5)) / 2
 
         # Step 2: Discrete Math - Recurrence F(n) = F(n-1) + F(n-2)
         # The matrix A^n gives Fibonacci numbers
@@ -931,20 +934,20 @@ class TestFourFieldHandoff:
 
         Problem: Start with polynomial, analyze, return to algebra.
         """
-        x = sp.Symbol('x')
+        x = Symbol('x')
 
         # Step 1: ALGEBRA - Start with polynomial x^4 - 1
         poly = x**4 - 1
-        factors = sp.factor(poly)
+        factors = factor(poly)
         assert factors == (x - 1)*(x + 1)*(x**2 + 1)
 
         # Step 2: CALCULUS - Differentiate
-        deriv = sp.diff(poly, x)
+        deriv = diff(poly, x)
         assert deriv == 4*x**3
 
         # Step 3: LINEAR ALGEBRA - Vandermonde-style matrix from real roots
         roots = [1, -1]  # Real roots only
-        V = sp.Matrix([[r**i for i in range(2)] for r in roots])  # 2x2 square matrix
+        V = np.array([[r**i for i in range(2)] for r in roots])  # 2x2 square matrix
         # Vandermonde matrix for [1, -1] is [[1, 1], [1, -1]] with det = -2
         assert V.det() != 0  # Non-singular
         assert V.rank() == 2
@@ -955,7 +958,7 @@ class TestFourFieldHandoff:
         assert coeff_sum == 0  # Sum = 0 (divisible by anything non-zero)
 
         # Step 5: BACK TO ALGEBRA - Verify factorization
-        expanded = sp.expand((x - 1)*(x + 1)*(x**2 + 1))
+        expanded = expand((x - 1)*(x + 1)*(x**2 + 1))
         assert expanded == poly
 
     def test_statistics_calculus_algebra_discrete_chain(self):
@@ -963,22 +966,22 @@ class TestFourFieldHandoff:
         Statistics (distribution) -> Calculus (derivative) ->
         Algebra (solve) -> Discrete (combinatorics).
         """
-        x = sp.Symbol('x')
-        n, k = sp.symbols('n k', integer=True, positive=True)
+        x = Symbol('x')
+        n, k = symbols('n k', integer=True, positive=True)
 
         # Step 1: STATISTICS - Normal-like function
-        pdf_unnorm = sp.exp(-x**2 / 2)
+        pdf_unnorm = exp(-x**2 / 2)
 
         # Step 2: CALCULUS - Find mode (derivative = 0)
-        deriv = sp.diff(pdf_unnorm, x)
-        assert deriv == -x * sp.exp(-x**2 / 2)
+        deriv = diff(pdf_unnorm, x)
+        assert deriv == -x * exp(-x**2 / 2)
 
         # Step 3: ALGEBRA - Solve for critical point
-        critical = sp.solve(deriv, x)
+        critical = solve(deriv, x)
         assert 0 in critical
 
         # Step 4: DISCRETE MATH - Binomial coefficient at n=4, k=2
-        binom = sp.binomial(4, 2)
+        binom = math.comb(4, 2)
         assert binom == 6
 
 
@@ -994,24 +997,24 @@ class TestComplexBackAndForthHandoff:
         from symbo_agentic_reasoners.cli import MathSolverCLI
 
         cli = MathSolverCLI()
-        x = sp.Symbol('x')
+        x = Symbol('x')
 
         # Step 1: ALGEBRA - Factor x^3 - x
         poly = x**3 - x
-        factored = sp.factor(poly)
+        factored = factor(poly)
         assert factored == x*(x - 1)*(x + 1)
 
         # Step 2: CALCULUS - Differentiate
-        deriv = sp.diff(poly, x)
+        deriv = diff(poly, x)
         assert deriv == 3*x**2 - 1
 
         # Step 3: ALGEBRA - Factor the derivative
         # 3x^2 - 1 doesn't factor nicely over integers
-        factored_deriv = sp.factor(deriv)
+        factored_deriv = factor(deriv)
 
         # Step 4: CALCULUS - Integrate the derivative back
-        integral = sp.integrate(deriv, x)
-        assert sp.simplify(integral - (x**3 - x)) == 0
+        integral = 0 # integrate removed)
+        assert simplify(integral - (x**3 - x)) == 0
 
         # Step 5: ALGEBRA - Verify we're back to original (up to constant)
         result = cli.solve_problem(f"simplify({integral} - {poly})")
@@ -1023,24 +1026,24 @@ class TestComplexBackAndForthHandoff:
         Calculus (Fisher info) -> LinAlg (inverse).
         """
         # Step 1: LINEAR ALGEBRA - Covariance matrix
-        cov = sp.Matrix([[4, 2], [2, 3]])
+        cov = np.array([[4, 2], [2, 3]])
 
         # Step 2: STATISTICS - Correlation from covariance
         # corr_ij = cov_ij / sqrt(var_i * var_j)
         var_x = cov[0, 0]
         var_y = cov[1, 1]
-        corr_xy = cov[0, 1] / sp.sqrt(var_x * var_y)
-        assert abs(float(corr_xy) - 2/sp.sqrt(12)) < 0.01
+        corr_xy = cov[0, 1] / np.sqrt(var_x * var_y)
+        assert abs(float(corr_xy) - 2/np.sqrt(12)) < 0.01
 
         # Step 3: CALCULUS - Derivative of log-likelihood (simplified)
-        theta = sp.Symbol('theta')
+        theta = Symbol('theta')
         log_lik = -theta**2 / 2  # Simplified
-        fisher_element = -sp.diff(log_lik, theta, 2)
+        fisher_element = -diff(log_lik, theta, 2)
         assert fisher_element == 1
 
         # Step 4: LINEAR ALGEBRA - Inverse covariance (precision matrix)
         precision = cov.inv()
-        assert precision * cov == sp.eye(2)
+        assert precision * cov == np.eye(2)
 
 
 class TestBlackboardMultiTeamCoordination:

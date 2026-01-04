@@ -24,7 +24,6 @@ Comprehensive tests for Phase 6 discovery components:
 """
 
 import pytest
-import sympy as sp
 from unittest.mock import MagicMock, patch
 
 

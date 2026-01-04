@@ -26,7 +26,7 @@ Tests to bring coverage to 70%+ for:
 """
 
 import pytest
-import sympy as sp
+from symbo_agentic_reasoners.core.symbolic import Symbol
 from unittest.mock import Mock, MagicMock, patch
 
 
@@ -280,7 +280,7 @@ class TestBoundaryExplorerComprehensive:
             BoundaryCondition, BoundaryType
         )
 
-        x = sp.Symbol('x')
+        x = Symbol('x')
         condition = BoundaryCondition(
             condition_id="test_cond",
             expression=str(x > 0),

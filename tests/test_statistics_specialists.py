@@ -24,7 +24,6 @@ Comprehensive tests for statistics specialist agents:
 """
 
 import pytest
-import sympy as sp
 
 
 # =============================================================================

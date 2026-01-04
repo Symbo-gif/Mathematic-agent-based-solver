@@ -14,7 +14,6 @@
 
 import pytest
 from unittest.mock import MagicMock, patch
-import sympy as sp
 from datetime import datetime
 
 from symbo_agentic_reasoners.optimization.distillation.harvester import ThoughtTraceHarvester, ThoughtTrace, VerificationStatus

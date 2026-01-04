@@ -26,7 +26,6 @@ Comprehensive tests for deep search components:
 
 import pytest
 import numpy as np
-import sympy as sp
 from unittest.mock import Mock, MagicMock, patch
 
 
