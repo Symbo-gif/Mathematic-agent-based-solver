@@ -31,9 +31,12 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Dict, Any, Literal
+from typing import Optional, Dict, Any, Literal, Callable, Union, Type
 
 logger = logging.getLogger(__name__)
+
+# Type for converter functions
+ConverterType = Union[Type[float], Type[int], Type[str], Callable[[str], bool]]
 
 
 @dataclass
@@ -93,15 +96,18 @@ class SolverConfig:
 
     def _apply_env_overrides(self) -> None:
         """Apply environment variable overrides."""
-        env_mappings = {
+        def _parse_bool(x: str) -> bool:
+            return x.lower() in ("true", "1", "yes")
+
+        env_mappings: Dict[str, tuple[str, ConverterType]] = {
             "MATH_SOLVER_TIMEOUT_SEC": ("timeout_sec", float),
             "MATH_SOLVER_MAX_STEPS": ("max_steps", int),
             "MATH_SOLVER_MAX_RECURSION_DEPTH": ("max_recursion_depth", int),
             "MATH_SOLVER_MAX_PARALLEL": ("max_parallel_problems", int),
             "MATH_SOLVER_LOG_LEVEL": ("log_level", str),
             "MATH_SOLVER_LOG_FORMAT": ("log_format", str),
-            "MATH_SOLVER_ENABLE_TIMEOUTS": ("enable_timeouts", lambda x: x.lower() in ("true", "1", "yes")),
-            "MATH_SOLVER_STRICT_MODE": ("strict_mode", lambda x: x.lower() in ("true", "1", "yes")),
+            "MATH_SOLVER_ENABLE_TIMEOUTS": ("enable_timeouts", _parse_bool),
+            "MATH_SOLVER_STRICT_MODE": ("strict_mode", _parse_bool),
         }
 
         for env_var, (attr, converter) in env_mappings.items():
