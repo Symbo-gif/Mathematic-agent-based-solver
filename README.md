@@ -19,42 +19,60 @@ pip install -e .
 
 ## Quick Start
 
-Interactive CLI:
+### CLI Commands
+
+After installation, the `math-agent-solver` command is available:
 
 ```bash
-python main.py
+# Solve a single problem
+math-agent-solver solve "2 + 2"
+math-agent-solver solve "diff(x**2, x)"
+
+# Solve problems from a file
+math-agent-solver solve-file problems.txt
+
+# Batch process a directory
+math-agent-solver batch ./data/problems/
+
+# Show system status
+math-agent-solver status
+
+# Interactive mode
+math-agent-solver
 ```
 
-Solve a single problem:
-
-```bash
-python main.py solve "integrate(x**2, x)"
-```
-
-Batch a directory of problems:
-
-```bash
-python main.py batch ./data/problems/
-```
-
-## Core API Examples
+### Library Usage
 
 ```python
-from symbo_agentic_reasoners.core.blackboard import Blackboard
-from symbo_agentic_reasoners.core.orchestrator import MainOrchestrator
+from symbo_agentic_reasoners.api import solve_expression, SolverConfig
 
-blackboard = Blackboard()
-orchestrator = MainOrchestrator(blackboard=blackboard)
-result = orchestrator.solve("x^2 + 2x + 1 = 0")
-print(result.solution)
+# Simple usage with defaults
+result = solve_expression("x**2 - 4")
+print(result.solution)  # Shows the simplified expression
+
+# Custom configuration
+config = SolverConfig(timeout_sec=30.0, max_steps=500)
+result = solve_expression("integrate(sin(x), x)", config=config)
+
+# Check status
+if result.status == "ok":
+    print(f"Solution: {result.solution}")
+else:
+    print(f"Error: {result.error}")
 ```
 
-Structured logging:
+### Batch Processing
 
 ```python
-from symbo_agentic_reasoners.utils.logging import setup_logging
+from symbo_agentic_reasoners.api import solve_file, solve_batch
 
-setup_logging(json_format=True, level="INFO")
+# Solve from file
+results = solve_file("problems.txt")
+for r in results:
+    print(f"{r.problem}: {r.solution if r.status == 'ok' else r.error}")
+
+# Solve a list of problems
+results = solve_batch(["2+2", "3*3", "diff(x**2, x)"])
 ```
 
 ## Architecture Overview
@@ -69,6 +87,44 @@ setup_logging(json_format=True, level="INFO")
 
 ## Configuration
 
+### CLI Options
+
+```bash
+# Set timeout and log level
+math-agent-solver --timeout 30 --log-level DEBUG solve "x**2"
+
+# Use a config file
+math-agent-solver --config my_config.yaml solve-file problems.txt
+```
+
+### Configuration File
+
+Create a `config.yaml` with solver settings:
+
+```yaml
+solver:
+  timeout_sec: 60.0
+  max_steps: 1000
+  max_parallel_problems: 4
+  log_level: INFO
+  log_format: pretty
+```
+
+### Environment Variables
+
+Override settings via environment:
+
+```bash
+export MATH_SOLVER_TIMEOUT_SEC=120
+export MATH_SOLVER_MAX_STEPS=2000
+export MATH_SOLVER_LOG_LEVEL=DEBUG
+math-agent-solver solve "complex_problem"
+```
+
+### Legacy Configuration
+
+For advanced system-wide settings:
+
 1. Copy `.env.example` to `.env` and adjust values (paths, timeouts, HMAC keys).
 2. Point to YAML config (defaults in `config.yaml`):
 
@@ -77,7 +133,65 @@ export SYMBO_CONFIG_FILE=config.yaml
 python main.py solve "sin(x)**2 + cos(x)**2"
 ```
 
-Structured logging config is available at `config/logging.json` (JSON formatter, rotating file handler).
+## Production Usage
+
+### Safety Limits
+
+The solver enforces safety limits to prevent runaway operations:
+
+- **Timeout**: Default 60 seconds per problem (configurable)
+- **Max Steps**: Default 1000 solver steps per problem
+- **Max Recursion**: Default 50 levels deep
+- **Expression Limits**: Max depth 100, max length 10000 chars
+
+### Structured Results
+
+All API calls return structured `SolveResult` objects:
+
+```python
+result = solve_expression("2 + 2")
+
+# Check status
+if result.status == "ok":
+    print(result.solution)
+elif result.status == "timeout":
+    print(f"Timed out: {result.error}")
+elif result.status == "error":
+    print(f"Error: {result.error}")
+
+# Access diagnostics
+print(f"Solved in {result.solve_time_ms}ms")
+print(f"Domain: {result.domain}")
+print(f"Specialist: {result.specialist_used}")
+```
+
+### Logging
+
+Configure logging for observability:
+
+```python
+from symbo_agentic_reasoners.api import setup_logging
+
+# Human-readable logs
+setup_logging(level="INFO", log_format="pretty")
+
+# JSON logs for log aggregation
+setup_logging(level="INFO", log_format="json")
+```
+
+Correlation IDs are automatically included for request tracing.
+
+### Parallel Processing
+
+For batch workloads:
+
+```python
+config = SolverConfig(
+    timeout_sec=30.0,
+    max_parallel_problems=8,  # Use 8 parallel workers
+)
+results = solve_batch(problems, config)
+```
 
 ## Testing & Coverage
 

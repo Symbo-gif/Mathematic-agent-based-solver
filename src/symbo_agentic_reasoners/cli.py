@@ -577,11 +577,30 @@ Examples:
   %(prog)s                          Start interactive mode
   %(prog)s solve "2 + 2"            Solve a single problem
   %(prog)s solve "diff(x**2, x)"    Differentiate x^2
+  %(prog)s solve-file problems.txt  Process file of problems
   %(prog)s batch ./problems/        Process folder of problems
-  %(prog)s batch problems.txt       Process file of problems
   %(prog)s status                   Show system status
+
+Configuration:
+  Use --timeout, --max-steps, --log-level to override defaults.
+  Use --config to load settings from a YAML/JSON file.
+
+Environment Variables:
+  MATH_SOLVER_TIMEOUT_SEC    Override timeout (seconds)
+  MATH_SOLVER_MAX_STEPS      Override max steps
+  MATH_SOLVER_LOG_LEVEL      Override log level (DEBUG, INFO, WARNING, ERROR)
         """
     )
+
+    # Global options
+    parser.add_argument('--timeout', type=float, default=60.0,
+                       help='Timeout per problem in seconds (default: 60)')
+    parser.add_argument('--max-steps', type=int, default=1000,
+                       help='Maximum solver steps per problem (default: 1000)')
+    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'],
+                       default='INFO', help='Logging level (default: INFO)')
+    parser.add_argument('--config', type=str, default=None,
+                       help='Path to configuration file (YAML or JSON)')
 
     subparsers = parser.add_subparsers(dest='command', help='Commands')
 
@@ -589,8 +608,15 @@ Examples:
     solve_parser = subparsers.add_parser('solve', help='Solve a single math problem')
     solve_parser.add_argument('problem', help='The math problem to solve')
     solve_parser.add_argument('-v', '--verbose', action='store_true', help='Show detailed output')
+    solve_parser.add_argument('--json', action='store_true', help='Output as JSON')
 
-    # Batch command
+    # Solve-file command (new)
+    solve_file_parser = subparsers.add_parser('solve-file', help='Solve problems from a file')
+    solve_file_parser.add_argument('path', help='Path to file containing problems')
+    solve_file_parser.add_argument('-o', '--output', help='Output file path for results')
+    solve_file_parser.add_argument('--json', action='store_true', help='Output as JSON')
+
+    # Batch command (legacy, same as solve-file)
     batch_parser = subparsers.add_parser('batch', help='Process batch of problems')
     batch_parser.add_argument('path', help='Path to file or folder')
     batch_parser.add_argument('-o', '--output', help='Output file path')
@@ -600,19 +626,76 @@ Examples:
 
     args = parser.parse_args()
 
+    # Setup logging based on args
+    from symbo_agentic_reasoners.api import setup_logging, SolverConfig
+    setup_logging(level=args.log_level)
+
+    # Load config
+    if args.config:
+        solver_config = SolverConfig.from_file(args.config)
+    else:
+        solver_config = SolverConfig(
+            timeout_sec=args.timeout,
+            max_steps=args.max_steps,
+            log_level=args.log_level,
+        )
+
     cli = MathSolverCLI()
 
     if args.command == 'solve':
         cli._initialize_system(verbose=False)
         result = cli.solve_problem(args.problem, show_details=args.verbose)
-        if result.get('status') == 'success':
-            print(gold("Result: ") + teal(f"{result.get('result')}"))
-            if args.verbose:
-                print(gold("Domain: ") + teal(f"{result.get('domain', 'N/A')}"))
-                print(gold("Specialist: ") + teal(f"{result.get('specialist', 'N/A')}"))
-                print(gold("Time: ") + teal(f"{result.get('time_ms', 0):.1f}ms"))
+
+        if getattr(args, 'json', False):
+            # JSON output
+            import json
+            print(json.dumps(result, indent=2))
+            if result.get('status') != 'success':
+                sys.exit(1)
         else:
-            print(red(f"Error: {result.get('error', 'Unknown error')}"))
+            # Pretty output
+            if result.get('status') == 'success':
+                print(gold("Result: ") + teal(f"{result.get('result')}"))
+                if args.verbose:
+                    print(gold("Domain: ") + teal(f"{result.get('domain', 'N/A')}"))
+                    print(gold("Specialist: ") + teal(f"{result.get('specialist', 'N/A')}"))
+                    print(gold("Time: ") + teal(f"{result.get('time_ms', 0):.1f}ms"))
+            else:
+                print(red(f"Error: {result.get('error', 'Unknown error')}"))
+                sys.exit(1)
+
+    elif args.command == 'solve-file':
+        # Use the new public API
+        from symbo_agentic_reasoners.api import solve_file
+        results = solve_file(args.path, solver_config)
+
+        success_count = sum(1 for r in results if r.status == 'ok')
+        total = len(results)
+
+        if getattr(args, 'json', False):
+            import json
+            output = [r.to_dict() for r in results]
+            if args.output:
+                with open(args.output, 'w') as f:
+                    json.dump(output, f, indent=2)
+                print(gold(f"Results saved to: {args.output}"))
+            else:
+                print(json.dumps(output, indent=2))
+        else:
+            print(gold("=" * 60))
+            print(gold(f"Processed: {total} problems"))
+            print(green(f"Solved: {success_count}") + gold(" | ") + red(f"Failed: {total - success_count}"))
+            print(gold("=" * 60))
+
+            for r in results:
+                status = green("✓") if r.status == 'ok' else red("✗")
+                problem_preview = (r.problem or "")[:50]
+                if r.status == 'ok':
+                    print(f"{status} {problem_preview} → {r.solution}")
+                else:
+                    print(f"{status} {problem_preview} → {r.error}")
+
+        if success_count < total:
             sys.exit(1)
 
     elif args.command == 'batch':
