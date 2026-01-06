@@ -1,0 +1,1710 @@
+================================================================================
+SYMBO AGENTIC REASONERS - COMPLETE AGENT CATALOG
+================================================================================
+
+Version: 0.6.0
+Total Agents: 260+ (1 Orchestrator + 38 Supervisors + 220+ Specialists)
+Architecture: Hierarchical Hub-and-Spoke with BDI Cognitive Agents
+Last Updated: 2026-01-06
+
+================================================================================
+SECTION 1: AGENT HIERARCHY OVERVIEW
+================================================================================
+
+TIER 1: ORCHESTRATOR (1 agent)
+    Main coordinator that decomposes problems, routes to supervisors, and 
+    synthesizes final results. NEVER computes directly - only delegates.
+
+TIER 2: SUPERVISORS (38 agents)
+    Domain-specific coordinators that route tasks to appropriate specialists.
+    Acts as "foremen" for their domain - they coordinate but never compute.
+
+TIER 3: SPECIALISTS (220+ agents)
+    Task executors that perform actual mathematical computations using native
+    Python implementations. Organized across 30+ specialized domains.
+
+BASE AGENTS (2 agents)
+    Problem analysis and notation translation support agents.
+
+SYNTHESIS AGENTS (4 agents)
+    Result synthesis, proof construction, and formal translation agents.
+
+PROVERS (2 agents)
+    Formal verification and proof validation agents.
+
+COORDINATORS (1 agent)
+    Multi-domain team coordination agent.
+
+================================================================================
+SECTION 2: TIER 1 - ORCHESTRATOR
+================================================================================
+
+AGENT: MainOrchestrator
+    Location: src/symbo_agentic_reasoners/core/orchestrator.py
+    Role: The "General Contractor" - coordinates entire problem-solving process
+    
+    CAPABILITIES:
+    - Problem decomposition using HTN (Hierarchical Task Network)
+    - Dynamic routing to appropriate supervisors
+    - Result synthesis from partial solutions
+    - Meta-learning and knowledge caching coordination
+    - Resource coordination and timeout enforcement
+    
+    CRITICAL CONSTRAINT:
+    - NON-INTERVENTION DIRECTIVE: Never performs calculations directly
+    - If it sees "2+2", it must delegate, never compute
+
+================================================================================
+SECTION 3: TIER 2 - SUPERVISORS (38 Agents)
+================================================================================
+
+CORE MATHEMATICAL DOMAINS
+--------------------------------------------------------------------------------
+
+1. CalculusSupervisor
+   Location: agents/supervisors/calculus_supervisor.py
+   Domain: Calculus operations
+   CAPABILITIES:
+   - Routes to differentiation/integration/limits/series/ODE specialists
+   - Analyzes problem complexity for routing decisions
+   - Coordinates multi-step calculus workflows
+
+2. AlgebraSupervisor
+   Location: agents/supervisors/algebra_supervisor.py
+   Domain: Algebraic operations
+   CAPABILITIES:
+   - Routes to polynomial/equation/arithmetic/number theory specialists
+   - Analyzes task requirements and prerequisites
+   - Coordinates simplification strategies
+
+3. LinearAlgebraSupervisor (linalg_supervisor)
+   Location: agents/supervisors/linalg_supervisor.py
+   Domain: Linear algebra operations
+   CAPABILITIES:
+   - Routes to matrix/decomposition/vector/tensor specialists
+   - Coordinates eigenvalue/eigenvector computations
+   - Manages linear system solving workflows
+
+4. GeometrySupervisor
+   Location: agents/supervisors/geometry_supervisor.py
+   Domain: Geometric problems
+   CAPABILITIES:
+   - Routes to euclidean/analytic/trigonometry specialists
+   - Coordinates coordinate geometry workflows
+   - Manages transformation operations
+
+5. LogicSupervisor
+   Location: agents/supervisors/logic_supervisor.py
+   Domain: Mathematical logic
+   CAPABILITIES:
+   - Routes to propositional/predicate/proof specialists
+   - Coordinates logical inference workflows
+   - Manages formal proof construction
+
+6. DiscreteMathSupervisor
+   Location: agents/supervisors/discrete_math_supervisor.py
+   Domain: Discrete mathematics
+   CAPABILITIES:
+   - Routes to combinatorics/graph theory/recurrence specialists
+   - Coordinates counting and enumeration problems
+   - Manages generating function workflows
+
+7. StatsSupervisor
+   Location: agents/supervisors/stats_supervisor.py
+   Domain: Statistics and probability
+   CAPABILITIES:
+   - Routes to Bayesian/frequentist/distribution specialists
+   - Coordinates hypothesis testing workflows
+   - Manages regression analysis
+
+PHYSICS DOMAINS
+--------------------------------------------------------------------------------
+
+8. PhysicsMechanicsSupervisor
+   Location: agents/supervisors/physics_mechanics_supervisor.py
+   Domain: Classical mechanics
+   CAPABILITIES:
+   - Routes to kinematics/dynamics/energy specialists
+   - Coordinates motion analysis workflows
+   - Manages force and momentum problems
+
+9. PhysicsEMSupervisor
+   Location: agents/supervisors/physics_em_supervisor.py
+   Domain: Electromagnetism
+   CAPABILITIES:
+   - Routes to electrostatics/magnetism/circuits specialists
+   - Coordinates field calculations
+   - Manages circuit analysis workflows
+
+10. PhysicsThermoSupervisor
+    Location: agents/supervisors/physics_thermo_supervisor.py
+    Domain: Thermodynamics
+    CAPABILITIES:
+    - Routes to heat transfer/gas laws specialists
+    - Coordinates entropy calculations
+    - Manages thermodynamic cycle analysis
+
+11. PhysicsQuantumSupervisor
+    Location: agents/supervisors/physics_quantum_supervisor.py
+    Domain: Quantum mechanics
+    CAPABILITIES:
+    - Routes to wavefunction/operator/systems specialists
+    - Coordinates quantum state calculations
+    - Manages Schrödinger equation workflows
+
+ADVANCED ANALYSIS DOMAINS
+--------------------------------------------------------------------------------
+
+12. ComplexAnalysisSupervisor
+    Location: agents/supervisors/complex_analysis_supervisor.py
+    Domain: Complex analysis
+    CAPABILITIES:
+    - Routes to contour integration/residue/conformal mapping specialists
+    - Coordinates analytic function analysis
+    - Manages Laurent/Taylor series workflows
+
+13. RealAnalysisSupervisor
+    Location: agents/supervisors/real_analysis_supervisor.py
+    Domain: Real analysis
+    CAPABILITIES:
+    - Routes to measure theory/convergence specialists
+    - Coordinates Lebesgue integration workflows
+    - Manages metric space analysis
+
+14. FunctionalAnalysisSupervisor
+    Location: agents/supervisors/functional_analysis_supervisor.py
+    Domain: Functional analysis
+    CAPABILITIES:
+    - Routes to Banach/Hilbert space/operator specialists
+    - Coordinates spectral theory workflows
+    - Manages bounded operator analysis
+
+ALGEBRA & NUMBER THEORY DOMAINS
+--------------------------------------------------------------------------------
+
+15. ElementaryNumberTheorySupervisor
+    Location: agents/supervisors/elementary_number_theory_supervisor.py
+    Domain: Elementary number theory
+    CAPABILITIES:
+    - Routes to primes/divisibility/modular arithmetic specialists
+    - Coordinates Diophantine equation workflows
+    - Manages congruence calculations
+
+16. AlgebraicNumberTheorySupervisor
+    Location: agents/supervisors/algebraic_number_theory_supervisor.py
+    Domain: Algebraic number theory
+    CAPABILITIES:
+    - Routes to algebraic integers/ideals specialists
+    - Coordinates number field analysis
+    - Manages class field theory workflows
+
+17. AnalyticNumberTheorySupervisor
+    Location: agents/supervisors/analytic_number_theory_supervisor.py
+    Domain: Analytic number theory
+    CAPABILITIES:
+    - Routes to Riemann zeta/L-function specialists
+    - Coordinates prime distribution analysis
+    - Manages arithmetic function workflows
+
+18. FiniteFieldsSupervisor
+    Location: agents/supervisors/finite_fields_supervisor.py
+    Domain: Finite fields and Galois theory
+    CAPABILITIES:
+    - Routes to field arithmetic/extension/Galois specialists
+    - Coordinates irreducible polynomial workflows
+    - Manages finite field constructions
+
+GEOMETRY & TOPOLOGY DOMAINS
+--------------------------------------------------------------------------------
+
+19. DiffGeometrySupervisor
+    Location: agents/supervisors/diff_geometry_supervisor.py
+    Domain: Differential geometry
+    CAPABILITIES:
+    - Routes to manifold/curvature specialists
+    - Coordinates tensor analysis workflows
+    - Manages differential form calculations
+
+20. RiemannianGeometrySupervisor
+    Location: agents/supervisors/riemannian_geometry_supervisor.py
+    Domain: Riemannian geometry
+    CAPABILITIES:
+    - Routes to metric tensor/geodesic specialists
+    - Coordinates curvature tensor calculations
+    - Manages connection form workflows
+
+21. AlgebraicTopologySupervisor
+    Location: agents/supervisors/algebraic_topology_supervisor.py
+    Domain: Algebraic topology
+    CAPABILITIES:
+    - Routes to homology/homotopy/cohomology specialists
+    - Coordinates fundamental group calculations
+    - Manages spectral sequence workflows
+
+22. GeometricMeasureSupervisor
+    Location: agents/supervisors/geometric_measure_supervisor.py
+    Domain: Geometric measure theory
+    CAPABILITIES:
+    - Routes to Hausdorff measure/rectifiability specialists
+    - Coordinates minimal surface analysis
+    - Manages current theory workflows
+
+LOGIC & FOUNDATIONS DOMAINS
+--------------------------------------------------------------------------------
+
+23. ModelTheorySupervisor
+    Location: agents/supervisors/model_theory_supervisor.py
+    Domain: Model theory
+    CAPABILITIES:
+    - Routes to satisfiability/categoricity specialists
+    - Coordinates quantifier elimination workflows
+    - Manages o-minimality analysis
+
+24. ProofTheorySupervisor
+    Location: agents/supervisors/proof_theory_supervisor.py
+    Domain: Proof theory
+    CAPABILITIES:
+    - Routes to formal proofs/type theory specialists
+    - Coordinates cut elimination workflows
+    - Manages ordinal analysis
+
+25. ComputabilitySupervisor
+    Location: agents/supervisors/computability_supervisor.py
+    Domain: Computability theory
+    CAPABILITIES:
+    - Routes to Turing machines/decidability specialists
+    - Coordinates complexity theory workflows
+    - Manages recursion theory analysis
+
+26. CategoryTheorySupervisor
+    Location: agents/supervisors/category_theory_supervisor.py
+    Domain: Category theory
+    CAPABILITIES:
+    - Routes to functor/natural transformation specialists
+    - Coordinates adjunction workflows
+    - Manages monoidal category analysis
+
+APPLIED MATHEMATICS DOMAINS
+--------------------------------------------------------------------------------
+
+27. CryptographySupervisor
+    Location: agents/supervisors/cryptography_supervisor.py
+    Domain: Cryptography
+    CAPABILITIES:
+    - Routes to asymmetric/hash/modular arithmetic specialists
+    - Coordinates encryption/decryption workflows
+    - Manages digital signature protocols
+
+28. InformationTheorySupervisor
+    Location: agents/supervisors/information_theory_supervisor.py
+    Domain: Information theory
+    CAPABILITIES:
+    - Routes to entropy/channel capacity/coding specialists
+    - Coordinates error correction workflows
+    - Manages source coding analysis
+
+29. ControlTheorySupervisor
+    Location: agents/supervisors/control_theory_supervisor.py
+    Domain: Control theory
+    CAPABILITIES:
+    - Routes to stability/controllability specialists
+    - Coordinates feedback system analysis
+    - Manages observer design workflows
+
+30. OptimizationSupervisor
+    Location: agents/supervisors/optimization_supervisor.py
+    Domain: Mathematical optimization
+    CAPABILITIES:
+    - Routes to convex/nonlinear/combinatorial specialists
+    - Coordinates constraint optimization workflows
+    - Manages variational calculus problems
+
+31. StochasticProcessesSupervisor
+    Location: agents/supervisors/stochastic_processes_supervisor.py
+    Domain: Stochastic processes
+    CAPABILITIES:
+    - Routes to Markov chain/random process specialists
+    - Coordinates martingale analysis workflows
+    - Manages stochastic calculus problems
+
+32. BayesianDecisionTheorySupervisor
+    Location: agents/supervisors/bayesian_decision_theory_supervisor.py
+    Domain: Decision theory
+    CAPABILITIES:
+    - Routes to utility theory/sequential decision specialists
+    - Coordinates risk analysis workflows
+    - Manages decision rule optimization
+
+33. TimeseriesSupervisor
+    Location: agents/supervisors/timeseries_supervisor.py
+    Domain: Time series analysis
+    CAPABILITIES:
+    - Routes to ARIMA/Kalman filter specialists
+    - Coordinates spectral analysis workflows
+    - Manages nonlinear time series analysis
+
+SPECIALIZED DOMAINS
+--------------------------------------------------------------------------------
+
+34. SpectralGraphTheorySupervisor
+    Location: agents/supervisors/spectral_graph_theory_supervisor.py
+    Domain: Spectral graph theory
+    CAPABILITIES:
+    - Routes to graph eigenvalue/Laplacian specialists
+    - Coordinates Cheeger inequality analysis
+    - Manages random walk calculations
+
+35. TDASupervisor
+    Location: agents/supervisors/tda_supervisor.py
+    Domain: Topological data analysis
+    CAPABILITIES:
+    - Routes to persistent homology/simplicial complex specialists
+    - Coordinates Betti number calculations
+    - Manages mapper algorithm workflows
+
+36. ErgodicTheorySupervisor
+    Location: agents/supervisors/ergodic_theory_supervisor.py
+    Domain: Ergodic theory
+    CAPABILITIES:
+    - Routes to dynamical entropy/mixing specialists
+    - Coordinates ergodic theorem applications
+    - Manages invariant measure analysis
+
+37. InequalitiesConvexitySupervisor
+    Location: agents/supervisors/inequalities_convexity_supervisor.py
+    Domain: Inequalities and convex analysis
+    CAPABILITIES:
+    - Routes to convex function/separation theorem specialists
+    - Coordinates subgradient analysis
+    - Manages proximal operator workflows
+
+38. LearningEnhancementSupervisor
+    Location: agents/supervisors/learning_enhancement_supervisor.py
+    Domain: Meta-learning and adaptation
+    CAPABILITIES:
+    - Routes to curriculum/complexity scoring specialists
+    - Coordinates learning enhancement workflows
+    - Manages negative learning analysis
+
+================================================================================
+SECTION 4: TIER 3 - SPECIALISTS (220+ Agents)
+================================================================================
+
+ALGEBRA SPECIALISTS
+--------------------------------------------------------------------------------
+
+algebra/arithmetic_specialist.py - ArithmeticSpecialist
+    CAPABILITIES:
+    - Arbitrary-precision integer arithmetic
+    - Fraction operations
+    - Basic algebraic simplification
+
+algebra/polynomial_specialist.py - PolynomialSpecialist
+    CAPABILITIES:
+    - Polynomial factorization (quadratic, cubic, quartic)
+    - Root finding (analytical and numerical)
+    - Polynomial division and GCD
+
+algebra/equation_system_solver.py - EquationSystemSolver
+    CAPABILITIES:
+    - Linear equation system solving
+    - Nonlinear equation solving
+    - Substitution and elimination methods
+
+algebra/group_ring_theory.py - GroupRingTheorySpecialist
+    CAPABILITIES:
+    - Group structure analysis
+    - Ring operations
+    - Ideal theory basics
+
+algebra/number_theory_specialist.py - NumberTheorySpecialist
+    CAPABILITIES:
+    - Prime factorization
+    - GCD/LCM calculations
+    - Modular arithmetic
+
+algebra/polynomial/ (7 specialists):
+    - domain_solver.py - DomainSolver
+    - numeric_roots.py - NumericRootsSpecialist
+    - polynomial_agent.py - PolynomialAgent
+    - polynomial_factors.py - PolynomialFactorsSpecialist
+    - polynomial_gcd.py - PolynomialGCDSpecialist
+    - polynomial_solvers.py - PolynomialSolversSpecialist
+    - rational_equations.py - RationalEquationsSpecialist
+
+algebra/elementary_number_theory/ (7 specialists):
+    - congruence_specialist.py - CongruenceSpecialist
+    - continued_fractions_specialist.py - ContinuedFractionsSpecialist
+    - diophantine_basic_specialist.py - DiophantineBasicSpecialist
+    - lifting_the_exponent_specialist.py - LiftingTheExponentSpecialist
+    - pell_equation_specialist.py - PellEquationSpecialist
+    - quadratic_residue_specialist.py - QuadraticResidueSpecialist
+    - tonelli_shanks_specialist.py - TonelliShanksSpecialist
+
+algebra/finite_fields/ (7 specialists):
+    - extension_field_specialist.py - ExtensionFieldSpecialist
+    - field_arithmetic_specialist.py - FieldArithmeticSpecialist
+    - field_isomorphism_specialist.py - FieldIsomorphismSpecialist
+    - galois_theory_specialist.py - GaloisTheorySpecialist
+    - irreducible_polynomial_specialist.py - IrreduciblePolynomialSpecialist
+    - minimal_polynomial_specialist.py - MinimalPolynomialSpecialist
+    - prime_field_specialist.py - PrimeFieldSpecialist
+
+algebra/number_theory/algebraic/ (4 specialists):
+    - class_field_theory.py - ClassFieldTheorySpecialist
+    - ideal_theory.py - IdealTheorySpecialist
+    - local_fields.py - LocalFieldsSpecialist
+    - number_fields.py - NumberFieldsSpecialist
+
+algebra/number_theory/analytic/ (7 specialists):
+    - analytic_continuation.py - AnalyticContinuationSpecialist
+    - arithmetic_functions.py - ArithmeticFunctionsSpecialist
+    - explicit_formula.py - ExplicitFormulaSpecialist
+    - l_function_advanced.py - LFunctionAdvancedSpecialist
+    - prime_distribution.py - PrimeDistributionSpecialist
+    - zero_density.py - ZeroDensitySpecialist
+    - zeta_functions.py - ZetaFunctionsSpecialist
+
+CALCULUS SPECIALISTS
+--------------------------------------------------------------------------------
+
+calculus/differentiation_specialist.py - DifferentiationSpecialist
+    CAPABILITIES:
+    - Power rule, product rule, quotient rule, chain rule
+    - Implicit differentiation
+    - Partial derivatives
+    - Higher-order derivatives
+
+calculus/integration_specialist.py - IntegrationSpecialist
+    CAPABILITIES:
+    - Triple-engine approach (Native → Symbolic → Numerical)
+    - Substitution method
+    - Integration by parts
+    - Trigonometric integrals
+    - Partial fractions
+    - Numerical fallback for non-elementary integrands
+
+calculus/advanced_integration_specialist.py - AdvancedIntegrationSpecialist
+    CAPABILITIES:
+    - Complex integration techniques
+    - Special function integrals
+    - Improper integrals
+
+calculus/limit_evaluator.py - LimitEvaluator
+    CAPABILITIES:
+    - L'Hôpital's rule
+    - Limit laws
+    - Infinite limits
+    - One-sided limits
+
+calculus/series_specialist.py - SeriesSpecialist
+    CAPABILITIES:
+    - Taylor/Maclaurin series
+    - Power series
+    - Convergence tests
+    - Asymptotic expansions
+
+calculus/ode_specialist.py - ODESpecialist
+    CAPABILITIES:
+    - First-order ODEs (separable, linear, exact)
+    - Second-order linear ODEs
+    - Laplace transform methods
+
+calculus/ode_solver.py - ODESolver
+    CAPABILITIES:
+    - Numerical ODE solving
+    - Initial value problems
+    - Boundary value problems
+
+calculus/ (additional specialists):
+    - bernoulli_ode_specialist.py - BernoulliODESpecialist
+    - exact_ode_specialist.py - ExactODESpecialist
+    - exp_trig_integration_specialist.py - ExpTrigIntegrationSpecialist
+    - fourier_specialist.py - FourierSpecialist
+    - linear_nonhomogeneous_ode_specialist.py - LinearNonhomogeneousODESpecialist
+    - ode_systems_specialist.py - ODESystemsSpecialist
+    - riccati_ode_specialist.py - RiccatiODESpecialist
+    - separable_ode_specialist.py - SeparableODESpecialist
+    - special_functions_specialist.py - SpecialFunctionsSpecialist
+    - substitution_specialist.py - SubstitutionSpecialist
+    - tabular_integration_specialist.py - TabularIntegrationSpecialist
+
+LINEAR ALGEBRA SPECIALISTS
+--------------------------------------------------------------------------------
+
+linear_algebra/matrix_ops_specialist.py - MatrixOperationsSpecialist
+    CAPABILITIES:
+    - Matrix multiplication, addition, subtraction
+    - Determinant calculation
+    - Matrix inversion
+    - Rank computation
+    - Trace computation
+
+linear_algebra/decomposition_specialist.py - DecompositionSpecialist
+    CAPABILITIES:
+    - LU decomposition
+    - QR decomposition
+    - SVD (Singular Value Decomposition)
+    - Eigenvalue decomposition
+    - Cholesky decomposition
+
+linear_algebra/advanced_matrix_specialist.py - AdvancedMatrixSpecialist
+    CAPABILITIES:
+    - Jordan normal form
+    - Matrix exponentials
+    - Matrix functions
+
+linear_algebra/vector_space_analyst.py - VectorSpaceAnalyst
+    CAPABILITIES:
+    - Basis finding
+    - Dimension calculation
+    - Orthogonalization (Gram-Schmidt)
+    - Linear independence testing
+
+linear_algebra/tensor_operations.py - TensorOperationsSpecialist
+    CAPABILITIES:
+    - Tensor products
+    - Tensor contractions
+    - Index manipulation
+
+GEOMETRY SPECIALISTS
+--------------------------------------------------------------------------------
+
+geometry/euclidean_specialist.py - EuclideanSpecialist
+    CAPABILITIES:
+    - Distance and angle calculations
+    - Triangle properties (area, centroid, circumcenter)
+    - Circle properties
+    - Polygon analysis
+
+geometry/analytic_specialist.py - AnalyticSpecialist
+    CAPABILITIES:
+    - Coordinate geometry
+    - Line equations
+    - Conic sections
+    - Parametric curves
+
+geometry/trigonometry_specialist.py - TrigonometrySpecialist
+    CAPABILITIES:
+    - Trigonometric identities
+    - Angle relationships
+    - Law of sines/cosines
+    - Inverse trigonometric functions
+
+geometry/transformation_specialist.py - TransformationSpecialist
+    CAPABILITIES:
+    - Rotation, reflection, translation
+    - Scaling and shearing
+    - Composition of transformations
+
+geometry/computational_geometry_specialist.py - ComputationalGeometrySpecialist
+    CAPABILITIES:
+    - Convex hull algorithms
+    - Point-in-polygon tests
+    - Intersection detection
+
+geometry/solid_geometry_specialist.py - SolidGeometrySpecialist
+    CAPABILITIES:
+    - 3D volume calculations
+    - Surface area calculations
+    - Polyhedra analysis
+
+LOGIC SPECIALISTS
+--------------------------------------------------------------------------------
+
+logic/propositional_specialist.py - PropositionalSpecialist
+    CAPABILITIES:
+    - Truth table generation
+    - Logical equivalence checking
+    - Normal form conversion (CNF, DNF)
+    - Validity and satisfiability checking
+
+logic/predicate_specialist.py - PredicateSpecialist
+    CAPABILITIES:
+    - First-order logic operations
+    - Quantifier manipulation
+    - Prenex normal form
+
+logic/proof_specialist.py - ProofSpecialist
+    CAPABILITIES:
+    - Natural deduction
+    - Proof tree construction
+    - Inference rule application
+
+logic/sat_solver_specialist.py - SATSolverSpecialist
+    CAPABILITIES:
+    - Boolean satisfiability solving
+    - DPLL algorithm
+    - Unit propagation
+
+logic/modal_logic_specialist.py - ModalLogicSpecialist
+    CAPABILITIES:
+    - Modal operators (necessity, possibility)
+    - Kripke semantics
+    - Modal validity checking
+
+logic/temporal_logic_specialist.py - TemporalLogicSpecialist
+    CAPABILITIES:
+    - LTL (Linear Temporal Logic)
+    - CTL (Computation Tree Logic)
+    - Temporal formula checking
+
+STATISTICS SPECIALISTS
+--------------------------------------------------------------------------------
+
+statistics/distribution_specialist.py - DistributionSpecialist
+    CAPABILITIES:
+    - Probability distributions (normal, binomial, Poisson, etc.)
+    - PDF/CDF calculations
+    - Moment calculations
+
+statistics/bayesian_engine.py - BayesianEngine
+    CAPABILITIES:
+    - Bayesian inference
+    - Prior/posterior calculations
+    - Conjugate prior analysis
+
+statistics/frequentist_agent.py - FrequentistAgent
+    CAPABILITIES:
+    - Hypothesis testing
+    - Confidence intervals
+    - P-value calculations
+
+statistics/regression_specialist.py - RegressionSpecialist
+    CAPABILITIES:
+    - Linear regression
+    - Multiple regression
+    - Polynomial regression
+
+statistics/nonparametric_specialist.py - NonparametricSpecialist
+    CAPABILITIES:
+    - Rank-based tests
+    - Kernel density estimation
+    - Bootstrap methods
+
+statistics/stochastic_process.py - StochasticProcessSpecialist
+    CAPABILITIES:
+    - Markov chain analysis
+    - Random walk simulation
+    - Stationary distributions
+
+statistics/bayesian_decision/ (3 specialists):
+    - decision_rules.py - DecisionRulesSpecialist
+    - sequential_decision.py - SequentialDecisionSpecialist
+    - utility_theory.py - UtilityTheorySpecialist
+
+statistics/timeseries/ (4 specialists):
+    - arima.py - ARIMASpecialist
+    - kalman_filter.py - KalmanFilterSpecialist
+    - nonlinear_timeseries.py - NonlinearTimeseriesSpecialist
+    - spectral_analysis.py - SpectralAnalysisSpecialist
+
+COMPLEX ANALYSIS SPECIALISTS
+--------------------------------------------------------------------------------
+
+complex_analysis/analytic_functions_specialist.py - AnalyticFunctionsSpecialist
+    CAPABILITIES:
+    - Cauchy-Riemann equations
+    - Analytic continuation
+    - Singularity classification
+
+complex_analysis/contour_integration_specialist.py - ContourIntegrationSpecialist
+    CAPABILITIES:
+    - Path integrals
+    - Cauchy integral formula
+    - Cauchy integral theorem
+
+complex_analysis/residue_calculus_specialist.py - ResidueCalculusSpecialist
+    CAPABILITIES:
+    - Residue computation
+    - Residue theorem applications
+    - Pole identification
+
+complex_analysis/conformal_mapping_specialist.py - ConformalMappingSpecialist
+    CAPABILITIES:
+    - Conformal transformations
+    - Riemann mapping theorem applications
+    - Boundary correspondence
+
+complex_analysis/elliptic_functions_specialist.py - EllipticFunctionsSpecialist
+    CAPABILITIES:
+    - Weierstrass elliptic functions
+    - Jacobi elliptic functions
+    - Modular forms basics
+
+CATEGORY THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+category_theory/functor_specialist.py - FunctorSpecialist
+    CAPABILITIES:
+    - Functor construction
+    - Natural transformation analysis
+    - Functor composition
+
+category_theory/adjunction_specialist.py - AdjunctionSpecialist
+    CAPABILITIES:
+    - Adjoint functor analysis
+    - Unit/counit construction
+    - Free-forgetful adjunctions
+
+category_theory/morphism_specialist.py - MorphismSpecialist
+    CAPABILITIES:
+    - Morphism classification
+    - Isomorphism detection
+    - Epimorphism/monomorphism analysis
+
+category_theory/universal_properties_specialist.py - UniversalPropertiesSpecialist
+    CAPABILITIES:
+    - Limits and colimits
+    - Products and coproducts
+    - Pullbacks and pushouts
+
+category_theory/monoidal_specialist.py - MonoidalSpecialist
+    CAPABILITIES:
+    - Monoidal category structure
+    - Tensor products
+    - Braiding and symmetry
+
+ALGEBRAIC TOPOLOGY SPECIALISTS
+--------------------------------------------------------------------------------
+
+algebraic_topology/homology.py - HomologySpecialist
+    CAPABILITIES:
+    - Simplicial homology
+    - Singular homology
+    - Homology group calculations
+
+algebraic_topology/cohomology.py - CohomologySpecialist
+    CAPABILITIES:
+    - de Rham cohomology
+    - Čech cohomology
+    - Cup products
+
+algebraic_topology/homotopy.py - HomotopySpecialist
+    CAPABILITIES:
+    - Homotopy group calculations
+    - Fibration sequences
+    - Homotopy equivalence
+
+algebraic_topology/fundamental_group.py - FundamentalGroupSpecialist
+    CAPABILITIES:
+    - Fundamental group computation
+    - Covering space theory
+    - Van Kampen theorem applications
+
+algebraic_topology/spectral_sequences.py - SpectralSequencesSpecialist
+    CAPABILITIES:
+    - Spectral sequence construction
+    - Filtration analysis
+    - Convergence criteria
+
+COMPUTABILITY SPECIALISTS
+--------------------------------------------------------------------------------
+
+computability/turing_completeness.py - TuringCompletenessSpecialist
+    CAPABILITIES:
+    - Turing machine simulation
+    - Universal computation
+    - Halting problem analysis
+
+computability/recursion_theory.py - RecursionTheorySpecialist
+    CAPABILITIES:
+    - Recursive function analysis
+    - Primitive recursion
+    - µ-recursion
+
+computability/complexity_theory.py - ComplexityTheorySpecialist
+    CAPABILITIES:
+    - Complexity class analysis
+    - P vs NP considerations
+    - Reduction techniques
+
+computability/kolmogorov_complexity.py - KolmogorovComplexitySpecialist
+    CAPABILITIES:
+    - Algorithmic information theory
+    - Incompressibility analysis
+    - Random string detection
+
+computability/turing_degrees.py - TuringDegreesSpecialist
+    CAPABILITIES:
+    - Degree structure analysis
+    - Jump operator
+    - Turing reducibility
+
+CONTROL THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+control_theory/linear_control_specialist.py - LinearControlSpecialist
+    CAPABILITIES:
+    - State-space analysis
+    - Transfer function manipulation
+    - Controllability/observability testing
+
+control_theory/dynamical_systems_specialist.py - DynamicalSystemsSpecialist
+    CAPABILITIES:
+    - Phase portrait analysis
+    - Equilibrium point classification
+    - Bifurcation analysis
+
+CRYPTOGRAPHY SPECIALISTS
+--------------------------------------------------------------------------------
+
+cryptography/asymmetric_crypto_specialist.py - AsymmetricCryptoSpecialist
+    CAPABILITIES:
+    - RSA algorithm
+    - Elliptic curve cryptography basics
+    - Key generation
+
+cryptography/hash_specialist.py - HashSpecialist
+    CAPABILITIES:
+    - Cryptographic hash functions
+    - Collision resistance analysis
+    - Message authentication
+
+cryptography/modular_arithmetic_specialist.py - ModularArithmeticSpecialist
+    CAPABILITIES:
+    - Modular exponentiation
+    - Chinese remainder theorem
+    - Discrete logarithm basics
+
+DIFFERENTIAL GEOMETRY SPECIALISTS
+--------------------------------------------------------------------------------
+
+diff_geometry/differential_geometry_specialist.py - DifferentialGeometrySpecialist
+    CAPABILITIES:
+    - Manifold analysis
+    - Tangent/cotangent bundles
+    - Differential forms
+
+diff_geometry/topology_specialist.py - TopologySpecialist
+    CAPABILITIES:
+    - Topological invariants
+    - Covering spaces
+    - Compact manifold analysis
+
+DISCRETE MATH SPECIALISTS
+--------------------------------------------------------------------------------
+
+discrete_math/combinatorics_agent.py - CombinatoricsAgent
+    CAPABILITIES:
+    - Permutations and combinations
+    - Binomial coefficients
+    - Inclusion-exclusion principle
+
+discrete_math/graph_theory_agent.py - GraphTheoryAgent
+    CAPABILITIES:
+    - Graph traversal algorithms
+    - Shortest path algorithms
+    - Connectivity analysis
+
+discrete_math/recurrence_agent.py - RecurrenceAgent
+    CAPABILITIES:
+    - Linear recurrence solving
+    - Generating function methods
+    - Asymptotic analysis
+
+discrete_math/boolean_algebra_agent.py - BooleanAlgebraAgent
+    CAPABILITIES:
+    - Boolean expression simplification
+    - Karnaugh maps
+    - Logic circuit analysis
+
+discrete_math/set_theory_agent.py - SetTheoryAgent
+    CAPABILITIES:
+    - Set operations
+    - Cardinality
+    - Power sets
+
+discrete_math/finite_automata_agent.py - FiniteAutomataAgent
+    CAPABILITIES:
+    - DFA/NFA construction
+    - Regular expression conversion
+    - Automata minimization
+
+discrete_math/generating_functions/ (7 specialists):
+    - asymptotic_extraction_specialist.py
+    - bivariate_gf_specialist.py
+    - exponential_gf_specialist.py
+    - gf_composition_specialist.py
+    - ordinary_gf_specialist.py
+    - rational_gf_specialist.py
+    - recurrence_gf_specialist.py
+
+discrete_math/spectral_graphs/ (5 specialists):
+    - adjacency_spectrum.py
+    - cheeger_inequality.py
+    - laplacian_spectrum.py
+    - random_walks.py
+    - spectral_clustering.py
+
+ERGODIC THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+ergodic/dynamical_entropy.py - DynamicalEntropySpecialist
+    CAPABILITIES:
+    - Kolmogorov-Sinai entropy
+    - Entropy rate calculations
+    - Symbolic dynamics
+
+ergodic/ergodic_theorems.py - ErgodicTheoremsSpecialist
+    CAPABILITIES:
+    - Birkhoff ergodic theorem
+    - Mean ergodic theorem
+    - Pointwise ergodic theorems
+
+ergodic/invariant_measures.py - InvariantMeasuresSpecialist
+    CAPABILITIES:
+    - Invariant measure construction
+    - Unique ergodicity
+    - Measure preservation
+
+ergodic/mixing.py - MixingSpecialist
+    CAPABILITIES:
+    - Mixing properties
+    - Weak mixing
+    - Strong mixing
+
+FUNCTIONAL ANALYSIS SPECIALISTS
+--------------------------------------------------------------------------------
+
+functional_analysis/banach_space_specialist.py - BanachSpaceSpecialist
+    CAPABILITIES:
+    - Banach space structure
+    - Bounded linear operators
+    - Open mapping theorem
+
+functional_analysis/hilbert_space_specialist.py - HilbertSpaceSpecialist
+    CAPABILITIES:
+    - Hilbert space theory
+    - Orthonormal bases
+    - Spectral theorem
+
+functional_analysis/operator_theory_specialist.py - OperatorTheorySpecialist
+    CAPABILITIES:
+    - Operator spectrum
+    - Compact operators
+    - Self-adjoint operators
+
+GEOMETRIC MEASURE SPECIALISTS
+--------------------------------------------------------------------------------
+
+geometric_measure/hausdorff_measure.py - HausdorffMeasureSpecialist
+    CAPABILITIES:
+    - Hausdorff dimension
+    - Hausdorff measure calculations
+    - Fractal dimension
+
+geometric_measure/rectifiability.py - RectifiabilitySpecialist
+    CAPABILITIES:
+    - Rectifiable sets
+    - Purely unrectifiable sets
+    - Tangent measures
+
+geometric_measure/minimal_surfaces.py - MinimalSurfacesSpecialist
+    CAPABILITIES:
+    - Mean curvature analysis
+    - Plateau problem
+    - Soap film surfaces
+
+geometric_measure/currents.py - CurrentsSpecialist
+    CAPABILITIES:
+    - Normal currents
+    - Integral currents
+    - Boundary operators
+
+INEQUALITIES & CONVEXITY SPECIALISTS
+--------------------------------------------------------------------------------
+
+inequalities/cauchy_schwarz_specialist.py - CauchySchwarzSpecialist
+    CAPABILITIES:
+    - Cauchy-Schwarz inequality applications
+    - Inner product bounds
+    - Vector space inequalities
+
+inequalities/holder_inequality_specialist.py - HolderInequalitySpecialist
+    CAPABILITIES:
+    - Hölder's inequality
+    - Lp space norms
+    - Generalized means
+
+inequalities/jensen_inequality_specialist.py - JensenInequalitySpecialist
+    CAPABILITIES:
+    - Jensen's inequality
+    - Convex function applications
+    - Expected value bounds
+
+inequalities/convex_function_specialist.py - ConvexFunctionSpecialist
+    CAPABILITIES:
+    - Convexity testing
+    - Subgradient computation
+    - Epigraph analysis
+
+inequalities/convex_set_specialist.py - ConvexSetSpecialist
+    CAPABILITIES:
+    - Convex hull construction
+    - Support functions
+    - Extreme points
+
+inequalities/separation_theorem_specialist.py - SeparationTheoremSpecialist
+    CAPABILITIES:
+    - Hyperplane separation
+    - Supporting hyperplanes
+    - Convex separation
+
+inequalities/chebyshev_inequality_specialist.py - ChebyshevInequalitySpecialist
+inequalities/rearrangement_inequality_specialist.py - RearrangementInequalitySpecialist
+inequalities/proximal_operator_specialist.py - ProximalOperatorSpecialist
+inequalities/subgradient_specialist.py - SubgradientSpecialist
+
+INFORMATION THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+information_theory/entropy_specialist.py - EntropySpecialist
+    CAPABILITIES:
+    - Shannon entropy
+    - Conditional entropy
+    - Mutual information
+
+information_theory/channel_capacity_specialist.py - ChannelCapacitySpecialist
+    CAPABILITIES:
+    - Channel capacity calculation
+    - Noisy channel coding
+    - Rate-distortion theory
+
+information_theory/coding_theory_specialist.py - CodingTheorySpecialist
+    CAPABILITIES:
+    - Source coding
+    - Huffman coding
+    - Arithmetic coding
+
+information_theory/error_correcting/ (6 specialists):
+    - dual_code_specialist.py
+    - generator_matrix_specialist.py
+    - hamming_distance_specialist.py
+    - linear_code_specialist.py
+    - minimum_distance_specialist.py
+    - parity_check_specialist.py
+
+LEARNING SPECIALISTS
+--------------------------------------------------------------------------------
+
+learning/bpe_tokenizer_specialist.py - BPETokenizerSpecialist
+    CAPABILITIES:
+    - Byte-pair encoding
+    - Vocabulary construction
+    - Subword tokenization
+
+learning/complexity_scorer_specialist.py - ComplexityScorerSpecialist
+    CAPABILITIES:
+    - Problem complexity assessment
+    - Difficulty estimation
+    - Learning curve prediction
+
+learning/curriculum_specialist.py - CurriculumSpecialist
+    CAPABILITIES:
+    - Learning sequence optimization
+    - Prerequisite analysis
+    - Skill progression
+
+learning/knowledge_graph_specialist.py - KnowledgeGraphSpecialist
+    CAPABILITIES:
+    - Knowledge graph construction
+    - Relationship extraction
+    - Graph-based reasoning
+
+learning/model_architect_specialist.py - ModelArchitectSpecialist
+    CAPABILITIES:
+    - Model architecture selection
+    - Hyperparameter optimization
+    - Architecture search
+
+learning/negative_learner_specialist.py - NegativeLearnerSpecialist
+    CAPABILITIES:
+    - Negative example learning
+    - Counterexample analysis
+    - Failure case learning
+
+MODEL THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+model_theory/categoricity.py - CategoricitySpecialist
+    CAPABILITIES:
+    - Categorical theory analysis
+    - Morley's theorem applications
+    - Spectrum analysis
+
+model_theory/compactness.py - CompactnessSpecialist
+    CAPABILITIES:
+    - Compactness theorem applications
+    - Finite satisfiability
+    - Ultraproduct construction
+
+model_theory/ominimality.py - OminimalitySpecialist
+    CAPABILITIES:
+    - O-minimal structure analysis
+    - Cell decomposition
+    - Definable sets
+
+model_theory/quantifier_elimination.py - QuantifierEliminationSpecialist
+    CAPABILITIES:
+    - Quantifier elimination algorithms
+    - Decidability results
+    - Effective procedures
+
+NUMERICAL SPECIALISTS
+--------------------------------------------------------------------------------
+
+numerical/numerical_methods_specialist.py - NumericalMethodsSpecialist
+    CAPABILITIES:
+    - Root finding (Newton, bisection)
+    - Numerical differentiation
+    - Numerical integration
+
+numerical/linear_systems_specialist.py - LinearSystemsSpecialist
+    CAPABILITIES:
+    - Gaussian elimination
+    - LU factorization
+    - Iterative methods (Jacobi, Gauss-Seidel)
+
+numerical/optimization_specialist.py - OptimizationSpecialist
+    CAPABILITIES:
+    - Gradient descent
+    - Newton's method for optimization
+    - Constrained optimization
+
+numerical/pde_specialist.py - PDESpecialist
+    CAPABILITIES:
+    - Finite difference methods
+    - Boundary value problems
+    - Heat/wave equation solving
+
+numerical/spline_specialist.py - SplineSpecialist
+    CAPABILITIES:
+    - Cubic spline interpolation
+    - B-spline construction
+    - Spline smoothing
+
+numerical/advanced_quadrature_specialist.py - AdvancedQuadratureSpecialist
+    CAPABILITIES:
+    - Gaussian quadrature
+    - Adaptive integration
+    - Multi-dimensional integration
+
+numerical/numerical_utility.py - NumericalUtility (helper)
+
+OPTIMIZATION SPECIALISTS
+--------------------------------------------------------------------------------
+
+optimization/linear_programming_specialist.py - LinearProgrammingSpecialist
+    CAPABILITIES:
+    - Simplex method
+    - Dual problems
+    - Sensitivity analysis
+
+optimization/convex_optimization_specialist.py - ConvexOptimizationSpecialist
+    CAPABILITIES:
+    - Convex programming
+    - Interior point methods
+    - Duality theory
+
+optimization/combinatorial_specialist.py - CombinatorialSpecialist
+    CAPABILITIES:
+    - Integer programming
+    - Branch and bound
+    - Cutting planes
+
+optimization/advanced/ (6 specialists):
+    - game_theory.py - GameTheorySpecialist
+    - global_optimization.py - GlobalOptimizationSpecialist
+    - multiobjective.py - MultiobjectiveSpecialist
+    - nonconvex.py - NonconvexSpecialist
+    - optimal_control.py - OptimalControlSpecialist
+    - variational_calculus.py - VariationalCalculusSpecialist
+
+PHYSICS SPECIALISTS
+--------------------------------------------------------------------------------
+
+physics/mechanics/:
+    - kinematics_specialist.py - KinematicsSpecialist
+    - dynamics_specialist.py - DynamicsSpecialist
+    - energy_specialist.py - EnergySpecialist
+
+physics/electromagnetism/:
+    - electrostatics_specialist.py - ElectrostaticsSpecialist
+    - magnetism_specialist.py - MagnetismSpecialist
+    - circuits_specialist.py - CircuitsSpecialist
+
+physics/thermodynamics/:
+    - heat_specialist.py - HeatSpecialist
+    - gas_laws_specialist.py - GasLawsSpecialist
+
+physics/quantum/:
+    - wavefunction_specialist.py - WavefunctionSpecialist
+    - operators_specialist.py - OperatorsSpecialist
+    - systems_specialist.py - SystemsSpecialist
+
+physics/waves/:
+    - wave_optics_specialist.py - WaveOpticsSpecialist
+
+PROOF THEORY SPECIALISTS
+--------------------------------------------------------------------------------
+
+proof_theory/cut_elimination.py - CutEliminationSpecialist
+    CAPABILITIES:
+    - Cut elimination proofs
+    - Gentzen's theorem
+    - Proof normalization
+
+proof_theory/ordinal_analysis.py - OrdinalAnalysisSpecialist
+    CAPABILITIES:
+    - Proof-theoretic ordinals
+    - Ordinal notation systems
+    - Consistency strength
+
+proof_theory/type_theory.py - TypeTheorySpecialist
+    CAPABILITIES:
+    - Dependent type theory
+    - Type checking
+    - Curry-Howard correspondence
+
+proof_theory/curry_howard.py - CurryHowardSpecialist
+    CAPABILITIES:
+    - Propositions as types
+    - Proofs as programs
+    - Logical framework analysis
+
+proof_theory/constructive_math.py - ConstructiveMathSpecialist
+    CAPABILITIES:
+    - Constructive proofs
+    - Intuitionistic logic
+    - BHK interpretation
+
+REAL ANALYSIS SPECIALISTS
+--------------------------------------------------------------------------------
+
+real_analysis/sequences_series_specialist.py - SequencesSeriesSpecialist
+    CAPABILITIES:
+    - Sequence convergence
+    - Series convergence tests
+    - Cauchy sequences
+
+real_analysis/metric_space_specialist.py - MetricSpaceSpecialist
+    CAPABILITIES:
+    - Metric space topology
+    - Completeness
+    - Compactness
+
+real_analysis/measure_theory_specialist.py - MeasureTheorySpecialist
+    CAPABILITIES:
+    - Lebesgue measure
+    - σ-algebras
+    - Measurable functions
+
+real_analysis/function_spaces_specialist.py - FunctionSpacesSpecialist
+    CAPABILITIES:
+    - Lp spaces
+    - Continuous function spaces
+    - Function space topology
+
+RIEMANNIAN GEOMETRY SPECIALISTS
+--------------------------------------------------------------------------------
+
+riemannian/metric.py - MetricSpecialist
+    CAPABILITIES:
+    - Riemannian metrics
+    - Metric tensor calculations
+    - Distance functions
+
+riemannian/curvature.py - CurvatureSpecialist
+    CAPABILITIES:
+    - Riemann curvature tensor
+    - Ricci curvature
+    - Scalar curvature
+
+riemannian/geodesic.py - GeodesicSpecialist
+    CAPABILITIES:
+    - Geodesic equations
+    - Geodesic curves
+    - Exponential map
+
+riemannian/holonomy.py - HolonomySpecialist
+    CAPABILITIES:
+    - Holonomy groups
+    - Parallel transport
+    - Holonomy classification
+
+riemannian/comparison.py - ComparisonSpecialist
+    CAPABILITIES:
+    - Comparison theorems
+    - Toponogov theorem
+    - Curvature bounds
+
+STOCHASTIC SPECIALISTS
+--------------------------------------------------------------------------------
+
+stochastic/brownian_motion.py - BrownianMotionSpecialist
+    CAPABILITIES:
+    - Brownian motion properties
+    - Wiener process
+    - Sample path analysis
+
+stochastic/martingale_theory.py - MartingaleTheorySpecialist
+    CAPABILITIES:
+    - Martingale definitions
+    - Optional stopping
+    - Martingale convergence
+
+stochastic/stochastic_calculus.py - StochasticCalculusSpecialist
+    CAPABILITIES:
+    - Itô calculus
+    - Stratonovich calculus
+    - Stochastic integrals
+
+stochastic/sde_solver.py - SDESolverSpecialist
+    CAPABILITIES:
+    - Stochastic differential equations
+    - Numerical SDE methods
+    - Euler-Maruyama scheme
+
+stochastic/levy_processes.py - LevyProcessesSpecialist
+    CAPABILITIES:
+    - Lévy process analysis
+    - Jump processes
+    - Infinite divisibility
+
+TOPOLOGICAL DATA ANALYSIS SPECIALISTS
+--------------------------------------------------------------------------------
+
+tda/persistent_homology.py - PersistentHomologySpecialist
+    CAPABILITIES:
+    - Persistent homology computation
+    - Persistence diagrams
+    - Barcodes
+
+tda/simplicial_complex.py - SimplicialComplexSpecialist
+    CAPABILITIES:
+    - Simplicial complex construction
+    - Filtrations
+    - Simplicial operations
+
+tda/mapper.py - MapperSpecialist
+    CAPABILITIES:
+    - Mapper algorithm
+    - Cover construction
+    - Nerve computation
+
+tda/topological_inference.py - TopologicalInferenceSpecialist
+    CAPABILITIES:
+    - Topological inference from data
+    - Confidence sets
+    - Statistical topology
+
+================================================================================
+SECTION 5: BASE AGENTS (2 Agents)
+================================================================================
+
+1. ProblemAnalyzer
+   Location: agents/base/problem_analysis.py
+   CAPABILITIES:
+   - Problem decomposition
+   - Domain detection from keywords
+   - Complexity assessment
+   - Dependency analysis
+   - Subtask generation
+   - Structured problem representation
+
+2. NotationTranslator
+   Location: agents/base/notation_translator.py
+   CAPABILITIES:
+   - LaTeX to plaintext conversion
+   - Plaintext to SymPy-compatible format
+   - Unicode symbol handling
+   - Notation normalization
+   - Mathematical expression parsing
+
+================================================================================
+SECTION 6: SYNTHESIS AGENTS (4 Agents)
+================================================================================
+
+1. ConjectureGenerator (SYN-3)
+   Location: agents/synthesis/conjecture_generator.py
+   CAPABILITIES:
+   - Pattern-based conjecture generation
+   - Property discovery
+   - Counterexample checking
+   - Conjecture ranking
+   - Hypothesis refinement
+
+2. FormalTranslator (SYN-2)
+   Location: agents/synthesis/formal_translator.py
+   CAPABILITIES:
+   - Formal language translation
+   - Mathematical formalization
+   - Logical representation construction
+
+3. ProofTermConstructor (SYN-4)
+   Location: agents/synthesis/proof_term_constructor.py
+   CAPABILITIES:
+   - Proof term construction
+   - Type-theoretic proof building
+   - Lambda term generation
+
+4. StructuralSynthesizer (SYN-1)
+   Location: agents/synthesis/structural_synthesizer.py
+   CAPABILITIES:
+   - Structure synthesis
+   - Pattern combination
+   - Solution assembly
+
+================================================================================
+SECTION 7: PROVER AGENTS (2 Agents)
+================================================================================
+
+1. LogicalProver (PRV-1)
+   Location: agents/provers/logical_prover.py
+   CAPABILITIES:
+   - First-order logic proof search
+   - Resolution refutation
+   - Natural deduction tactics
+   - Proof tree construction
+   - Countermodel generation
+   
+   PROOF STRATEGIES:
+   - Resolution
+   - Natural deduction
+   - Tableaux
+   - Backward chaining
+   - Forward chaining
+
+2. ModelChecker (PRV-2)
+   Location: agents/provers/model_checker.py
+   CAPABILITIES:
+   - Model verification
+   - Property checking
+   - Counterexample generation
+   - State space exploration
+
+================================================================================
+SECTION 8: COORDINATOR AGENTS (1 Agent)
+================================================================================
+
+1. MultiDomainCoordinator
+   Location: agents/coordinators/multi_domain_coordinator.py
+   CAPABILITIES:
+   - Multi-domain problem analysis
+   - Cross-domain task decomposition
+   - Supervisor orchestration
+   - Result synthesis from multiple domains
+   - Dependency management between domain results
+   
+   SUPPORTED DOMAINS (28 total):
+   - Core: ALGEBRA, CALCULUS, LINEAR_ALGEBRA, STATISTICS, GEOMETRY,
+           DISCRETE_MATH, LOGIC, INFORMATION_THEORY, CRYPTOGRAPHY,
+           OPTIMIZATION, CATEGORY_THEORY, PHYSICS, NUMERICAL
+   - Phase 1: ANALYTIC_NUMBER_THEORY, ALGEBRAIC_NUMBER_THEORY,
+              SPECTRAL_GRAPH, STOCHASTIC_PROCESSES, MODEL_THEORY,
+              PROOF_THEORY
+   - Phase 2: COMPUTABILITY, RIEMANNIAN_GEOMETRY, BAYESIAN_DECISION,
+              TIME_SERIES
+   - Phase 3: ALGEBRAIC_TOPOLOGY, ERGODIC_THEORY, GEOMETRIC_MEASURE, TDA
+
+================================================================================
+SECTION 9: INFRASTRUCTURE COMPONENTS
+================================================================================
+
+Agent Management System (AMS)
+   Location: infrastructure/ams.py
+   CAPABILITIES:
+   - Agent lifecycle management
+   - VRAM enforcement (max 100 agents)
+   - Agent registration/deregistration
+   - Resource monitoring
+
+Directory Facilitator (DF)
+   Location: infrastructure/directory_facilitator.py
+   CAPABILITIES:
+   - Service registration
+   - Service discovery
+   - Capability matching
+   - Agent lookup
+
+Agent Communication Channel (ACC)
+   Location: infrastructure/acc.py
+   CAPABILITIES:
+   - Message routing
+   - FIPA-ACL protocol support
+   - Message queuing
+
+Agent Pool
+   Location: infrastructure/agent_pool.py
+   CAPABILITIES:
+   - Memory-efficient agent pooling
+   - Agent reuse
+   - Pool state management
+
+Agent Factory
+   Location: infrastructure/agent_factory.py
+   CAPABILITIES:
+   - Agent instantiation
+   - Configuration injection
+   - Agent type management
+
+Watchdog
+   Location: infrastructure/watchdog.py
+   CAPABILITIES:
+   - Timeout enforcement (default 30s per agent)
+   - Hung agent detection
+   - Resource cleanup
+
+Resource Governor
+   Location: infrastructure/resource_governor.py
+   CAPABILITIES:
+   - System-wide throttling
+   - Resource limits
+   - Memory management
+
+================================================================================
+SECTION 10: MIDDLEWARE COMPONENTS
+================================================================================
+
+Knowledge Management Team
+   Location: middleware/knowledge_management.py
+   CAPABILITIES:
+   - Solution caching (Look-Before-Leap pattern)
+   - Knowledge retrieval
+   - Similarity matching
+   - Cache invalidation
+
+Meta-Learning Team
+   Location: middleware/meta_learning.py
+   CAPABILITIES:
+   - Learn from failures and successes
+   - Strategy adaptation
+   - Performance optimization
+   - Learning rate adjustment
+
+Conflict Resolution
+   Location: middleware/conflict_resolution.py
+   CAPABILITIES:
+   - Multi-agent conflict mediation
+   - Priority-based resolution
+   - Consensus building
+
+Theorem Library
+   Location: middleware/theorem_library.py
+   CAPABILITIES:
+   - Mathematical knowledge base
+   - Theorem lookup
+   - Axiom management
+
+Pattern Indexer
+   Location: middleware/pattern_indexer.py
+   CAPABILITIES:
+   - Pattern recognition
+   - Pattern matching
+   - Pattern storage
+
+Failure Analysis Team
+   Location: middleware/failure_analysis_team.py
+   CAPABILITIES:
+   - Failure root cause analysis
+   - Recovery suggestion
+   - Error pattern detection
+
+================================================================================
+SECTION 11: BDI COGNITIVE ARCHITECTURE
+================================================================================
+
+All agents inherit from the BDI (Belief-Desire-Intention) framework:
+
+BELIEFS (B)
+   - Agent's knowledge about the world
+   - Internal model of reality
+   - Examples: "problem_type", "variable_value", "theorem_applicable"
+
+DESIRES (D)
+   - Agent's ultimate high-level goals
+   - Objectives the agent wishes to achieve
+   - Examples: "solve_integral", "factor_polynomial", "verify_proof"
+
+INTENTIONS (I)
+   - Agent's committed plan of action
+   - Specific course chosen after deliberation
+   - Examples: "apply_risch_algorithm", "use_substitution"
+
+BDI CONTROL LOOP:
+   1. PERCEIVE: Update beliefs from environment (Blackboard, messages)
+   2. DELIBERATE: Compare beliefs against desires to generate new intentions
+   3. MEANS-END: Select concrete plans to achieve intentions
+   4. EXECUTE: Execute one step of current intention
+   5. Repeat
+
+CRITICAL PRINCIPLE:
+   Cognitive agents NEVER compute directly. They:
+   - Reason about problems (deliberation)
+   - Generate plans (means-end reasoning)
+   - Delegate computation to native engines or specialists (execution)
+   - Verify and interpret results (belief update)
+
+================================================================================
+SECTION 12: AGENT COMMUNICATION PROTOCOLS
+================================================================================
+
+FIPA-ACL Protocol
+   Location: protocols/fipa_acl.py
+   CAPABILITIES:
+   - Standardized agent messaging
+   - Performative types (REQUEST, INFORM, CFP, PROPOSE, etc.)
+   - Content encoding
+   - Conversation threading
+
+Blackboard System
+   Location: core/blackboard.py
+   CAPABILITIES:
+   - Centralized workspace
+   - Pub-sub notifications
+   - Entry status tracking
+   - Tag-based queries
+
+Message Bus
+   Location: core/message_bus.py
+   CAPABILITIES:
+   - Direct agent-to-agent messaging
+   - Topic-based routing
+   - Asynchronous communication
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+AGENT COUNTS BY TIER:
+   Tier 1 (Orchestrator):     1 agent
+   Tier 2 (Supervisors):     38 agents
+   Tier 3 (Specialists):    220+ agents
+   Base Agents:               2 agents
+   Synthesis Agents:          4 agents
+   Prover Agents:             2 agents
+   Coordinator Agents:        1 agent
+   ---------------------------------
+   TOTAL:                   268+ agents
+
+DOMAIN COVERAGE:
+   30+ specialized mathematical domains including:
+   - Core math (algebra, calculus, geometry, linear algebra)
+   - Advanced analysis (complex, real, functional)
+   - Physics (mechanics, EM, thermo, quantum)
+   - Number theory (elementary, algebraic, analytic)
+   - Topology (algebraic, differential, TDA)
+   - Logic & foundations (proof theory, model theory, computability)
+   - Applied (cryptography, information theory, control, optimization)
+
+PERFORMANCE CHARACTERISTICS:
+   - Max concurrent agents: 100
+   - Default agent timeout: 30 seconds
+   - Native implementations: NO SYMPY by agents
+   - Parallel execution: Supported
+   - Solution caching: Enabled via Look-Before-Leap
+
+================================================================================
+END OF AGENT CATALOG
+================================================================================
