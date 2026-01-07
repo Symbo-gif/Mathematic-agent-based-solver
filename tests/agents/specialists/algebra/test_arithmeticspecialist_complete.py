@@ -217,12 +217,8 @@ class TestArithmeticSpecialistComplete:
 
     def test_bdi_interface(self, specialist):
         """Test BDI methods exist and are callable."""
-        # update_beliefs - may take zero or more arguments depending on implementation
-        try:
-            specialist.update_beliefs()
-        except TypeError:
-            # Some implementations don't take arguments
-            specialist.update_beliefs()
+        # update_beliefs - should work without arguments
+        specialist.update_beliefs()
 
         # deliberate
         intentions = specialist.deliberate()
