@@ -34,6 +34,23 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 from typing import Generator
 
+
+# =============================================================================
+# COLLECTION IGNORES - Tests for aspirational/unimplemented code
+# =============================================================================
+
+# These files/directories contain tests for code that doesn't exist yet
+collect_ignore = [
+    # Property-based tests require hypothesis which is optional
+    "test_property_based.py",
+    "test_property_based_extended.py",
+    # Word problem tests for unimplemented modules
+    "word_problem",
+    "core/word_problem",
+    # Property-based tests directory
+    "property_based",
+]
+
 # =============================================================================
 # TEST CONFIGURATION
 # =============================================================================

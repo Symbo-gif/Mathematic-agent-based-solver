@@ -140,7 +140,7 @@ class TestHolderInequalitySpecialist:
 
     def test_bdi_interface(self, specialist):
         """Test BDI cycle."""
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
         intentions = specialist.deliberate()
         assert isinstance(intentions, list)
 

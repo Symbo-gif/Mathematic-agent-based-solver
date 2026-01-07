@@ -192,7 +192,7 @@ class TestRecurrenceGFSpecialist:
     # TEST 11: BDI Cycle Compliance
     def test_bdi_interface(self, specialist):
         """Test BDI cognitive cycle methods."""
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
         intentions = specialist.deliberate()
         assert isinstance(intentions, list)
 

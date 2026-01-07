@@ -217,7 +217,7 @@ class TestFunctorSpecialistComplete:
         """Test BDI methods exist and are callable."""
         # update_beliefs
         try:
-            specialist.update_beliefs({})
+            specialist.update_beliefs()
         except TypeError:
             # Some specialists don't accept arguments
             specialist.update_beliefs()

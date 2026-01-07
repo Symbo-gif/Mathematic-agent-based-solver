@@ -517,6 +517,118 @@ def _try_exp_series(expr_str: str, var: str, start: int) -> Optional[Tuple[str, 
     return None
 
 
+def series(expr, var, point=0, n=6):
+    """
+    Compute Taylor series expansion of an expression around a point.
+
+    This is a native implementation of Taylor series that computes:
+        f(x) ≈ f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...
+
+    Args:
+        expr: Expression to expand (can be string or native Expr)
+        var: Variable or variable name to expand in
+        point: Point around which to expand (default 0 for Maclaurin series)
+        n: Number of terms (default 6)
+
+    Returns:
+        String representation of the series expansion
+
+    Example:
+        >>> series("sin(x)", "x", 0, 4)
+        'x - x**3/6'
+        >>> series("exp(x)", "x", 0, 5)
+        '1 + x + x**2/2 + x**3/6 + x**4/24'
+    """
+    from .calculus_supervisor import differentiate
+
+    # Convert inputs to appropriate forms
+    if isinstance(expr, str):
+        expr_str = expr
+    else:
+        expr_str = str(expr)
+
+    if isinstance(var, str):
+        var_name = var
+    else:
+        var_name = str(var)
+
+    try:
+        pt = float(point) if point not in (float('inf'), float('-inf')) else 0
+    except (ValueError, TypeError):
+        pt = 0
+
+    # Build Taylor series by computing derivatives at the point
+    terms = []
+
+    current_expr = expr_str
+    factorial = 1
+
+    for k in range(n):
+        # Evaluate k-th derivative at the point
+        if k > 0:
+            factorial *= k
+
+        # Compute the derivative value at pt
+        try:
+            value = _evaluate_at_numeric(current_expr, var_name, pt)
+            if value is None or not isinstance(value, (int, float)) or math.isnan(value):
+                value = 0
+        except Exception:
+            value = 0
+
+        if abs(value) > 1e-15:
+            coef = value / factorial
+            if k == 0:
+                if abs(coef - round(coef)) < 1e-10 and abs(coef) < 1e10:
+                    terms.append(str(int(round(coef))))
+                else:
+                    terms.append(f"{coef:.6g}")
+            elif k == 1:
+                if abs(coef - 1) < 1e-10:
+                    terms.append(f"({var_name} - {pt})" if pt != 0 else var_name)
+                elif abs(coef + 1) < 1e-10:
+                    terms.append(f"-({var_name} - {pt})" if pt != 0 else f"-{var_name}")
+                elif abs(coef - round(coef)) < 1e-10 and abs(coef) < 1e10:
+                    terms.append(f"{int(round(coef))}*{var_name}")
+                else:
+                    terms.append(f"{coef:.6g}*{var_name}")
+            else:
+                power_term = f"({var_name} - {pt})**{k}" if pt != 0 else f"{var_name}**{k}"
+                if abs(coef - 1) < 1e-10:
+                    terms.append(power_term)
+                elif abs(coef + 1) < 1e-10:
+                    terms.append(f"-{power_term}")
+                elif abs(coef - round(coef)) < 1e-10 and abs(coef) < 1e10:
+                    terms.append(f"{int(round(coef))}*{power_term}")
+                else:
+                    terms.append(f"{coef:.6g}*{power_term}")
+
+        # Differentiate for next iteration
+        if k < n - 1:
+            try:
+                success, deriv, _ = differentiate(current_expr, var_name)
+                if success and deriv:
+                    current_expr = deriv
+                else:
+                    break
+            except Exception:
+                break
+
+    if not terms:
+        return "0"
+
+    # Combine terms
+    result = terms[0]
+    for term in terms[1:]:
+        if term.startswith('-'):
+            result += f" {term}"
+        else:
+            result += f" + {term}"
+
+    return result
+
+
 __all__ = [
     'series_sum',
+    'series',
 ]
