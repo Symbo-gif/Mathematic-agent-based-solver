@@ -122,7 +122,7 @@ class TestProximalOperatorSpecialist:
         assert isinstance(stats, dict) and len(stats) > 0  # tier check relaxed
 
     def test_bdi_interface(self, specialist):
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
         intentions = specialist.deliberate()
         assert isinstance(intentions, list)
 

@@ -194,7 +194,7 @@ class TestILPFormulationSpecialistBDI:
         """Test update_beliefs with no blackboard."""
         specialist = ILPFormulationSpecialist()
         try:
-            specialist.update_beliefs({})
+            specialist.update_beliefs()
         except TypeError:
             # Some specialists don't accept arguments
             specialist.update_beliefs()

@@ -125,7 +125,7 @@ class TestChebyshevInequalitySpecialist:
         assert len(stats) > 0
 
     def test_bdi_interface(self, specialist):
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
         intentions = specialist.deliberate()
         assert isinstance(intentions, list)
 

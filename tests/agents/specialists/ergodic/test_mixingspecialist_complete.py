@@ -218,7 +218,7 @@ class TestMixingSpecialistComplete:
     def test_bdi_interface(self, specialist):
         """Test BDI methods exist and are callable."""
         # update_beliefs
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
 
         # deliberate
         intentions = specialist.deliberate()

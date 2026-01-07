@@ -205,7 +205,7 @@ class TestGraphIsomorphismSpecialistBDI:
         """Test update_beliefs with no blackboard."""
         specialist = GraphIsomorphismSpecialist()
         try:
-            specialist.update_beliefs({})
+            specialist.update_beliefs()
         except TypeError:
             # Some specialists don't accept arguments
             specialist.update_beliefs()

@@ -179,7 +179,7 @@ class TestCauchySchwarzSpecialist:
     def test_bdi_interface(self, specialist):
         """Test BDI cognitive cycle methods."""
         # update_beliefs
-        specialist.update_beliefs({})
+        specialist.update_beliefs()
 
         # deliberate
         intentions = specialist.deliberate()
