@@ -29,7 +29,7 @@ dependencies = [
 
 [project.optional-dependencies]
 ml = [
-    "torch>=2.0.0",
+    "torch>=2.8.0",
 ]
 vector = [
     "chromadb>=0.4.0",
@@ -49,7 +49,7 @@ visualization = [
     "plotly>=5.14.0",
 ]
 full = [
-    "torch>=2.0.0",
+    "torch>=2.8.0",
     "chromadb>=0.4.0",
     "sentence-transformers>=2.2.0",
     "networkx>=3.0",
