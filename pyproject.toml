@@ -45,7 +45,7 @@ logic = [
     "kanren>=0.2.3",
 ]
 visualization = [
-    "matplotlib>=3.7.0",
+    "matplotlib>=3.9.4",
     "plotly>=5.14.0",
 ]
 full = [
@@ -55,7 +55,7 @@ full = [
     "networkx>=3.0",
     "scikit-optimize>=0.9.0",
     "kanren>=0.2.3",
-    "matplotlib>=3.7.0",
+    "matplotlib>=3.9.4",
     "plotly>=5.14.0",
 ]
 dev = [
